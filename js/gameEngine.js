@@ -16,7 +16,7 @@ const RETOS = [
   {
     id: 1,
     titulo: "El mural que nadie midió",
-    eyebrow: "Nivel 1 · Cuadrado de binomio · (a+b)¹",
+    eyebrow: "Nivel 1 · Cuadrado de binomio · (a+b)²",
     tags: [
       { label: "Nivel 1 — Básico",  cls: "rtag-green"  },
       { label: "(a+b)¹",            cls: "rtag-purple" },
@@ -72,7 +72,7 @@ const RETOS = [
     el área como <em>25x² + 16</em>, cambiando el signo del término central.
     Esto sobreestimó el espacio disponible y se compraron más semillas de las necesarias.
     ¿Cuál es el área correcta?`,
-    enunciado: "Desarrolla correctamente: (5x − 4)¹",
+    enunciado: "Desarrolla correctamente: (5x − 4)²",
     opciones: [
       { id:"2a", texto:"25x² + 16",
         correcta: false,
@@ -225,20 +225,19 @@ const RETOS = [
         <em>50x³−72x = 2x(25x²−36) = 2x(5x+6)(5x−6)</em>.
         El proceso tiene dos etapas: primero extraer el factor común <em>2x</em>,
         luego identificar la diferencia de cuadrados <em>(5x)²−6²</em>.
-        Esta estructura revela que el presupuesto tiene una distribution
+        Esta estructura reveals que el presupuesto tiene una distribución
         simétrica y factorizable de forma exacta.` },
       { id:"5d", texto:"2(25x³ − 36x)",
         correcta: false,
         feedback:`<strong>Incorrecto.</strong> Se extrajo el factor numérico 2 pero no
         el literal <em>x</em>. El MCD completo es <em>2x</em> porque todos los
         términos son divisibles tanto por 2 como por <em>x</em>. Siempre se debe
-        extraer simultaneamente la parte numérica y literal del factor común.` }
+        extraer simultáneamente la parte numérica y literal del factor común.` }
     ]
   },
 
   // ══════════════════════════════════════════════════════
   //  RETO 6 — NIVEL: Experto  expresión compuesta con (a+b)²
-  //  usando coeficientes fraccionarios implícitos y simplificación
   // ══════════════════════════════════════════════════════
   {
     id: 6,
@@ -396,7 +395,7 @@ function initMapa() {
 }
 
 // ──────────────────────────────────────────────────────────
-//  RETO (Corregido con la inyección dinámica al DOM)
+//  RETO
 // ──────────────────────────────────────────────────────────
 function initReto() {
   if (!window.location.pathname.includes("reto.html")) return;
@@ -404,7 +403,6 @@ function initReto() {
   const reto = RETOS.find(r => r.id === id);
   if (!reto) { window.location.href = "mapa.html"; return; }
 
-  // ✅ CORRECCIÓN: Inyección de datos dinámica desde la BD en el HTML de la plantilla
   const eyebrowEl = $id("reto-eyebrow");
   const tituloEl = $id("reto-titulo");
   const narrativaEl = $id("reto-narrativa");
@@ -464,7 +462,6 @@ function initReto() {
       const correcta = opcion.correcta;
 
       if (correcta) {
-        // ✅ ACIERTO
         erroresConsecutivos = 0;
         mostrarFeedback(true, opcion.feedback);
         const res = loadResueltos();
@@ -481,25 +478,23 @@ function initReto() {
           }
         }
       } else {
-        // ❌ ERROR
         erroresConsecutivos++;
 
-        // Penalización de 10 minutos
+        // ✅ CORRECCIÓN EXANTE: Descontar exactamente 5 minutos por cada error cometido
+        // Restar milisegundos al punto de inicio fuerza a que la cuenta atrás baje instantáneamente.
         const startTime = loadStart();
         if (startTime) {
-          const nuevoStart = startTime + 10*60*1000; // +10 minutos
+          const nuevoStart = startTime - (5 * 60 * 1000); 
           saveStart(nuevoStart);
           startClock();
         }
 
-        // 1ra vez: pista suave
         if (erroresConsecutivos === 1) {
           const pista1 = `Recuerda revisar el <strong>término central</strong> 
           y los <strong>coeficientes</strong> en el desarrollo del producto notable. 
           Verifica el signo y el valor de cada término.`;
           mostrarFeedback(false, pista1, true);
 
-        // 2da vez: pista más directa
         } else if (erroresConsecutivos === 2) {
           const pista2 = `<strong>Enfoque directo:</strong> 
           Revisa el desarrollo de <em>(a+b)²</em> o <em>(a−b)²</em>. 
@@ -507,7 +502,6 @@ function initReto() {
           con la estructura correcta de la identidad.`;
           mostrarFeedback(false, pista2, true);
 
-        // 3ra vez en adelante: mostrar la opción correcta + explicación
         } else if (erroresConsecutivos >= 3) {
           const opCorrecta = reto.opciones.find(o => o.correcta);
           const mensaje = `
@@ -592,4 +586,4 @@ document.addEventListener("DOMContentLoaded", () => {
   initMapa();
   initReto();
   initCierre();
-}); // ✅ CORRECCIÓN: Evento DOM cerrado limpiamente sin tokens inesperados de llaves
+});
