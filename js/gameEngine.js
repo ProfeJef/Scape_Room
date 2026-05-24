@@ -3,23 +3,16 @@
 // ============================================================
 
 // ──────────────────────────────────────────────────────────
-//  BASE DE DATOS DE RETOS — Dificultad progresiva
-//  Nivel 1-2: coeficientes simples
-//  Nivel 3-4: coeficientes enteros mayores
-//  Nivel 5-6: coeficientes fraccionarios / expresiones compuestas
+//  BASE DE DATOS DE RETOS — Estructura y Retos Originales
 // ──────────────────────────────────────────────────────────
 const RETOS = [
-
-  // ══════════════════════════════════════════════════════
-  //  RETO 1 — NIVEL: Entrada  (a+b)² con coeficiente 1
-  // ══════════════════════════════════════════════════════
   {
     id: 1,
     titulo: "El mural que nadie midió",
     eyebrow: "Nivel 1 · Cuadrado de binomio · (a+b)²",
     tags: [
       { label: "Nivel 1 — Básico",  cls: "rtag-green"  },
-      { label: "(a+b)¹",            cls: "rtag-purple" },
+      { label: "(a+b)²",            cls: "rtag-purple" },
       { label: "Área",              cls: "rtag-gold"   }
     ],
     narrativa: `El sistema aprobó un presupuesto para un mural cuyo lado mide
@@ -54,17 +47,13 @@ const RETOS = [
         sumando coeficientes.` }
     ]
   },
-
-  // ══════════════════════════════════════════════════════
-  //  RETO 2 — NIVEL: Fácil  (a−b)² con coeficientes medianos
-  // ══════════════════════════════════════════════════════
   {
     id: 2,
     titulo: "El terreno que se recortó",
-    eyebrow: "Nivel 2 · Cuadrado de diferencia · (a−b)¹",
+    eyebrow: "Nivel 2 · Cuadrado de diferencia · (a−b)²",
     tags: [
       { label: "Nivel 2 — Fácil",  cls: "rtag-green"  },
-      { label: "(a−b)¹",           cls: "rtag-purple" },
+      { label: "(a−b)²",           cls: "rtag-purple" },
       { label: "Factor común",     cls: "rtag-pink"   }
     ],
     narrativa: `El colegio redujo el terreno de su huerto restando <strong>4</strong> metros
@@ -97,10 +86,6 @@ const RETOS = [
         Recuerda que el coeficiente 2 multiplica el producto de los dos términos del binomio.` }
     ]
   },
-
-  // ══════════════════════════════════════════════════════
-  //  RETO 3 — NIVEL: Medio  (a+b)(a−b) con coeficientes > 5
-  // ══════════════════════════════════════════════════════
   {
     id: 3,
     titulo: "El contenedor de doble cara",
@@ -142,10 +127,6 @@ const RETOS = [
         Los términos medios se cancelan por ser opuestos: <em>+ab</em> y <em>−ab</em>.` }
     ]
   },
-
-  // ══════════════════════════════════════════════════════
-  //  RETO 4 — NIVEL: Medio-alto  (a+b)³ coeficientes no triviales
-  // ══════════════════════════════════════════════════════
   {
     id: 4,
     titulo: "El tanque de agua del colegio",
@@ -187,13 +168,9 @@ const RETOS = [
         <em>(ka)³ = k³·a³</em>, por lo que <em>(2x)³ = 2³·x³ = 8x³</em>.` }
     ]
   },
-
-  // ══════════════════════════════════════════════════════
-  //  RETO 5 — NIVEL: Alto  producto de binomios con factor común
-  // ══════════════════════════════════════════════════════
   {
     id: 5,
-    titulo: "El presupuesto de los tres proyectos",
+    titulo: "El festival de matemáticas",
     eyebrow: "Nivel 5 · Factorización compuesta · Factor común + diferencia de cuadrados",
     tags: [
       { label: "Nivel 5 — Alto",            cls: "rtag-pink"   },
@@ -209,7 +186,7 @@ const RETOS = [
     opciones: [
       { id:"5a", texto:"x(50x² − 72)",
         correcta: false,
-        feedback:`<strong>Incorrecto.</strong> Se extrajo el factor <em>x</em> pero no
+        feedback:`<strong>Incorrecto.</strong> Se extracho el factor <em>x</em> pero no
         el numérico. El MCD de 50 y 72 es <em>2</em>, por lo tanto el factor común
         completo es <em>2x</em>. Además, la expresión <em>50x²−72</em> sigue siendo
         factorizable como diferencia de cuadrados tras extraer el 2.` },
@@ -225,7 +202,7 @@ const RETOS = [
         <em>50x³−72x = 2x(25x²−36) = 2x(5x+6)(5x−6)</em>.
         El proceso tiene dos etapas: primero extraer el factor común <em>2x</em>,
         luego identificar la diferencia de cuadrados <em>(5x)²−6²</em>.
-        Esta estructura reveals que el presupuesto tiene una distribución
+        Esta estructura revela que el presupuesto tiene una distribución
         simétrica y factorizable de forma exacta.` },
       { id:"5d", texto:"2(25x³ − 36x)",
         correcta: false,
@@ -235,13 +212,9 @@ const RETOS = [
         extraer simultáneamente la parte numérica y literal del factor común.` }
     ]
   },
-
-  // ══════════════════════════════════════════════════════
-  //  RETO 6 — NIVEL: Experto  expresión compuesta con (a+b)²
-  // ══════════════════════════════════════════════════════
   {
     id: 6,
-    titulo: "La fórmula definitiva del sistema",
+    titulo: "La fórmula justa del sistema",
     eyebrow: "Nivel 6 · Experto · Binomio con fracciones + simplificación",
     tags: [
       { label: "Nivel 6 — Experto",  cls: "rtag-pink"   },
@@ -313,7 +286,7 @@ const formatTime = (sec) => {
 };
 
 // ──────────────────────────────────────────────────────────
-//  TEMPORIZADOR GLOBAL
+//  TEMPORIZADOR GLOBAL — CORREGIDO EL PROBLEMA DEL PARPADEO
 // ──────────────────────────────────────────────────────────
 let clockInterval = null;
 
@@ -323,6 +296,11 @@ function startClock() {
   const progressTxt = $id("progress-txt");
   const startTime   = loadStart();
   if (!startTime || !clockEl) return;
+
+  // 🛠️ FIX: Limpiar cualquier intervalo previo activo para evitar solapamientos y parpadeos
+  if (clockInterval) {
+    clearInterval(clockInterval);
+  }
 
   const tick = () => {
     const elapsed   = Math.floor((Date.now() - startTime) / 1000);
@@ -480,13 +458,12 @@ function initReto() {
       } else {
         erroresConsecutivos++;
 
-        // ✅ CORRECCIÓN EXANTE: Descontar exactamente 5 minutos por cada error cometido
-        // Restar milisegundos al punto de inicio fuerza a que la cuenta atrás baje instantáneamente.
+        // 🛠️ FIX: Descontar exactamente 5 minutos por cada error cometido en milisegundos
         const startTime = loadStart();
         if (startTime) {
           const nuevoStart = startTime - (5 * 60 * 1000); 
           saveStart(nuevoStart);
-          startClock();
+          startClock(); // Reinicia el intervalo limpio con la nueva hora recalculada
         }
 
         if (erroresConsecutivos === 1) {
