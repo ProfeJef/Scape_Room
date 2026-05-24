@@ -226,7 +226,9 @@ function initVestibulo() {
 //  MAPA
 // ──────────────────────────────────────────────────────────
 function initMapa() {
-  if (!window.location.pathname.includes("mapa.html")) return;
+  // ✅ Después
+const enMapa = window.location.pathname.includes("mapa.html");
+if (!enMapa) return;
   const resueltos    = loadResueltos();
   const desbloqueado = resueltos.length + 1;
   RETOS.forEach(reto => {
@@ -254,7 +256,9 @@ function initMapa() {
 //  RETO
 // ──────────────────────────────────────────────────────────
 function initReto() {
-  if (!window.location.pathname.includes("reto.html")) return;
+ // ✅ Después
+const enReto = window.location.pathname.includes("reto.html");
+if (!enReto) return;
   const id   = parseInt(getParam("id"));
   const reto = RETOS.find(r => r.id === id);
   if (!reto) { window.location.href = "mapa.html"; return; }
@@ -350,7 +354,9 @@ function initReto() {
 //  CIERRE
 // ──────────────────────────────────────────────────────────
 function initCierre() {
-  if (!window.location.pathname.includes("cierre.html")) return;
+  // ✅ Después
+const enCierre = window.location.pathname.includes("cierre.html");
+if (!enCierre) return;
   const resueltos = loadResueltos();
   const startTime = loadStart();
   const elapsed   = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
@@ -385,12 +391,26 @@ function initCierre() {
 //  INICIALIZACIÓN
 // ──────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-  const path     = window.location.pathname;
+  const path = window.location.pathname;
+
+  // ✅ Detectar si estamos en index de forma robusta
+  const enIndex = path.endsWith("/")
+    || path.endsWith("index.html")
+    || path === ""
+    || !path.includes(".html");
+
   const hasStart = !!loadStart();
-  if (!hasStart && !path.includes("index.html") && path !== "/" && path !== "") {
-    window.location.href = "index.html"; return;
+
+  // Solo redirigir si NO estamos en index y no hay sesión activa
+  if (!hasStart && !enIndex) {
+    window.location.href = "index.html";
+    return;
   }
-  if (!path.includes("index.html")) startClock();
+
+  // Iniciar reloj en todas las pantallas excepto index
+  if (!enIndex) startClock();
+
+  // Inicializar pantalla correspondiente
   initVestibulo();
   initMapa();
   initReto();
