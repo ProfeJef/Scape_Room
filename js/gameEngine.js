@@ -403,7 +403,9 @@ function initReto() {
   const reto = RETOS.find(r => r.id === id);
   if (!reto) { window.location.href = "mapa.html"; return; }
 
-  // Rellenar cabecera
+  // Rellenar cabecera (tu código anterior para cabecera y opciones)
+  // ...
+
   const btnValidar   = $id("btn-validar");
   const feedback     = $id("feedback");
   const fbIcon       = $id("fb-icon");
@@ -412,15 +414,14 @@ function initReto() {
   const btnSiguiente = $id("btn-siguiente");
   let seleccionado   = null;
   let yaRespondio    = false;
-  let erroresConsecutivos = 0;  // Nueva variable
+  let erroresConsecutivos = 0;
 
   opcionesEl.addEventListener("change", (e) => {
     if (yaRespondio) return;
     seleccionado = e.target.value;
     btnValidar.disabled = false;
     document.querySelectorAll(".opcion-item").forEach(el =>
-      el.classList.toggle("selected", el.dataset.id === seleccionado)
-    );
+      el.classList.toggle("selected", el.dataset.id === seleccionado));
   });
 
   btnValidar.addEventListener("click", () => {
@@ -430,9 +431,9 @@ function initReto() {
     const correcta = opcion.correcta;
 
     if (correcta) {
-      // ✅ ACIERTO: quitar penalización, guardar, mostrar siguiente
+      // ✅ ACIERTO
       erroresConsecutivos = 0;
-      mostrarFeedback(correcta, opcion.feedback);  // feedback completo
+      mostrarFeedback(true, opcion.feedback); // feedback completo
       const res = loadResueltos();
       if (!res.includes(id)) { res.push(id); saveResueltos(res); }
       if (btnSiguiente) {
@@ -450,46 +451,38 @@ function initReto() {
       // ❌ ERROR
       erroresConsecutivos++;
 
-      // Penalizar 10 minutos en el reloj
+      // Penalización de 10 minutos
       const startTime = loadStart();
       if (startTime) {
         const nuevoStart = startTime + 10*60*1000; // +10 minutos
         saveStart(nuevoStart);
-        startClock(); // reinicia el intervalo con el nuevo tiempo
+        startClock();
       }
 
-      // Primera vez: pista sin revelar la opción correcta
-      if (erroresConsecutivos <= 2) {
-        let pista = "";
-        if (erroresConsecutivos === 1) {
-          pista = `Recuerda: revisa el <strong>término central</strong> y los
-          <strong>coeficientes</strong> en el desarrollo de este producto notable.
-          Revisa el proceso de aplicación de la identidad algebraica.`;
-        } else { // erroresConsecutivos === 2
-          pista = `<strong>Enfoque directo:</strong> Revisa el desarrollo de
-          <em>(a+b)²</em> o <em>(a−b)²</em> en tu cuaderno. Verifica que el signo
-          y el coeficiente de cada término se correspondan con la estructura
-          correcta de la identidad.`;
-        }
-        mostrarFeedback(false, pista, erroresConsecutivos < 2);
+      // 1ra vez: pista suave, sin mostrar la opción correcta
+      if (erroresConsecutivos === 1) {
+        const pista1 = `Recuerda revisar el <strong>término central</strong> 
+        y los <strong>coeficientes</strong> en el desarrollo del producto notable. 
+        Verifica el signo y el valor de cada término.`;
+        mostrarFeedback(false, pista1, true); // ocultar correcta
 
-      // Segunda vez: muestra la opción correcta y explicación completa
+      // 2da vez: pista más directa, aún sin mostrar la opción correcta
+      } else if (erroresConsecutivos === 2) {
+        const pista2 = `<strong>Enfoque directo:</strong> 
+        Revisa el desarrollo de <em>(a+b)²</em> o <em>(a−b)²</em>. 
+        Verifica que el signo y el coeficiente de cada término se correspondan 
+        con la estructura correcta de la identidad.`;
+        mostrarFeedback(false, pista2, true); // ocultar correcta
+
+      // 3ra vez en adelante: mostrar la opción correcta + explicación
       } else if (erroresConsecutivos >= 3) {
         const opCorrecta = reto.opciones.find(o => o.correcta);
         const mensaje = `
           <strong>Respuesta correcta:</strong> ${opCorrecta.texto}<br><br>
           ${opCorrecta.feedback}
         `;
-        mostrarFeedback(false, mensaje, false);
-        yaRespondio = true;  // bloquear más intentos
-      } else if (erroresConsecutivos === 2) {
-        // A la tercera vez: mostrar la opción correcta, pero aún permitir intentar
-        const opCorrecta = reto.opciones.find(o => o.correcta);
-        document.querySelectorAll(".opcion-item").forEach(el => {
-          if (el.dataset.id === opCorrecta.id) el.classList.add("correct");
-        });
-        mostrarFeedback(false, `Vuelve a intentar; la opción correcta
-        tiene <strong>fondo verde</strong>`, false);
+        mostrarFeedback(false, mensaje, false); // ya no ocultar correcta
+        yaRespondio = true;
       }
     }
   });
