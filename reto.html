@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room — Reto</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="reto-body">
+  <nav class="navbar">
+    <span class="clock" id="clock">00:00</span>
+    <div class="progress">
+      <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+    </div>
+  </nav>
 
+  <header class="reto-header">
+    <h1 id="reto-titulo">...</h1>
+  </header>
+
+  <main class="reto-content">
+    <div class="enunciado" id="reto-enunciado"></div>
+
+    <form id="reto-form">
+      <div class="opciones" id="reto-opciones"></div>
+      <button type="button" class="btn btn-primary btn-validate" id="btn-validar">
+        Validar respuesta
+      </button>
+    </form>
+
+    <div class="feedback-container" id="feedback">
+      <span class="feedback-title" id="feedback-title"></span>
+      <p id="feedback-text"></p>
+    </div>
+  </main>
+
+  <script src="js/gameEngine.js"></script>
+</body>
+</html>
