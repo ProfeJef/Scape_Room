@@ -294,17 +294,19 @@ function startClock() {
   const clockEl     = $id("clock");
   const progressBar = $id("progress-bar");
   const progressTxt = $id("progress-txt");
-  const startTime   = loadStart();
-  if (!startTime || !clockEl) return;
 
-  // 🛠️ FIX: Limpiar cualquier intervalo previo activo para evitar solapamientos y parpadeos
-  if (clockInterval) {
-    clearInterval(clockInterval);
-  }
+  if (!clockEl) return;
+  if (clockInterval) clearInterval(clockInterval);
 
   const tick = () => {
-    const elapsed   = Math.floor((Date.now() - startTime) / 1000);
+    // 🔥 MAGIA AQUÍ: Leer el tiempo directo del almacenamiento CADA segundo.
+    // Esto evita memorias residuales y elimina el parpadeo por completo.
+    const currentStartTime = loadStart();
+    if (!currentStartTime) return;
+
+    const elapsed   = Math.floor((Date.now() - currentStartTime) / 1000);
     const remaining = Math.max(0, DURATION_SEC - elapsed);
+
     clockEl.textContent = formatTime(remaining);
     clockEl.classList.remove("warning","danger");
     if (remaining <= 60)       clockEl.classList.add("danger");
@@ -321,10 +323,10 @@ function startClock() {
       window.location.href = "cierre.html"; 
     }
   };
+  
   tick();
   clockInterval = setInterval(tick, 1000);
 }
-
 // ──────────────────────────────────────────────────────────
 //  VESTÍBULO
 // ──────────────────────────────────────────────────────────
@@ -402,12 +404,17 @@ function initReto() {
 
   if (opcionesEl) {
     opcionesEl.innerHTML = "";
-    reto.opciones.forEach(o => {
+    const letras = ["A", "B", "C", "D"]; // Generador de incisos
+    
+    reto.opciones.forEach((o, index) => {
       opcionesEl.innerHTML += `
-        <div class="opcion" data-id="${o.id}">
-          <input type="radio" name="opcion_er" id="${o.id}" value="${o.id}">
-          <label for="${o.id}">${o.texto}</label>
-        </div>
+        <label class="opcion-pro" for="${o.id}">
+          <input type="radio" name="opcion_er" id="${o.id}" value="${o.id}" class="radio-oculto">
+          <div class="opcion-pro-inner">
+            <div class="opcion-letra">${letras[index]}</div>
+            <div class="opcion-texto">${o.texto}</div>
+          </div>
+        </label>
       `;
     });
   }
@@ -455,15 +462,14 @@ function initReto() {
             btnSiguiente.onclick = () => { window.location.href = `reto.html?id=${nextId}`; };
           }
         }
-      } else {
+     } else {
         erroresConsecutivos++;
 
-        // 🛠️ FIX: Descontar exactamente 5 minutos por cada error cometido en milisegundos
-        const startTime = loadStart();
-        if (startTime) {
-          const nuevoStart = startTime - (5 * 60 * 1000); 
-          saveStart(nuevoStart);
-          startClock(); // Reinicia el intervalo limpio con la nueva hora recalculada
+        // 🔥 CORRECCIÓN DEL PARPADEO: Solo actualizamos la base de datos.
+        // El reloj (que ahora lee cada segundo) se actualizará solo al instante sin cruzarse.
+        const currentStart = loadStart();
+        if (currentStart) {
+          saveStart(currentStart - (5 * 60 * 1000));
         }
 
         if (erroresConsecutivos === 1) {
