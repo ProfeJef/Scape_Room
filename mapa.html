@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room — Panel de Retos</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <span class="clock" id="clock">00:00</span>
+    <div class="progress">
+      <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+    </div>
+  </nav>
 
+  <main class="retos-container">
+    <h1>Panel de Retos</h1>
+    <p>Completa cada reto para liberar el siguiente nodo.</p>
+
+    <div class="retos-grid">
+      <a href="reto.html?id=1" class="nodo-reto active" id="nodo-1">Reto 1: Alineación de objetivos</a>
+      <a href="reto.html?id=2" class="nodo-reto locked" id="nodo-2">Reto 2: Evaluación formativa</a>
+      <a href="reto.html?id=3" class="nodo-reto locked" id="nodo-3">Reto 3: Gamificación ética</a>
+    </div>
+  </main>
+
+  <script src="js/gameEngine.js"></script>
+</body>
+</html>
