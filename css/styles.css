@@ -1,1 +1,320 @@
+/* styles.css */
+:root {
+  --bg: #0F172A;
+  --accent: #38BDF8;
+  --warn: #F59E0B;
+  --text: #F8FAFC;
+  --text-muted: rgba(248, 250, 252, 0.65);
+  --correct-bg: rgba(34, 197, 94, 0.2);
+  --locked-bg: rgba(156, 163, 175, 0.15);
+  --active-bg: rgba(56, 191, 248, 0.2);
+}
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Utilidades */
+.hidden { display: none; }
+
+/* Vestíbulo */
+.vestibulo-body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vestibulo-container {
+  max-width: 640px;
+  padding: 2rem;
+  background-color: rgba(15, 23, 42, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.vestibulo-header h1 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.vestibulo-header p {
+  text-align: center;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem 0;
+}
+
+.vestibulo-objectives,
+.vestibulo-rules {
+  margin-bottom: 1.5rem;
+}
+
+.vestibulo-objectives h2,
+.vestibulo-rules h2 {
+  font-size: 1.2rem;
+  margin: 0 0 0.8rem 0;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 0.3rem;
+}
+
+.vestibulo-objectives ul,
+.vestibulo-rules ol {
+  padding-left: 1.2rem;
+  line-height: 1.7;
+}
+
+.vestibulo-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* Botón de inicio con pulso */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+.btn-primary:hover {
+  background-color: #22d3ee;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Mapa de retos */
+/* Se usará en mapa.html; dejamos el reset mínimo para Grid/Flex */
+.retos-container {
+  padding: 1rem 0 2rem 0;
+}
+
+.retos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  padding: 1rem 1rem 0 1rem;
+}
+
+.nodo-reto {
+  padding: 1.25rem 1rem;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.nodo-reto.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--locked-bg);
+}
+
+.nodo-reto.completed {
+  background-color: var(--correct-bg);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+}
+
+.nodo-reto.active {
+  background-color: var(--active-bg);
+  border: 1px solid var(--accent);
+}
+
+/* Temporizador y progreso */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: rgba(15, 23, 42, 0.95);
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.clock {
+  font-size: 1.1rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.progress {
+  width: 100%;
+  max-width: 300px;
+  height: 6px;
+  background-color: rgba(156, 163, 175, 0.3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--accent);
+  transition: 0.3s ease-in-out;
+}
+
+/* Plantilla de reto */
+.reto-body {
+  min-height: 100vh;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reto-header {
+  padding: 1.25rem 1.5rem;
+  background-color: rgba(15, 23, 42, 0.95);
+  border-bottom: 1px solid rgba(156, 163, 175, 0.2);
+}
+
+.reto-header h1 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.reto-content {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Pregunta de opción múltiple */
+.opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.opcion {
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background-color: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(156, 163, 175, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.opcion:hover,
+.opcion.checked {
+  border-color: var(--accent);
+}
+
+.opcion input[type="radio"] {
+  accent-color: var(--accent);
+  margin: 0;
+}
+
+.opcion label {
+  flex-grow: 1;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Botón de validar */
+.btn-validate {
+  align-self: center;
+  margin-top: 1rem;
+}
+
+/* Feedback formativo */
+.feedback-container {
+  position: relative;
+  margin-top: 0.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  background-color: rgba(15, 23, 42, 0.9);
+  border: 1px solid transparent;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+
+.feedback-container.visible {
+  opacity: 1;
+}
+
+.feedback-container.correct {
+  border-color: rgba(34, 197, 94, 0.6);
+}
+
+.feedback-container.incorrect {
+  border-color: var(--warn);
+}
+
+.feedback-title {
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+/* Pantalla de cierre */
+.cierre-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.cierre-title {
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  color: var(--accent);
+}
+
+.cierre-message {
+  max-width: 600px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.stats {
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .vestibulo-container { padding: 1.2rem; }
+  .progress { max-width: 200px; }
+  .retos-grid { grid-template-columns: 1fr; }
+}
