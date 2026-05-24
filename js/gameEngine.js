@@ -10,17 +10,16 @@
 // ──────────────────────────────────────────────────────────
 const RETOS = [
 
-
   // ══════════════════════════════════════════════════════
   //  RETO 1 — NIVEL: Entrada  (a+b)² con coeficiente 1
   // ══════════════════════════════════════════════════════
   {
     id: 1,
     titulo: "El mural que nadie midió",
-    eyebrow: "Nivel 1 · Cuadrado de binomio · (a+b)²",
+    eyebrow: "Nivel 1 · Cuadrado de binomio · (a+b)¹",
     tags: [
       { label: "Nivel 1 — Básico",  cls: "rtag-green"  },
-      { label: "(a+b)²",            cls: "rtag-purple" },
+      { label: "(a+b)¹",            cls: "rtag-purple" },
       { label: "Área",              cls: "rtag-gold"   }
     ],
     narrativa: `El sistema aprobó un presupuesto para un mural cuyo lado mide
@@ -56,17 +55,16 @@ const RETOS = [
     ]
   },
 
-
   // ══════════════════════════════════════════════════════
   //  RETO 2 — NIVEL: Fácil  (a−b)² con coeficientes medianos
   // ══════════════════════════════════════════════════════
   {
     id: 2,
     titulo: "El terreno que se recortó",
-    eyebrow: "Nivel 2 · Cuadrado de diferencia · (a−b)²",
+    eyebrow: "Nivel 2 · Cuadrado de diferencia · (a−b)¹",
     tags: [
       { label: "Nivel 2 — Fácil",  cls: "rtag-green"  },
-      { label: "(a−b)²",           cls: "rtag-purple" },
+      { label: "(a−b)¹",           cls: "rtag-purple" },
       { label: "Factor común",     cls: "rtag-pink"   }
     ],
     narrativa: `El colegio redujo el terreno de su huerto restando <strong>4</strong> metros
@@ -74,7 +72,7 @@ const RETOS = [
     el área como <em>25x² + 16</em>, cambiando el signo del término central.
     Esto sobreestimó el espacio disponible y se compraron más semillas de las necesarias.
     ¿Cuál es el área correcta?`,
-    enunciado: "Desarrolla correctamente: (5x − 4)²",
+    enunciado: "Desarrolla correctamente: (5x − 4)¹",
     opciones: [
       { id:"2a", texto:"25x² + 16",
         correcta: false,
@@ -99,7 +97,6 @@ const RETOS = [
         Recuerda que el coeficiente 2 multiplica el producto de los dos términos del binomio.` }
     ]
   },
-
 
   // ══════════════════════════════════════════════════════
   //  RETO 3 — NIVEL: Medio  (a+b)(a−b) con coeficientes > 5
@@ -146,11 +143,10 @@ const RETOS = [
     ]
   },
 
-
   // ══════════════════════════════════════════════════════
   //  RETO 4 — NIVEL: Medio-alto  (a+b)³ coeficientes no triviales
   // ══════════════════════════════════════════════════════
-    {
+  {
     id: 4,
     titulo: "El tanque de agua del colegio",
     eyebrow: "Nivel 4 · Cubo de binomio · (2x+3)³",
@@ -192,7 +188,6 @@ const RETOS = [
     ]
   },
 
-
   // ══════════════════════════════════════════════════════
   //  RETO 5 — NIVEL: Alto  producto de binomios con factor común
   // ══════════════════════════════════════════════════════
@@ -230,7 +225,7 @@ const RETOS = [
         <em>50x³−72x = 2x(25x²−36) = 2x(5x+6)(5x−6)</em>.
         El proceso tiene dos etapas: primero extraer el factor común <em>2x</em>,
         luego identificar la diferencia de cuadrados <em>(5x)²−6²</em>.
-        Esta estructura revela que el presupuesto tiene una distribución
+        Esta estructura revela que el presupuesto tiene una distribution
         simétrica y factorizable de forma exacta.` },
       { id:"5d", texto:"2(25x³ − 36x)",
         correcta: false,
@@ -240,7 +235,6 @@ const RETOS = [
         extraer simultaneamente la parte numérica y literal del factor común.` }
     ]
   },
-
 
   // ══════════════════════════════════════════════════════
   //  RETO 6 — NIVEL: Experto  expresión compuesta con (a+b)²
@@ -295,6 +289,7 @@ const RETOS = [
     ]
   }
 ];
+
 // ──────────────────────────────────────────────────────────
 //  CONSTANTES Y UTILIDADES
 // ──────────────────────────────────────────────────────────
@@ -337,13 +332,17 @@ function startClock() {
     clockEl.classList.remove("warning","danger");
     if (remaining <= 60)       clockEl.classList.add("danger");
     else if (remaining <= 300) clockEl.classList.add("warning");
+    
     if (progressBar) {
       const res = loadResueltos();
       const pct = Math.round((res.length / TOTAL_RETOS) * 100);
       progressBar.style.width = pct + "%";
       if (progressTxt) progressTxt.textContent = `${res.length} / ${TOTAL_RETOS}`;
     }
-    if (remaining <= 0) { clearInterval(clockInterval); window.location.href = "cierre.html"; }
+    if (remaining <= 0) { 
+      clearInterval(clockInterval); 
+      window.location.href = "cierre.html"; 
+    }
   };
   tick();
   clockInterval = setInterval(tick, 1000);
@@ -368,11 +367,11 @@ function initVestibulo() {
 //  MAPA
 // ──────────────────────────────────────────────────────────
 function initMapa() {
-  // ✅ Después
-const enMapa = window.location.pathname.includes("mapa.html");
-if (!enMapa) return;
+  const enMapa = window.location.pathname.includes("mapa.html");
+  if (!enMapa) return;
   const resueltos    = loadResueltos();
   const desbloqueado = resueltos.length + 1;
+  
   RETOS.forEach(reto => {
     const nodo = $id(`nodo-${reto.id}`);
     if (!nodo) return;
@@ -385,6 +384,8 @@ if (!enMapa) return;
     } else if (reto.id === desbloqueado) {
       nodo.classList.add("active-node");
       nodo.href = `reto.html?id=${reto.id}`;
+      const lbl = qs(".nodo-status-label", nodo);
+      if (lbl) { lbl.className = "nodo-status-label status-active"; lbl.textContent = "🔓 Disponible"; }
     } else {
       nodo.classList.add("locked");
       nodo.href = "#";
@@ -395,7 +396,7 @@ if (!enMapa) return;
 }
 
 // ──────────────────────────────────────────────────────────
-//  RETO
+//  RETO (Corregido con la inyección dinámica al DOM)
 // ──────────────────────────────────────────────────────────
 function initReto() {
   if (!window.location.pathname.includes("reto.html")) return;
@@ -403,8 +404,37 @@ function initReto() {
   const reto = RETOS.find(r => r.id === id);
   if (!reto) { window.location.href = "mapa.html"; return; }
 
-  // Rellenar cabecera (tu código anterior para cabecera y opciones)
-  // ...
+  // ✅ CORRECCIÓN: Inyección de datos dinámica desde la BD en el HTML de la plantilla
+  const eyebrowEl = $id("reto-eyebrow");
+  const tituloEl = $id("reto-titulo");
+  const narrativaEl = $id("reto-narrativa");
+  const enunciadoEl = $id("reto-enunciado");
+  const tagsEl = $id("reto-tags");
+  const opcionesEl = $id("reto-opciones");
+
+  if (eyebrowEl) eyebrowEl.innerHTML = reto.eyebrow;
+  if (tituloEl) tituloEl.innerHTML = reto.titulo;
+  if (narrativaEl) narrativaEl.innerHTML = reto.narrativa;
+  if (enunciadoEl) enunciadoEl.innerHTML = reto.enunciado;
+  
+  if (tagsEl) {
+    tagsEl.innerHTML = "";
+    reto.tags.forEach(t => {
+      tagsEl.innerHTML += `<span class="rtag ${t.cls}">${t.label}</span>`;
+    });
+  }
+
+  if (opcionesEl) {
+    opcionesEl.innerHTML = "";
+    reto.opciones.forEach(o => {
+      opcionesEl.innerHTML += `
+        <div class="opcion" data-id="${o.id}">
+          <input type="radio" name="opcion_er" id="${o.id}" value="${o.id}">
+          <label for="${o.id}">${o.texto}</label>
+        </div>
+      `;
+    });
+  }
 
   const btnValidar   = $id("btn-validar");
   const feedback     = $id("feedback");
@@ -416,78 +446,83 @@ function initReto() {
   let yaRespondio    = false;
   let erroresConsecutivos = 0;
 
-  opcionesEl.addEventListener("change", (e) => {
-    if (yaRespondio) return;
-    seleccionado = e.target.value;
-    btnValidar.disabled = false;
-    document.querySelectorAll(".opcion-item").forEach(el =>
-      el.classList.toggle("selected", el.dataset.id === seleccionado));
-  });
+  if (opcionesEl) {
+    opcionesEl.addEventListener("change", (e) => {
+      if (yaRespondio) return;
+      seleccionado = e.target.value;
+      if (btnValidar) btnValidar.disabled = false;
+      document.querySelectorAll(".opcion").forEach(el =>
+        el.classList.toggle("checked", el.dataset.id === seleccionado));
+    });
+  }
 
-  btnValidar.addEventListener("click", () => {
-    if (!seleccionado || yaRespondio) return;
+  if (btnValidar) {
+    btnValidar.addEventListener("click", () => {
+      if (!seleccionado || yaRespondio) return;
 
-    const opcion   = reto.opciones.find(o => o.id === seleccionado);
-    const correcta = opcion.correcta;
+      const opcion   = reto.opciones.find(o => o.id === seleccionado);
+      const correcta = opcion.correcta;
 
-    if (correcta) {
-      // ✅ ACIERTO
-      erroresConsecutivos = 0;
-      mostrarFeedback(true, opcion.feedback); // feedback completo
-      const res = loadResueltos();
-      if (!res.includes(id)) { res.push(id); saveResueltos(res); }
-      if (btnSiguiente) {
-        btnSiguiente.classList.add("visible");
-        const nextId = id + 1;
-        if (nextId > TOTAL_RETOS) {
-          btnSiguiente.textContent = "Ver resultados →";
-          btnSiguiente.onclick = () => { window.location.href = "cierre.html"; };
-        } else {
-          btnSiguiente.textContent = "Siguiente misión →";
-          btnSiguiente.onclick = () => { window.location.href = `reto.html?id=${nextId}`; };
+      if (correcta) {
+        // ✅ ACIERTO
+        erroresConsecutivos = 0;
+        mostrarFeedback(true, opcion.feedback);
+        const res = loadResueltos();
+        if (!res.includes(id)) { res.push(id); saveResueltos(res); }
+        if (btnSiguiente) {
+          btnSiguiente.classList.add("visible");
+          const nextId = id + 1;
+          if (nextId > TOTAL_RETOS) {
+            btnSiguiente.textContent = "Ver resultados →";
+            btnSiguiente.onclick = () => { window.location.href = "cierre.html"; };
+          } else {
+            btnSiguiente.textContent = "Siguiente misión →";
+            btnSiguiente.onclick = () => { window.location.href = `reto.html?id=${nextId}`; };
+          }
+        }
+      } else {
+        // ❌ ERROR
+        erroresConsecutivos++;
+
+        // Penalización de 10 minutos
+        const startTime = loadStart();
+        if (startTime) {
+          const nuevoStart = startTime + 10*60*1000; // +10 minutos
+          saveStart(nuevoStart);
+          startClock();
+        }
+
+        // 1ra vez: pista suave
+        if (erroresConsecutivos === 1) {
+          const pista1 = `Recuerda revisar el <strong>término central</strong> 
+          y los <strong>coeficientes</strong> en el desarrollo del producto notable. 
+          Verifica el signo y el valor de cada término.`;
+          mostrarFeedback(false, pista1, true);
+
+        // 2da vez: pista más directa
+        } else if (erroresConsecutivos === 2) {
+          const pista2 = `<strong>Enfoque directo:</strong> 
+          Revisa el desarrollo de <em>(a+b)²</em> o <em>(a−b)²</em>. 
+          Verifica que el signo y el coeficiente de cada término se correspondan 
+          con la estructura correcta de la identidad.`;
+          mostrarFeedback(false, pista2, true);
+
+        // 3ra vez en adelante: mostrar la opción correcta + explicación
+        } else if (erroresConsecutivos >= 3) {
+          const opCorrecta = reto.opciones.find(o => o.correcta);
+          const mensaje = `
+            <strong>Respuesta correcta:</strong> ${opCorrecta.texto}<br><br>
+            ${opCorrecta.feedback}
+          `;
+          mostrarFeedback(false, mensaje, false);
+          yaRespondio = true;
         }
       }
-    } else {
-      // ❌ ERROR
-      erroresConsecutivos++;
-
-      // Penalización de 10 minutos
-      const startTime = loadStart();
-      if (startTime) {
-        const nuevoStart = startTime + 10*60*1000; // +10 minutos
-        saveStart(nuevoStart);
-        startClock();
-      }
-
-      // 1ra vez: pista suave, sin mostrar la opción correcta
-      if (erroresConsecutivos === 1) {
-        const pista1 = `Recuerda revisar el <strong>término central</strong> 
-        y los <strong>coeficientes</strong> en el desarrollo del producto notable. 
-        Verifica el signo y el valor de cada término.`;
-        mostrarFeedback(false, pista1, true); // ocultar correcta
-
-      // 2da vez: pista más directa, aún sin mostrar la opción correcta
-      } else if (erroresConsecutivos === 2) {
-        const pista2 = `<strong>Enfoque directo:</strong> 
-        Revisa el desarrollo de <em>(a+b)²</em> o <em>(a−b)²</em>. 
-        Verifica que el signo y el coeficiente de cada término se correspondan 
-        con la estructura correcta de la identidad.`;
-        mostrarFeedback(false, pista2, true); // ocultar correcta
-
-      // 3ra vez en adelante: mostrar la opción correcta + explicación
-      } else if (erroresConsecutivos >= 3) {
-        const opCorrecta = reto.opciones.find(o => o.correcta);
-        const mensaje = `
-          <strong>Respuesta correcta:</strong> ${opCorrecta.texto}<br><br>
-          ${opCorrecta.feedback}
-        `;
-        mostrarFeedback(false, mensaje, false); // ya no ocultar correcta
-        yaRespondio = true;
-      }
-    }
-  });
+    });
+  }
 
   function mostrarFeedback(correcta, texto, ocultarCorrecta = false) {
+    if (!feedback || !fbIcon || !fbTitle || !fbText) return;
     feedback.className = `feedback-card ${correcta ? "correct" : "incorrect"} visible`;
     fbIcon.textContent = correcta ? "✅" : "⚠️";
     fbTitle.textContent = correcta ? "¡Respuesta correcta!" : "Respuesta incorrecta";
@@ -495,13 +530,13 @@ function initReto() {
     yaRespondio = !ocultarCorrecta;
   }
 }
+
 // ──────────────────────────────────────────────────────────
 //  CIERRE
 // ──────────────────────────────────────────────────────────
 function initCierre() {
-  // ✅ Después
-const enCierre = window.location.pathname.includes("cierre.html");
-if (!enCierre) return;
+  const enCierre = window.location.pathname.includes("cierre.html");
+  if (!enCierre) return;
   const resueltos = loadResueltos();
   const startTime = loadStart();
   const elapsed   = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
@@ -516,6 +551,7 @@ if (!enCierre) return;
   if (title) { title.className = `main-title ${exito ? "success" : "timeout"}`; title.textContent = exito ? "¡Misión cumplida!" : "El tiempo se agotó"; }
   const msg = $id("mensaje-texto");
   if (msg && !exito) msg.innerHTML = `No alcanzó el tiempo para restaurar todas las decisiones del sistema. Pero cada reto resuelto fue un acto de <strong>pensamiento algebraico crítico</strong>. <strong>Reinicia la misión</strong> y usa lo aprendido para mejorar tu tiempo.`;
+  
   const statRetos  = $id("stat-retos");
   const statTiempo = $id("stat-tiempo");
   const statPct    = $id("stat-pct");
@@ -533,12 +569,11 @@ if (!enCierre) return;
 }
 
 // ──────────────────────────────────────────────────────────
-//  INICIALIZACIÓN
+//  INICIALIZACIÓN GLOBALS
 // ──────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
 
-  // ✅ Detectar si estamos en index de forma robusta
   const enIndex = path.endsWith("/")
     || path.endsWith("index.html")
     || path === ""
@@ -546,18 +581,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const hasStart = !!loadStart();
 
-  // Solo redirigir si NO estamos en index y no hay sesión activa
   if (!hasStart && !enIndex) {
     window.location.href = "index.html";
     return;
   }
 
-  // Iniciar reloj en todas las pantallas excepto index
   if (!enIndex) startClock();
 
-  // Inicializar pantalla correspondiente
   initVestibulo();
   initMapa();
   initReto();
   initCierre();
-});
+}); // ✅ CORRECCIÓN: Evento DOM cerrado limpiamente sin tokens inesperados de llaves
