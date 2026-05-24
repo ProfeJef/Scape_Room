@@ -318,3 +318,73 @@ html {
   .progress { max-width: 200px; }
   .retos-grid { grid-template-columns: 1fr; }
 }
+/* =========================================
+   DISEÑO PROFESIONAL DE OPCIONES
+========================================= */
+.opcion-pro {
+  display: block;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+/* Ocultar el círculo nativo por defecto */
+.radio-oculto {
+  display: none; 
+}
+
+/* Tarjeta base */
+.opcion-pro-inner {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg2);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 0.8rem 1.2rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto al pasar el cursor (Hover) */
+.opcion-pro:hover .opcion-pro-inner {
+  border-color: var(--purple);
+  background-color: var(--surface);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15);
+}
+
+/* Efecto al seleccionar la opción (Active) */
+.radio-oculto:checked + .opcion-pro-inner {
+  border-color: var(--pink);
+  background-color: rgba(236, 72, 153, 0.08);
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.25);
+}
+
+/* Cuadro de la letra (A, B, C, D) */
+.opcion-letra {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(168, 85, 247, 0.1);
+  color: var(--text);
+  font-weight: 700;
+  border-radius: 8px;
+  margin-right: 1.2rem;
+  border: 1px solid var(--purple);
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+/* Letra cuando está seleccionada */
+.radio-oculto:checked + .opcion-pro-inner .opcion-letra {
+  background-color: var(--pink);
+  border-color: var(--pink);
+  color: #fff;
+}
+
+/* Texto de la opción */
+.opcion-texto {
+  font-size: 1.05rem;
+  color: var(--text);
+  line-height: 1.4;
+}
