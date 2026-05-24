@@ -398,39 +398,12 @@ if (!enMapa) return;
 //  RETO
 // ──────────────────────────────────────────────────────────
 function initReto() {
- // ✅ Después
-const enReto = window.location.pathname.includes("reto.html");
-if (!enReto) return;
+  if (!window.location.pathname.includes("reto.html")) return;
   const id   = parseInt(getParam("id"));
   const reto = RETOS.find(r => r.id === id);
   if (!reto) { window.location.href = "mapa.html"; return; }
-  const resueltos    = loadResueltos();
-  const desbloqueado = resueltos.length + 1;
-  if (id > desbloqueado) { window.location.href = "mapa.html"; return; }
 
   // Rellenar cabecera
-  const numBadge  = $id("reto-num-badge");
-  const eyebrow   = $id("reto-eyebrow-label");
-  const titulo    = $id("reto-titulo");
-  const tagsEl    = $id("reto-tags");
-  const narrativa = $id("reto-narrativa");
-  if (numBadge)  numBadge.textContent = `Reto ${String(id).padStart(2,"0")}`;
-  if (eyebrow)   eyebrow.textContent  = reto.eyebrow;
-  if (titulo)    titulo.textContent   = reto.titulo;
-  if (narrativa) narrativa.innerHTML  = reto.narrativa;
-  if (tagsEl)    tagsEl.innerHTML     = reto.tags.map(t => `<span class="rtag ${t.cls}">${t.label}</span>`).join("");
-
-  // Opciones
-  const opcionesEl = $id("reto-opciones");
-  if (opcionesEl) {
-    opcionesEl.innerHTML = reto.opciones.map(op => `
-      <label class="opcion-item" data-id="${op.id}">
-        <input type="radio" name="opcion" value="${op.id}" />
-        <div class="opcion-radio"><div class="opcion-radio-dot"></div></div>
-        <span class="opcion-text">${op.texto}</span>
-      </label>`).join("");
-  }
-
   const btnValidar   = $id("btn-validar");
   const feedback     = $id("feedback");
   const fbIcon       = $id("fb-icon");
@@ -439,35 +412,27 @@ if (!enReto) return;
   const btnSiguiente = $id("btn-siguiente");
   let seleccionado   = null;
   let yaRespondio    = false;
+  let erroresConsecutivos = 0;  // Nueva variable
 
   opcionesEl.addEventListener("change", (e) => {
     if (yaRespondio) return;
     seleccionado = e.target.value;
     btnValidar.disabled = false;
     document.querySelectorAll(".opcion-item").forEach(el =>
-      el.classList.toggle("selected", el.dataset.id === seleccionado));
+      el.classList.toggle("selected", el.dataset.id === seleccionado)
+    );
   });
 
   btnValidar.addEventListener("click", () => {
     if (!seleccionado || yaRespondio) return;
-    yaRespondio = true;
-    btnValidar.disabled = true;
+
     const opcion   = reto.opciones.find(o => o.id === seleccionado);
     const correcta = opcion.correcta;
-    document.querySelectorAll(".opcion-item").forEach(el => {
-      el.classList.remove("selected");
-      if (el.dataset.id === seleccionado) el.classList.add(correcta ? "correct" : "incorrect");
-      if (!correcta) {
-        const opCorrecta = reto.opciones.find(o => o.correcta);
-        if (el.dataset.id === opCorrecta.id) el.classList.add("correct");
-      }
-    });
-    feedback.className  = `feedback-card ${correcta ? "correct" : "incorrect"} visible`;
-    fbIcon.textContent  = correcta ? "✅" : "⚠️";
-    fbTitle.textContent = correcta ? "¡Respuesta correcta!" : "Respuesta incorrecta";
-    fbText.innerHTML    = opcion.feedback;
-    setTimeout(() => feedback.scrollIntoView({ behavior:"smooth", block:"nearest" }), 100);
+
     if (correcta) {
+      // ✅ ACIERTO: quitar penalización, guardar, mostrar siguiente
+      erroresConsecutivos = 0;
+      mostrarFeedback(correcta, opcion.feedback);  // feedback completo
       const res = loadResueltos();
       if (!res.includes(id)) { res.push(id); saveResueltos(res); }
       if (btnSiguiente) {
@@ -482,16 +447,61 @@ if (!enReto) return;
         }
       }
     } else {
-      setTimeout(() => {
-        yaRespondio = false; seleccionado = null; btnValidar.disabled = true;
-        document.querySelectorAll(".opcion-item").forEach(el =>
-          el.classList.remove("correct","incorrect","selected"));
-        feedback.classList.remove("visible");
-      }, 4000);
+      // ❌ ERROR
+      erroresConsecutivos++;
+
+      // Penalizar 10 minutos en el reloj
+      const startTime = loadStart();
+      if (startTime) {
+        const nuevoStart = startTime + 10*60*1000; // +10 minutos
+        saveStart(nuevoStart);
+        startClock(); // reinicia el intervalo con el nuevo tiempo
+      }
+
+      // Primera vez: pista sin revelar la opción correcta
+      if (erroresConsecutivos <= 2) {
+        let pista = "";
+        if (erroresConsecutivos === 1) {
+          pista = `Recuerda: revisa el <strong>término central</strong> y los
+          <strong>coeficientes</strong> en el desarrollo de este producto notable.
+          Revisa el proceso de aplicación de la identidad algebraica.`;
+        } else { // erroresConsecutivos === 2
+          pista = `<strong>Enfoque directo:</strong> Revisa el desarrollo de
+          <em>(a+b)²</em> o <em>(a−b)²</em> en tu cuaderno. Verifica que el signo
+          y el coeficiente de cada término se correspondan con la estructura
+          correcta de la identidad.`;
+        }
+        mostrarFeedback(false, pista, erroresConsecutivos < 2);
+
+      // Segunda vez: muestra la opción correcta y explicación completa
+      } else if (erroresConsecutivos >= 3) {
+        const opCorrecta = reto.opciones.find(o => o.correcta);
+        const mensaje = `
+          <strong>Respuesta correcta:</strong> ${opCorrecta.texto}<br><br>
+          ${opCorrecta.feedback}
+        `;
+        mostrarFeedback(false, mensaje, false);
+        yaRespondio = true;  // bloquear más intentos
+      } else if (erroresConsecutivos === 2) {
+        // A la tercera vez: mostrar la opción correcta, pero aún permitir intentar
+        const opCorrecta = reto.opciones.find(o => o.correcta);
+        document.querySelectorAll(".opcion-item").forEach(el => {
+          if (el.dataset.id === opCorrecta.id) el.classList.add("correct");
+        });
+        mostrarFeedback(false, `Vuelve a intentar; la opción correcta
+        tiene <strong>fondo verde</strong>`, false);
+      }
     }
   });
-}
 
+  function mostrarFeedback(correcta, texto, ocultarCorrecta = false) {
+    feedback.className = `feedback-card ${correcta ? "correct" : "incorrect"} visible`;
+    fbIcon.textContent = correcta ? "✅" : "⚠️";
+    fbTitle.textContent = correcta ? "¡Respuesta correcta!" : "Respuesta incorrecta";
+    fbText.innerHTML = texto;
+    yaRespondio = !ocultarCorrecta;
+  }
+}
 // ──────────────────────────────────────────────────────────
 //  CIERRE
 // ──────────────────────────────────────────────────────────
