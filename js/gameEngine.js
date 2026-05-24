@@ -2,154 +2,296 @@
 //  gameEngine.js  —  Escape Room Educativo · Matemáticas 8°
 // ============================================================
 
+// ──────────────────────────────────────────────────────────
+//  BASE DE DATOS DE RETOS — Dificultad progresiva
+//  Nivel 1-2: coeficientes simples
+//  Nivel 3-4: coeficientes enteros mayores
+//  Nivel 5-6: coeficientes fraccionarios / expresiones compuestas
+// ──────────────────────────────────────────────────────────
 const RETOS = [
+
+
+  // ══════════════════════════════════════════════════════
+  //  RETO 1 — NIVEL: Entrada  (a+b)² con coeficiente 1
+  // ══════════════════════════════════════════════════════
   {
     id: 1,
     titulo: "El mural que nadie midió",
-    eyebrow: "Productos notables · (a+b)²",
+    eyebrow: "Nivel 1 · Cuadrado de binomio · (a+b)²",
     tags: [
-      { label: "Productos notables", cls: "rtag-purple" },
-      { label: "(a+b)²",            cls: "rtag-pink"   },
+      { label: "Nivel 1 — Básico",  cls: "rtag-green"  },
+      { label: "(a+b)²",            cls: "rtag-purple" },
       { label: "Área",              cls: "rtag-gold"   }
     ],
-    narrativa: `El sistema <strong>SistemaEduAlgo</strong> aprobó un presupuesto para
-    pintar un mural cuyo lado mide <strong>(a + b)</strong> metros. Para calcular
-    el área usó la expresión <em>a² + b²</em>, ignorando el término central.
-    El presupuesto resultó incorrecto y el dinero será mal invertido.
-    ¿Cuál es el desarrollo correcto del área del mural?`,
-    enunciado: "Selecciona la expresión que representa correctamente el área de un cuadrado de lado (a + b):",
+    narrativa: `El sistema aprobó un presupuesto para un mural cuyo lado mide
+    <strong>(3x + 5)</strong> metros. Calculó el área usando solo
+    <em>9x² + 25</em>, ignorando el término central.
+    El presupuesto quedó subvalorado. ¿Cuál es el área correcta del mural?`,
+    enunciado: "Desarrolla correctamente: (3x + 5)²",
     opciones: [
-      { id:"1a", texto:"a² + b²", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Este es el error más frecuente: olvidar el término del <em>doble producto</em>. La suma de cuadrados <em>no</em> es igual al cuadrado de una suma. Desde el constructivismo, comprender la diferencia requiere relacionar el símbolo con su representación geométrica: al elevar al cuadrado un binomio obtienes cuatro regiones, no dos.` },
-      { id:"1b", texto:"2a + 2b", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Esta expresión representa el <em>perímetro</em> del cuadrado, no su área. Confundir perímetro con área es un error conceptual que afecta la modelación de situaciones reales.` },
-      { id:"1c", texto:"a² + 2ab + b²", correcta:true,
-        feedback:`<strong>¡Correcto!</strong> El desarrollo de <em>(a+b)² = a² + 2ab + b²</em> incluye las dos áreas cuadradas y los dos rectángulos centrales <em>(2ab)</em>. Esta identidad conecta el álgebra con la geometría y permite calcular áreas de forma precisa.` },
-      { id:"1d", texto:"a² − 2ab + b²", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Esta expresión corresponde al desarrollo de <em>(a−b)²</em>, no de <em>(a+b)²</em>. La diferencia es el signo del término central.` }
+      { id:"1a", texto:"9x² + 25",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Olvidaste el término del <em>doble producto</em>.
+        El cuadrado de un binomio <em>nunca</em> es solo la suma de cuadrados.
+        Recuerda: <em>(a+b)² = a² + 2ab + b²</em>. Aquí
+        <em>a = 3x</em> y <em>b = 5</em>, así que el doble producto es
+        <em>2·(3x)·5 = 30x</em>.` },
+      { id:"1b", texto:"9x² + 15x + 25",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> El coeficiente del término central está mal.
+        El doble producto es <em>2·(3x)·5 = 30x</em>, no <em>15x</em>.
+        Un error frecuente es multiplicar los términos sin aplicar el factor 2.` },
+      { id:"1c", texto:"9x² + 30x + 25",
+        correcta: true,
+        feedback:`<strong>¡Correcto!</strong> <em>(3x+5)² = (3x)²+ 2·(3x)·5 + 5² = 9x²+30x+25</em>.
+        El término <em>30x</em> representa el doble producto que el sistema ignoró.
+        En contexto real, este término corresponde a los dos rectángulos de área
+        <em>3x·5</em> que forman parte del cuadrado total.` },
+      { id:"1d", texto:"6x² + 30x + 10",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Parece que multiplicaste los coeficientes
+        de forma lineal. Para elevar al cuadrado un binomio se aplica
+        <em>(a+b)² = a²+2ab+b²</em>, no se distribuye la potencia sobre cada término
+        sumando coeficientes.` }
     ]
   },
+
+
+  // ══════════════════════════════════════════════════════
+  //  RETO 2 — NIVEL: Fácil  (a−b)² con coeficientes medianos
+  // ══════════════════════════════════════════════════════
   {
     id: 2,
-    titulo: "El terreno compartido",
-    eyebrow: "Factor común · Distribución justa",
+    titulo: "El terreno que se recortó",
+    eyebrow: "Nivel 2 · Cuadrado de diferencia · (a−b)²",
     tags: [
-      { label: "Factor común",   cls: "rtag-purple" },
-      { label: "Distribución",  cls: "rtag-pink"   },
-      { label: "Contexto real", cls: "rtag-gold"   }
+      { label: "Nivel 2 — Fácil",  cls: "rtag-green"  },
+      { label: "(a−b)²",           cls: "rtag-purple" },
+      { label: "Factor común",     cls: "rtag-pink"   }
     ],
-    narrativa: `El colegio quiere repartir un terreno para proyectos estudiantiles.
-    El sistema propone la expresión <em>10x² + 20x + 30</em> pero dice que
-    <strong>"no es posible simplificarla"</strong> y declara el reparto inviable.
-    El equipo debe demostrar que el sistema está equivocado extrayendo el factor común.`,
-    enunciado: "¿Cuál es la factorización correcta de 10x² + 20x + 30 usando factor común?",
+    narrativa: `El colegio redujo el terreno de su huerto restando <strong>4</strong> metros
+    a cada lado. El nuevo lado mide <strong>(5x − 4)</strong>. El sistema calculó
+    el área como <em>25x² + 16</em>, cambiando el signo del término central.
+    Esto sobreestimó el espacio disponible y se compraron más semillas de las necesarias.
+    ¿Cuál es el área correcta?`,
+    enunciado: "Desarrolla correctamente: (5x − 4)²",
     opciones: [
-      { id:"2a", texto:"2(5x² + 10x + 15)", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> El factor extraído es 2, pero no es el <em>mayor</em> factor común. El MCD de 10, 20 y 30 es 10, no 2.` },
-      { id:"2b", texto:"10(x² + 2x + 3)", correcta:true,
-        feedback:`<strong>¡Correcto!</strong> El mayor factor común es <em>10</em>. La factorización <em>10(x²+2x+3)</em> revela que el terreno puede dividirse en 10 partes iguales. La factorización es una herramienta de justicia en la distribución de recursos.` },
-      { id:"2c", texto:"10x(x + 2 + 3)", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Al extraer <em>10x</em> el tercer término quedaría como <em>3/x</em>, que no es polinomial. El factor común solo puede extraerse si divide exactamente a todos los términos.` },
-      { id:"2d", texto:"5(2x² + 4x + 6)", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Aunque 5 divide los coeficientes, no es el <em>mayor</em> factor común. La expresión entre paréntesis aún puede simplificarse.` }
+      { id:"2a", texto:"25x² + 16",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Falta completamente el término central.
+        <em>(a−b)² = a²−2ab+b²</em>. Con <em>a=5x</em> y <em>b=4</em>,
+        el doble producto es <em>2·5x·4 = 40x</em> y va <strong>restando</strong>.` },
+      { id:"2b", texto:"25x² + 40x + 16",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> El término central tiene signo equivocado.
+        En el cuadrado de una <em>diferencia</em> el término central es siempre
+        <strong>negativo</strong>: <em>(a−b)² = a²−2ab+b²</em>.` },
+      { id:"2c", texto:"25x² − 40x + 16",
+        correcta: true,
+        feedback:`<strong>¡Correcto!</strong> <em>(5x−4)² = 25x²−40x+16</em>.
+        El signo negativo del término central <em>−40x</em> es clave: indica que
+        al restar dimensión al terreno, el área disminuye más de lo que parece si
+        solo se consideran los cuadrados extremos.` },
+      { id:"2d", texto:"25x² − 20x + 16",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> El coeficiente del término central es errado.
+        El doble producto es <em>2·(5x)·4 = 40x</em>, no <em>20x</em>.
+        Recuerda que el coeficiente 2 multiplica el producto de los dos términos del binomio.` }
     ]
   },
+
+
+  // ══════════════════════════════════════════════════════
+  //  RETO 3 — NIVEL: Medio  (a+b)(a−b) con coeficientes > 5
+  // ══════════════════════════════════════════════════════
   {
     id: 3,
-    titulo: "El contenedor que guarda todo",
-    eyebrow: "Binomio al cubo · Volumen",
+    titulo: "El contenedor de doble cara",
+    eyebrow: "Nivel 3 · Diferencia de cuadrados · (a+b)(a−b)",
     tags: [
-      { label: "Binomio al cubo", cls: "rtag-purple" },
-      { label: "(a+b)³",          cls: "rtag-pink"   },
-      { label: "Volumen 3D",      cls: "rtag-gold"   }
+      { label: "Nivel 3 — Medio",       cls: "rtag-gold"   },
+      { label: "(a+b)(a−b) = a²−b²",    cls: "rtag-purple" },
+      { label: "Diferencia cuadrados",  cls: "rtag-pink"   }
     ],
-    narrativa: `El colegio diseñó un contenedor cúbico para materiales reciclables
-    cuyo lado mide <strong>(a+b)</strong>. El sistema calculó el volumen usando solo
-    <em>a³+b³</em>, subestimando la capacidad real. El equipo debe corregir el modelo
-    con el desarrollo completo del binomio al cubo.`,
-    enunciado: "¿Cuál es el desarrollo correcto de (a + b)³?",
+    narrativa: `El sistema debe calcular el área de una losa rectangular con lados
+    <strong>(7x + 6)</strong> y <strong>(7x − 6)</strong>. El sistema desarrolló
+    el producto como <em>49x² + 84x − 84x − 36</em> pero luego "simplificó"
+    incorrectamente llegando a <em>49x² + 36</em>. Ese error hizo que se
+    ordenara más material del necesario. ¿Cuál es el resultado correcto?`,
+    enunciado: "Calcula correctamente: (7x + 6)(7x − 6)",
     opciones: [
-      { id:"3a", texto:"a³ + b³", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> El cubo de una suma <em>no</em> es igual a la suma de los cubos. Un cubo de lado <em>(a+b)</em> contiene <strong>8 subvolúmenes</strong> que no pueden ignorarse.` },
-      { id:"3b", texto:"a³ + 3a²b + 3ab² + b³", correcta:true,
-        feedback:`<strong>¡Correcto!</strong> El desarrollo <em>(a+b)³ = a³+3a²b+3ab²+b³</em> incluye los dos cubos y los seis prismas rectangulares internos. Los términos <em>3a²b</em> y <em>3ab²</em> representan volúmenes reales que no pueden omitirse.` },
-      { id:"3c", texto:"a³ + 2a²b + 2ab² + b³", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Los coeficientes correctos son <em>3</em>, no 2. Hay exactamente tres prismas de cada tipo. Verifica con el triángulo de Pascal: la fila del cubo es 1-3-3-1.` },
-      { id:"3d", texto:"3a³ + 3b³", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> El binomio al cubo siempre produce cuatro términos con coeficientes 1-3-3-1. Una expresión con solo dos términos no puede ser el cubo de un binomio.` }
+      { id:"3a", texto:"49x² + 36",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Este es el error del sistema: sumar los
+        cuadrados en lugar de restarlos. El producto notable de una suma por una
+        diferencia siempre produce <em>a²−b²</em>. Los términos cruzados se cancelan
+        y el resultado es siempre una <strong>resta</strong>.` },
+      { id:"3b", texto:"49x² − 36",
+        correcta: true,
+        feedback:`<strong>¡Correcto!</strong> <em>(7x+6)(7x−6) = (7x)²−6² = 49x²−36</em>.
+        Los términos cruzados <em>+42x</em> y <em>−42x</em> se anulan exactamente.
+        Esta identidad es muy eficiente: evita desarrollar cuatro términos y
+        permite calcular áreas diferenciales con solo dos operaciones.` },
+      { id:"3c", texto:"49x² − 84x − 36",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Los términos cruzados <em>+42x</em> y
+        <em>−42x</em> suman cero y deben desaparecer. Si aparece un término con <em>x</em>
+        en el resultado de <em>(a+b)(a−b)</em>, es una señal de que el producto
+        notable no fue aplicado correctamente.` },
+      { id:"3d", texto:"49x² + 84x − 36",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> De nuevo aparece un término lineal que no
+        debería existir. Recuerda: <em>(a+b)(a−b) = a²−b²</em> siempre.
+        Los términos medios se cancelan por ser opuestos: <em>+ab</em> y <em>−ab</em>.` }
     ]
   },
+
+
+  // ══════════════════════════════════════════════════════
+  //  RETO 4 — NIVEL: Medio-alto  (a+b)³ coeficientes no triviales
+  // ══════════════════════════════════════════════════════
     {
     id: 4,
-    titulo: "El algoritmo de las notas",
-    eyebrow: "Productos notables · Análisis crítico",
+    titulo: "El tanque de agua del colegio",
+    eyebrow: "Nivel 4 · Cubo de binomio · (2x+3)³",
     tags: [
-      { label: "Análisis crítico",  cls: "rtag-purple" },
-      { label: "Detección errores", cls: "rtag-pink"   }
+      { label: "Nivel 4 — Medio-alto", cls: "rtag-gold"   },
+      { label: "(a+b)³",               cls: "rtag-purple" },
+      { label: "Volumen cúbico",        cls: "rtag-pink"   }
     ],
-    narrativa: `El sistema calcula la nota final con <em>(base+bono)²</em> pero la
-    desarrolló como <em>base²+bono²</em>, omitiendo el término central. Esto genera
-    notas más bajas de lo real para estudiantes con bono positivo.
-    ¿Qué término falta en el desarrollo del sistema?`,
-    enunciado: "Si la nota se modela con (base + bono)², ¿qué término omitió el sistema?",
+    narrativa: `El colegio instaló un tanque cúbico de lado <strong>(2x + 3)</strong> dm.
+    El sistema calculó el volumen como <em>8x³ + 27</em>, ignorando los
+    términos interiores. El pedido de agua quedó 60% subestimado en ciertos
+    valores de <em>x</em>. ¿Cuál es el volumen correcto del tanque?`,
+    enunciado: "Desarrolla completamente: (2x + 3)³",
     opciones: [
-      { id:"4a", texto:"base × bono", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> El término faltante no es solo el producto, sino el <em>doble</em> del producto. En <em>(a+b)²</em> el coeficiente 2 es esencial.` },
-      { id:"4b", texto:"2 × base × bono", correcta:true,
-        feedback:`<strong>¡Correcto!</strong> El término faltante es <em>2·base·bono</em>. Al omitirlo, el sistema subestima la nota de cualquier estudiante con bono positivo. Un error algebraico pequeño puede generar <strong>consecuencias reales injustas</strong>.` },
-      { id:"4c", texto:"2 × base²", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> El doble de base al cuadrado no forma parte de <em>(a+b)²</em>. Los términos siempre son: <em>a²</em>, <em>2ab</em> y <em>b²</em>.` },
-      { id:"4d", texto:"bono²", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> El término <em>bono²</em> ya está en la expresión del sistema. Lo que falta es el doble producto <em>2·base·bono</em>.` }
+      { id:"4a", texto:"8x³ + 27",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Este es exactamente el error del sistema.
+        <em>(a+b)³ ≠ a³+b³</em>. El desarrollo completo tiene <strong>4 términos</strong>
+        con coeficientes 1-3-3-1. Los términos intermedios
+        <em>3a²b</em> y <em>3ab²</em> representan volúmenes reales del cubo.` },
+      { id:"4b", texto:"8x³ + 12x² + 18x + 27",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Revisa los coeficientes de los términos
+        intermedios. Con <em>a=2x</em> y <em>b=3</em>:
+        <em>3a²b = 3·(2x)²·3 = 3·4x²·3 = 36x²</em> y
+        <em>3ab² = 3·(2x)·9 = 54x</em>. Los coeficientes 12 y 18 no son correctos.` },
+      { id:"4c", texto:"8x³ + 36x² + 54x + 27",
+        correcta: true,
+        feedback:`<strong>¡Correcto!</strong>
+        <em>(2x+3)³ = (2x)³ + 3·(2x)²·3 + 3·(2x)·3² + 3³
+        = 8x³ + 36x² + 54x + 27</em>.
+        Los coeficientes 36 y 54 se obtienen aplicando correctamente
+        <em>3a²b</em> y <em>3ab²</em>. Omitirlos subestima el volumen real del tanque.` },
+      { id:"4d", texto:"6x³ + 36x² + 54x + 27",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> El primer término es <em>(2x)³ = 8x³</em>,
+        no <em>6x³</em>. Al elevar al cubo un monomio con coeficiente se aplica
+        <em>(ka)³ = k³·a³</em>, por lo que <em>(2x)³ = 2³·x³ = 8x³</em>.` }
     ]
   },
+
+
+  // ══════════════════════════════════════════════════════
+  //  RETO 5 — NIVEL: Alto  producto de binomios con factor común
+  // ══════════════════════════════════════════════════════
   {
     id: 5,
-    titulo: "El festival de matemáticas",
-    eyebrow: "Factor común · Reparto equitativo",
+    titulo: "El presupuesto de los tres proyectos",
+    eyebrow: "Nivel 5 · Factorización compuesta · Factor común + diferencia de cuadrados",
     tags: [
-      { label: "Factor común",     cls: "rtag-purple" },
-      { label: "Economía escolar", cls: "rtag-gold"   }
+      { label: "Nivel 5 — Alto",            cls: "rtag-pink"   },
+      { label: "Factor común",              cls: "rtag-purple" },
+      { label: "Diferencia de cuadrados",   cls: "rtag-gold"   }
     ],
-    narrativa: `Tres cursos recaudaron en total <em>12x³+18x²+6x</em> pesos.
-    El sistema propone dividir extrayendo solo el factor <em>2x</em>, dejando
-    una expresión aún simplificable. El equipo debe encontrar el mayor factor
-    común para un reparto completamente simplificado.`,
-    enunciado: "¿Cuál es la factorización completa de 12x³ + 18x² + 6x?",
+    narrativa: `El presupuesto de tres proyectos escolares se modela con la expresión
+    <strong>50x³ − 72x</strong>. El sistema dice que es irreducible y la usa
+    directamente para distribuir fondos, generando montos inexactos.
+    El equipo debe factorizar completamente para detectar la estructura real
+    del presupuesto.`,
+    enunciado: "Factoriza completamente: 50x³ − 72x",
     opciones: [
-      { id:"5a", texto:"2x(6x² + 9x + 3)", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Con factor <em>2x</em> la expresión entre paréntesis sigue siendo simplificable. Siempre se extrae el <em>mayor</em> factor común posible.` },
-      { id:"5b", texto:"6x(2x² + 3x + 1)", correcta:true,
-        feedback:`<strong>¡Correcto!</strong> El MCD de 12, 18 y 6 es <em>6</em> y todos los términos tienen factor <em>x</em>. La factorización <em>6x(2x²+3x+1)</em> permite repartir en 6x partes iguales de forma transparente y justa.` },
-      { id:"5c", texto:"3(4x³ + 6x² + 2x)", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Se extrajo el factor numérico 3 pero no el literal <em>x</em>. La factorización correcta debe considerar tanto la parte numérica como la literal del MCD.` },
-      { id:"5d", texto:"x(12x² + 18x + 6)", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Se extrajo el factor literal <em>x</em> pero se ignoró el factor numérico común 6. La expresión entre paréntesis sigue teniendo factor común 6.` }
+      { id:"5a", texto:"x(50x² − 72)",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Se extrajo el factor <em>x</em> pero no
+        el numérico. El MCD de 50 y 72 es <em>2</em>, por lo tanto el factor común
+        completo es <em>2x</em>. Además, la expresión <em>50x²−72</em> sigue siendo
+        factorizable como diferencia de cuadrados tras extraer el 2.` },
+      { id:"5b", texto:"2x(25x² − 36)",
+        correcta: false,
+        feedback:`<strong>Incorrecto — incompleto.</strong> Extrajiste correctamente el
+        factor <em>2x</em>, pero <em>25x²−36</em> es una <strong>diferencia de cuadrados</strong>:
+        <em>25x²−36 = (5x)²−6² = (5x+6)(5x−6)</em>.
+        Una factorización completa no deja expresiones factorizables sin desarrollar.` },
+      { id:"5c", texto:"2x(5x + 6)(5x − 6)",
+        correcta: true,
+        feedback:`<strong>¡Correcto!</strong>
+        <em>50x³−72x = 2x(25x²−36) = 2x(5x+6)(5x−6)</em>.
+        El proceso tiene dos etapas: primero extraer el factor común <em>2x</em>,
+        luego identificar la diferencia de cuadrados <em>(5x)²−6²</em>.
+        Esta estructura revela que el presupuesto tiene una distribución
+        simétrica y factorizable de forma exacta.` },
+      { id:"5d", texto:"2(25x³ − 36x)",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Se extrajo el factor numérico 2 pero no
+        el literal <em>x</em>. El MCD completo es <em>2x</em> porque todos los
+        términos son divisibles tanto por 2 como por <em>x</em>. Siempre se debe
+        extraer simultaneamente la parte numérica y literal del factor común.` }
     ]
   },
+
+
+  // ══════════════════════════════════════════════════════
+  //  RETO 6 — NIVEL: Experto  expresión compuesta con (a+b)²
+  //  usando coeficientes fraccionarios implícitos y simplificación
+  // ══════════════════════════════════════════════════════
   {
     id: 6,
-    titulo: "La fórmula justa del sistema",
-    eyebrow: "Creación algebraica · Misión final",
+    titulo: "La fórmula definitiva del sistema",
+    eyebrow: "Nivel 6 · Experto · Binomio con fracciones + simplificación",
     tags: [
-      { label: "Nivel creación", cls: "rtag-purple" },
-      { label: "Misión final",   cls: "rtag-pink"   },
-      { label: "Bloom",          cls: "rtag-gold"   }
+      { label: "Nivel 6 — Experto",  cls: "rtag-pink"   },
+      { label: "Misión final",       cls: "rtag-purple" },
+      { label: "Bloom: Creación",    cls: "rtag-gold"   }
     ],
-    narrativa: `La bonificación se modela con <em>(p+3)²−9</em> donde <em>p</em>
-    es la participación. El sistema simplifica erróneamente esta expresión como solo
-    <em>p²</em>. El equipo debe identificar el desarrollo correcto y completo
-    para restaurar el sistema definitivamente.`,
-    enunciado: "¿Cuál es el desarrollo correcto de (p + 3)² − 9?",
+    narrativa: `La fórmula de bonificación del sistema usa la expresión
+    <strong>(½x + 4)² − 16</strong>. El sistema la simplifica erróneamente
+    como <em>¼x²</em>, ignorando todos los demás términos. Esto hace que
+    estudiantes con baja participación reciban bonificación cero cuando en
+    realidad les corresponde un valor positivo. El equipo debe corregir el
+    desarrollo y simplificación completa de la expresión.`,
+    enunciado: "Desarrolla y simplifica completamente: (½x + 4)² − 16",
     opciones: [
-      { id:"6a", texto:"p²", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Esta es exactamente la simplificación errónea del sistema. Desarrollando: <em>(p+3)²−9 = p²+6p+9−9 = p²+6p</em>. El término <em>6p</em> omitido subestima la bonificación de todos los estudiantes con participación positiva.` },
-      { id:"6b", texto:"p² + 6p + 9", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Este es el desarrollo de <em>(p+3)²</em> sin restar el 9. La expresión completa incluye <em>−9</em>, así que: <em>p²+6p+9−9 = p²+6p</em>.` },
-      { id:"6c", texto:"p² + 6p", correcta:true,
-        feedback:`<strong>¡Correcto!</strong> Desarrollando: <em>(p+3)²−9 = p²+6p+9−9 = p²+6p</em>. Esta expresión se factoriza como <em>p(p+6)</em>, mostrando que la bonificación es proporcional a la participación. Has combinado productos notables, simplificación y factorización. <strong>¡El sistema ha sido restaurado!</strong>` },
-      { id:"6d", texto:"p(p + 3)", correcta:false,
-        feedback:`<strong>Incorrecto.</strong> Esta expresión equivale a <em>p²+3p</em>. El desarrollo de <em>(p+3)²</em> incluye el doble producto <em>2·p·3=6p</em>, no <em>3p</em>. El coeficiente 6 es clave.` }
+      { id:"6a", texto:"¼x²",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Esta es exactamente la simplificación
+        errónea del sistema. El desarrollo correcto es:
+        <em>(½x+4)² = ¼x² + 4x + 16</em>, y al restar 16:
+        <em>¼x² + 4x + 16 − 16 = ¼x² + 4x</em>.
+        El término <em>4x</em> es el que garantiza bonificación positiva
+        para participación mayor a cero.` },
+      { id:"6b", texto:"¼x² + 4x + 16",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> Desarrollaste bien el cuadrado del
+        binomio pero olvidaste restar el <em>−16</em> final.
+        <em>(½x+4)²−16 = ¼x²+4x+16−16 = ¼x²+4x</em>.
+        Los términos <em>+16</em> y <em>−16</em> se cancelan exactamente.` },
+      { id:"6c", texto:"¼x² + 4x",
+        correcta: true,
+        feedback:`<strong>¡Correcto!</strong>
+        <em>(½x+4)²−16 = (½x)²+2·(½x)·4+4²−16 = ¼x²+4x+16−16 = ¼x²+4x</em>.
+        Esta expresión puede factorizarse como <em>x(¼x+4)</em>, mostrando que
+        la bonificación es siempre proporcional a la participación <em>x</em>.
+        Has dominado el álgebra con coeficientes fraccionarios y simplificación
+        simultánea. <strong>¡El sistema queda completamente restaurado!</strong>` },
+      { id:"6d", texto:"¼x² + 2x",
+        correcta: false,
+        feedback:`<strong>Incorrecto.</strong> El término central del cuadrado del
+        binomio es <em>2·(½x)·4 = 4x</em>, no <em>2x</em>.
+        Al calcular el doble producto con <em>a=½x</em> y <em>b=4</em>:
+        <em>2ab = 2·½x·4 = 4x</em>. El factor <em>½</em> de <em>a</em> ya está
+        incluido en el cálculo, no lo elimines antes de tiempo.` }
     ]
   }
 ];
