@@ -4,11 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reto | Escape Room Matemático</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body class="reto-body">
 
-  <!-- Barra superior -->
   <header class="navbar">
     <div class="navbar-inner">
       <div class="clock" id="clock">45:00</div>
@@ -23,7 +22,6 @@
   </header>
 
   <main class="reto-shell">
-    <!-- Encabezado narrativo del reto -->
     <section class="reto-header" aria-labelledby="reto-titulo">
       <div class="reto-eyebrow" id="reto-eyebrow">Nivel · Tipo de reto</div>
       <h1 id="reto-titulo">Título del reto</h1>
@@ -31,7 +29,6 @@
     </section>
 
     <section class="reto-content">
-      <!-- Contexto / narrativa -->
       <article class="reto-card">
         <h2>Contexto de la misión</h2>
         <p id="reto-narrativa">
@@ -39,7 +36,6 @@
         </p>
       </article>
 
-      <!-- Pregunta -->
       <article class="reto-card">
         <form id="form-reto" novalidate>
           <fieldset class="reto-fieldset">
@@ -52,7 +48,6 @@
               class="opciones"
               aria-describedby="instruccion-opciones feedback"
             >
-              <!-- Las opciones se insertan dinámicamente desde gameEngine.js -->
             </div>
 
             <p id="instruccion-opciones" class="text-help">
@@ -71,7 +66,6 @@
           </div>
         </form>
 
-        <!-- Feedback -->
         <section
           id="feedback"
           class="feedback-card"
@@ -91,6 +85,6 @@
     </section>
   </main>
 
-  <script src="gameEngine.js"></script>
+  <script src="js/gameEngine.js"></script>
 </body>
 </html>
