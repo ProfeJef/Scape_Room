@@ -1,90 +1,1131 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reto | Escape Room Matemático</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reto — Eduquemos con TIC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:            #060d1a;
+      --surface:       #0b1628;
+      --surface-2:     #0f1e38;
+      --border:        rgba(0,224,255,0.12);
+      --border-strong: rgba(0,224,255,0.35);
+      --cyan:          #00e0ff;
+      --cyan-dim:      rgba(0,224,255,0.55);
+      --cyan-glow:     rgba(0,224,255,0.18);
+      --amber:         #f6a821;
+      --amber-glow:    rgba(246,168,33,0.18);
+      --green:         #22d37a;
+      --green-dim:     rgba(34,211,122,0.55);
+      --green-glow:    rgba(34,211,122,0.18);
+      --red:           #ff4e6a;
+      --red-glow:      rgba(255,78,106,0.25);
+      --purple:        #a855f7;
+      --purple-glow:   rgba(168,85,247,0.2);
+      --gray:          rgba(148,163,184,0.45);
+      --text:          #e8f4ff;
+      --text-muted:    rgba(184,214,255,0.65);
+      --text-faint:    rgba(120,165,210,0.4);
+      --font-display:  'Orbitron','Segoe UI',sans-serif;
+      --font-body:     'Exo 2','Segoe UI',sans-serif;
+      --ease-out:      cubic-bezier(0.16,1,0.3,1);
+      --ease-in:       cubic-bezier(0.4,0,1,1);
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+    body{min-height:100dvh;font-family:var(--font-body);color:var(--text);background:var(--bg);overflow-x:hidden}
+    button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+    a{color:inherit;text-decoration:none}
+    img,svg{display:block}
+
+    /* ── FONDO ANIMADO ── */
+    .bg-scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    .bg-grid{
+      position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(0,224,255,0.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,224,255,0.04) 1px,transparent 1px);
+      background-size:48px 48px;
+      animation:gridScroll 20s linear infinite;
+    }
+    @keyframes gridScroll{to{background-position:48px 48px}}
+    .bg-orb{position:absolute;border-radius:50%;filter:blur(110px);opacity:.22}
+    .orb1{width:520px;height:520px;background:radial-gradient(circle,rgba(0,224,255,.4) 0%,transparent 70%);top:-160px;left:-100px;animation:orbF 12s ease-in-out infinite alternate}
+    .orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(168,85,247,.3) 0%,transparent 70%);bottom:-60px;right:-60px;animation:orbF 15s ease-in-out infinite alternate-reverse}
+    .orb3{width:300px;height:300px;background:radial-gradient(circle,rgba(246,168,33,.2) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:orbF 18s ease-in-out infinite alternate}
+    @keyframes orbF{0%{transform:translate(0,0)}100%{transform:translate(30px,22px)}}
+    #p-canvas{position:absolute;inset:0;width:100%;height:100%}
+    #confetti-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:200;opacity:0;transition:opacity .4s}
+
+    /* ── NAVBAR ── */
+    .navbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(6,13,26,.9);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      padding:.65rem 1.25rem;
+      display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+      flex-wrap:wrap;
+    }
+    .nav-left{display:flex;align-items:center;gap:.75rem}
+    .nav-logo{display:flex;align-items:center;gap:.5rem}
+    .nav-logo-name{font-family:var(--font-display);font-size:.78rem;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-shadow:0 0 14px rgba(0,224,255,.45)}
+    .nav-divider{width:1px;height:22px;background:var(--border-strong)}
+    .reto-badge{
+      display:flex;align-items:center;gap:.4rem;
+      padding:.25rem .7rem;border-radius:9999px;
+      border:1px solid var(--border-strong);
+      background:rgba(0,224,255,.07);
+      font-family:var(--font-display);font-size:.65rem;font-weight:700;
+      color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;
+    }
+    .reto-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+    .nav-right{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+    .clock-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+    .clock-label{font-family:var(--font-display);font-size:.55rem;letter-spacing:.14em;color:var(--text-faint);text-transform:uppercase}
+    .clock{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--amber);letter-spacing:.08em;text-shadow:0 0 12px rgba(246,168,33,.5);min-width:5ch;text-align:right;transition:color .3s,text-shadow .3s}
+    .clock.critical{color:var(--red);text-shadow:0 0 18px var(--red-glow);animation:clockPulse .6s infinite}
+    @keyframes clockPulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .progress-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+    .progress-label{font-family:var(--font-display);font-size:.55rem;letter-spacing:.1em;color:var(--text-faint);text-transform:uppercase}
+    .progress-track{width:120px;height:5px;background:rgba(148,163,184,.18);border-radius:9999px;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:9999px;transition:width .6s var(--ease-out)}
+    .btn-back{
+      display:flex;align-items:center;gap:.35rem;
+      padding:.35rem .75rem;border-radius:8px;
+      border:1px solid var(--border);
+      color:var(--text-muted);font-size:.8rem;font-weight:500;
+      transition:border-color .18s,color .18s,background .18s;
+    }
+    .btn-back:hover{border-color:var(--border-strong);color:var(--cyan);background:rgba(0,224,255,.06)}
+
+    /* ── LAYOUT PRINCIPAL ── */
+    main{
+      position:relative;z-index:1;
+      min-height:calc(100dvh - 54px);
+      display:grid;
+      grid-template-columns:1fr;
+      gap:0;
+    }
+    @media(min-width:900px){
+      main{grid-template-columns:1fr 340px;grid-template-rows:auto 1fr}
+    }
+
+    /* ── ÁREA IZQUIERDA (MISIÓN + PREGUNTA) ── */
+    .mission-area{
+      padding:clamp(1.25rem,3vw,2rem);
+      display:flex;flex-direction:column;gap:1.25rem;
+    }
+
+    /* ── ENCABEZADO DE MISIÓN ── */
+    .mission-header{
+      background:linear-gradient(135deg,rgba(11,22,40,.98) 60%,rgba(15,30,56,.95));
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:1.25rem 1.5rem;
+      position:relative;overflow:hidden;
+    }
+    .mission-header::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);
+    }
+    .mission-eyebrow{
+      display:flex;align-items:center;gap:.5rem;
+      font-family:var(--font-display);font-size:.6rem;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--cyan);margin-bottom:.5rem;
+    }
+    .eyebrow-line{height:1px;width:32px;background:var(--cyan);opacity:.5}
+    .mission-title{
+      font-family:var(--font-display);
+      font-size:clamp(1rem,2.5vw,1.35rem);
+      font-weight:700;color:var(--text);
+      line-height:1.25;margin-bottom:.4rem;
+    }
+    .mission-title span{color:var(--cyan);text-shadow:0 0 18px rgba(0,224,255,.45)}
+    .mission-desc{font-size:.9rem;color:var(--text-muted);line-height:1.6;max-width:66ch}
+    .mission-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.85rem}
+    .meta-chip{
+      display:flex;align-items:center;gap:.3rem;
+      padding:.22rem .65rem;border-radius:9999px;
+      border:1px solid;font-size:.68rem;font-weight:600;
+      letter-spacing:.06em;text-transform:uppercase;
+    }
+    .chip-dificultad{border-color:rgba(246,168,33,.35);background:rgba(246,168,33,.07);color:var(--amber)}
+    .chip-tipo{border-color:var(--border-strong);background:rgba(0,224,255,.06);color:var(--cyan)}
+    .chip-xp{border-color:rgba(168,85,247,.35);background:rgba(168,85,247,.07);color:var(--purple)}
+
+    /* ── TARJETA DE PREGUNTA ── */
+    .question-card{
+      background:rgba(11,22,40,.95);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:1.5rem;
+      position:relative;overflow:hidden;
+      flex:1;
+    }
+    .question-card::after{
+      content:'';position:absolute;inset:0;border-radius:16px;
+      background:linear-gradient(135deg,rgba(0,224,255,.03) 0%,transparent 60%);
+      pointer-events:none;
+    }
+    .question-label{
+      font-family:var(--font-display);font-size:.6rem;
+      letter-spacing:.2em;text-transform:uppercase;
+      color:var(--text-faint);margin-bottom:.9rem;
+      display:flex;align-items:center;gap:.5rem;
+    }
+    .question-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .question-text{
+      font-size:clamp(1rem,2.2vw,1.15rem);font-weight:500;
+      color:var(--text);line-height:1.65;margin-bottom:1.5rem;
+    }
+    .question-text .formula{
+      display:inline-block;
+      font-family:var(--font-display);font-size:.95em;
+      color:var(--cyan);letter-spacing:.04em;
+    }
+    .question-img{
+      width:100%;max-width:420px;margin:.5rem auto 1.25rem;
+      background:rgba(15,30,56,.9);border:1px solid var(--border);border-radius:12px;
+      padding:1rem;text-align:center;display:none;
+    }
+
+    /* ── OPCIONES ── */
+    .opciones{display:flex;flex-direction:column;gap:.7rem}
+    .opcion-pro{display:block;cursor:pointer;position:relative}
+    .radio-oculto{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+    .opcion-pro-inner{
+      display:flex;align-items:center;gap:.9rem;
+      background:rgba(11,22,40,.85);
+      border:1.5px solid rgba(148,163,184,.2);
+      border-radius:12px;
+      padding:.85rem 1rem;
+      transition:border-color .22s var(--ease-out),
+                 background .22s var(--ease-out),
+                 transform .22s var(--ease-out),
+                 box-shadow .22s var(--ease-out);
+      position:relative;overflow:hidden;
+    }
+    .opcion-pro-inner::before{
+      content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+      background:var(--cyan);border-radius:3px 0 0 3px;
+      transform:scaleY(0);transform-origin:center;
+      transition:transform .22s var(--ease-out);
+    }
+    .opcion-pro:hover .opcion-pro-inner{
+      border-color:rgba(0,224,255,.4);
+      background:rgba(0,224,255,.05);
+      transform:translateX(4px);
+      box-shadow:0 0 0 1px rgba(0,224,255,.12),0 4px 16px rgba(0,0,0,.3);
+    }
+    .opcion-pro:hover .opcion-pro-inner::before{transform:scaleY(1)}
+    .radio-oculto:checked+.opcion-pro-inner{
+      border-color:var(--cyan);
+      background:rgba(0,224,255,.09);
+      transform:translateX(4px);
+      box-shadow:0 0 0 1px rgba(0,224,255,.25),0 6px 24px rgba(0,224,255,.12);
+    }
+    .radio-oculto:checked+.opcion-pro-inner::before{transform:scaleY(1)}
+
+    /* Estado correcto */
+    .opcion-pro.correct .opcion-pro-inner{
+      border-color:var(--green)!important;
+      background:rgba(34,211,122,.1)!important;
+      box-shadow:0 0 0 1px rgba(34,211,122,.3),0 0 24px rgba(34,211,122,.12)!important;
+    }
+    .opcion-pro.correct .opcion-pro-inner::before{background:var(--green)!important;transform:scaleY(1)!important}
+    /* Estado incorrecto */
+    .opcion-pro.incorrect .opcion-pro-inner{
+      border-color:var(--red)!important;
+      background:rgba(255,78,106,.08)!important;
+      box-shadow:0 0 0 1px rgba(255,78,106,.2)!important;
+    }
+    .opcion-pro.incorrect .opcion-pro-inner::before{background:var(--red)!important;transform:scaleY(1)!important}
+    /* Revelar correcta */
+    .opcion-pro.reveal-correct .opcion-pro-inner{
+      border-color:var(--green)!important;
+      background:rgba(34,211,122,.08)!important;
+    }
+
+    .opcion-letra{
+      display:flex;justify-content:center;align-items:center;
+      width:34px;height:34px;flex-shrink:0;border-radius:8px;
+      background:rgba(0,224,255,.1);border:1.5px solid rgba(0,224,255,.3);
+      font-family:var(--font-display);font-size:.78rem;font-weight:700;
+      color:var(--cyan);transition:all .22s var(--ease-out);
+    }
+    .radio-oculto:checked+.opcion-pro-inner .opcion-letra{background:var(--cyan);border-color:var(--cyan);color:var(--bg)}
+    .correct .opcion-letra{background:var(--green)!important;border-color:var(--green)!important;color:var(--bg)!important}
+    .incorrect .opcion-letra{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}
+    .reveal-correct .opcion-letra{background:rgba(34,211,122,.2)!important;border-color:var(--green)!important;color:var(--green)!important}
+
+    .opcion-texto{font-size:.95rem;color:var(--text);line-height:1.45;flex:1}
+    .opcion-icon{width:18px;height:18px;flex-shrink:0;opacity:0;transition:opacity .25s;margin-left:auto}
+    .correct .opcion-icon.ok,.reveal-correct .opcion-icon.ok{opacity:1;color:var(--green)}
+    .incorrect .opcion-icon.err{opacity:1;color:var(--red)}
+
+    /* ── BOTÓN VALIDAR ── */
+    .btn-validate-wrap{display:flex;justify-content:center;margin-top:1.25rem}
+    .btn-validate{
+      display:flex;align-items:center;gap:.6rem;
+      padding:.8rem 2.5rem;border-radius:10px;
+      background:var(--cyan);color:var(--bg);
+      font-family:var(--font-display);font-size:.78rem;font-weight:700;
+      letter-spacing:.12em;text-transform:uppercase;
+      box-shadow:0 0 0 1px rgba(0,224,255,.4),0 4px 24px rgba(0,224,255,.22);
+      transition:transform .22s var(--ease-out),box-shadow .22s,background .22s,opacity .22s;
+      position:relative;overflow:hidden;
+    }
+    .btn-validate::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+      transform:translateX(-100%);
+      transition:transform .5s;
+    }
+    .btn-validate:hover:not(:disabled)::before{transform:translateX(100%)}
+    .btn-validate:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 0 1px rgba(0,224,255,.6),0 8px 32px rgba(0,224,255,.35)}
+    .btn-validate:active:not(:disabled){transform:translateY(0)}
+    .btn-validate:disabled{opacity:.4;cursor:not-allowed}
+
+    /* ── PANEL DERECHO (SIDEBAR) ── */
+    .sidebar{
+      padding:clamp(1rem,2vw,1.5rem);
+      display:flex;flex-direction:column;gap:1rem;
+      border-top:1px solid var(--border);
+    }
+    @media(min-width:900px){
+      .sidebar{border-top:none;border-left:1px solid var(--border);grid-row:1/-1}
+    }
+
+    /* ── PISTA ENCRIPTADA ── */
+    .hint-card{
+      background:rgba(11,22,40,.95);border:1px solid var(--border);border-radius:14px;
+      padding:1.1rem 1.2rem;position:relative;overflow:hidden;
+    }
+    .hint-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--cyan))}
+    .hint-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem}
+    .hint-title{font-family:var(--font-display);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--purple)}
+    .hint-cost{
+      font-size:.65rem;font-weight:600;
+      padding:.15rem .45rem;border-radius:9999px;
+      border:1px solid rgba(246,168,33,.35);background:rgba(246,168,33,.08);color:var(--amber);
+    }
+    .hint-locked{text-align:center;padding:.75rem 0}
+    .hint-lock-icon{font-size:1.8rem;margin-bottom:.4rem;filter:drop-shadow(0 0 6px rgba(168,85,247,.4))}
+    .hint-locked p{font-size:.8rem;color:var(--text-muted);line-height:1.5}
+    .btn-hint{
+      width:100%;margin-top:.75rem;padding:.6rem;border-radius:9px;
+      border:1.5px solid rgba(168,85,247,.4);background:rgba(168,85,247,.08);
+      color:var(--purple);font-family:var(--font-display);font-size:.65rem;
+      font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      transition:border-color .2s,background .2s,box-shadow .2s;
+    }
+    .btn-hint:hover:not(:disabled){border-color:var(--purple);background:rgba(168,85,247,.15);box-shadow:0 0 16px rgba(168,85,247,.2)}
+    .btn-hint:disabled{opacity:.4;cursor:not-allowed}
+    .hint-text{font-size:.85rem;color:var(--text-muted);line-height:1.6;display:none}
+    .hint-text.visible{display:block;animation:fadeUp .4s var(--ease-out)}
+
+    /* ── PROGRESO DE INTENTOS ── */
+    .attempts-card{
+      background:rgba(11,22,40,.95);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.2rem;
+    }
+    .attempts-title{font-family:var(--font-display);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);margin-bottom:.75rem}
+    .attempts-dots{display:flex;gap:.5rem;flex-wrap:wrap}
+    .attempt-dot{
+      width:28px;height:28px;border-radius:50%;
+      border:1.5px solid rgba(148,163,184,.25);background:rgba(148,163,184,.08);
+      display:flex;align-items:center;justify-content:center;font-size:.75rem;
+      transition:all .3s var(--ease-out);
+    }
+    .attempt-dot.used-correct{border-color:var(--green);background:rgba(34,211,122,.15);color:var(--green)}
+    .attempt-dot.used-wrong{border-color:var(--red);background:rgba(255,78,106,.12);color:var(--red)}
+
+    /* ── CÓDIGO SECRETO ── */
+    .code-card{
+      background:rgba(11,22,40,.95);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.2rem;
+    }
+    .code-title{font-family:var(--font-display);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);margin-bottom:.75rem}
+    .code-display{
+      display:flex;gap:.35rem;justify-content:center;flex-wrap:wrap;
+    }
+    .code-char{
+      width:38px;height:44px;border-radius:8px;
+      background:rgba(0,0,0,.4);border:1.5px solid rgba(148,163,184,.2);
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--bg);
+      transition:all .4s var(--ease-out);
+    }
+    .code-char.revealed{border-color:var(--green);background:rgba(34,211,122,.12);color:var(--green);text-shadow:0 0 12px rgba(34,211,122,.6);animation:charReveal .6s var(--ease-out)}
+    @keyframes charReveal{0%{transform:scale(1.4) rotateY(90deg);opacity:0}100%{transform:scale(1) rotateY(0deg);opacity:1}}
+
+    /* ── FEEDBACK FORMATIVO ── */
+    .feedback-overlay{
+      position:fixed;inset:0;z-index:100;
+      display:flex;align-items:flex-end;justify-content:center;
+      padding:2rem 1rem;
+      pointer-events:none;
+    }
+    .feedback-card{
+      width:100%;max-width:560px;
+      background:rgba(6,13,26,.97);
+      border:1.5px solid transparent;
+      border-radius:18px;
+      padding:1.5rem 1.75rem;
+      pointer-events:auto;
+      transform:translateY(120%);
+      transition:transform .45s var(--ease-out),border-color .4s,box-shadow .4s;
+      position:relative;overflow:hidden;
+    }
+    .feedback-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      border-radius:18px 18px 0 0;transition:background .4s;
+    }
+    .feedback-card.visible{transform:translateY(0)}
+    .feedback-card.correct{border-color:rgba(34,211,122,.45);box-shadow:0 -8px 40px rgba(34,211,122,.12),0 0 0 1px rgba(34,211,122,.1)}
+    .feedback-card.correct::before{background:var(--green)}
+    .feedback-card.incorrect{border-color:rgba(255,78,106,.4);box-shadow:0 -8px 40px rgba(255,78,106,.1),0 0 0 1px rgba(255,78,106,.08)}
+    .feedback-card.incorrect::before{background:var(--red)}
+    .feedback-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+    .feedback-status{display:flex;align-items:center;gap:.6rem}
+    .feedback-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .correct .feedback-icon{background:rgba(34,211,122,.15);border:1px solid rgba(34,211,122,.4)}
+    .incorrect .feedback-icon{background:rgba(255,78,106,.12);border:1px solid rgba(255,78,106,.3)}
+    .feedback-title{font-family:var(--font-display);font-size:.9rem;font-weight:700;letter-spacing:.06em}
+    .correct .feedback-title{color:var(--green)}
+    .incorrect .feedback-title{color:var(--red)}
+    .btn-close-feedback{
+      width:28px;height:28px;border-radius:50%;
+      border:1px solid var(--border);background:rgba(148,163,184,.08);
+      color:var(--text-muted);font-size:1rem;line-height:1;
+      display:flex;align-items:center;justify-content:center;
+      transition:border-color .18s,background .18s,color .18s;flex-shrink:0;
+    }
+    .btn-close-feedback:hover{border-color:var(--border-strong);color:var(--text);background:rgba(148,163,184,.15)}
+    .feedback-body{font-size:.9rem;color:var(--text-muted);line-height:1.65}
+    .feedback-body strong{color:var(--text)}
+    .feedback-body .formula{color:var(--cyan);font-family:var(--font-display);font-size:.85em}
+    .feedback-actions{display:flex;gap:.65rem;margin-top:1rem;flex-wrap:wrap}
+    .btn-next{
+      flex:1;padding:.7rem;border-radius:9px;
+      background:var(--green);color:var(--bg);
+      font-family:var(--font-display);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      box-shadow:0 4px 20px rgba(34,211,122,.25);
+      transition:transform .2s,box-shadow .2s;
+    }
+    .btn-next:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(34,211,122,.35)}
+    .btn-retry{
+      flex:1;padding:.7rem;border-radius:9px;
+      border:1.5px solid rgba(255,78,106,.4);background:transparent;color:var(--red);
+      font-family:var(--font-display);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      transition:border-color .2s,background .2s,box-shadow .2s;
+    }
+    .btn-retry:hover{border-color:var(--red);background:rgba(255,78,106,.08);box-shadow:0 0 16px rgba(255,78,106,.15)}
+
+    /* ── PANTALLA DE VICTORIA ── */
+    .victory-screen{
+      position:fixed;inset:0;z-index:150;
+      background:rgba(6,13,26,.96);backdrop-filter:blur(8px);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:1.5rem;padding:2rem;text-align:center;
+      opacity:0;pointer-events:none;
+      transition:opacity .6s var(--ease-out);
+    }
+    .victory-screen.active{opacity:1;pointer-events:auto}
+    .victory-hex{
+      width:96px;height:96px;
+      background:linear-gradient(135deg,rgba(34,211,122,.25),rgba(0,224,255,.15));
+      border:2px solid var(--green);border-radius:50%;
+      display:flex;align-items:center;justify-content:center;font-size:2.5rem;
+      box-shadow:0 0 0 8px rgba(34,211,122,.08),0 0 40px rgba(34,211,122,.25);
+      animation:victoryPop .8s var(--ease-out);
+    }
+    @keyframes victoryPop{0%{transform:scale(0) rotate(-90deg);opacity:0}60%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+    .victory-title{font-family:var(--font-display);font-size:clamp(1.4rem,4vw,2rem);font-weight:900;color:var(--green);text-shadow:0 0 30px rgba(34,211,122,.5);letter-spacing:.04em}
+    .victory-subtitle{font-size:1rem;color:var(--text-muted);max-width:44ch;line-height:1.6}
+    .victory-code{
+      display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;justify-content:center;
+      padding:.85rem 1.5rem;border-radius:12px;
+      border:1.5px solid rgba(34,211,122,.4);background:rgba(34,211,122,.08);
+    }
+    .victory-code-label{font-family:var(--font-display);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint)}
+    .victory-code-value{font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:var(--green);letter-spacing:.25em;text-shadow:0 0 20px rgba(34,211,122,.6)}
+    .victory-xp{
+      display:flex;align-items:center;gap:.5rem;
+      font-family:var(--font-display);font-size:.72rem;font-weight:700;letter-spacing:.12em;
+      color:var(--purple);text-transform:uppercase;
+    }
+    .btn-mapa{
+      padding:.85rem 2rem;border-radius:10px;
+      background:var(--cyan);color:var(--bg);
+      font-family:var(--font-display);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+      box-shadow:0 4px 24px rgba(0,224,255,.3);
+      transition:transform .2s,box-shadow .2s;display:flex;align-items:center;gap:.5rem;
+    }
+    .btn-mapa:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,224,255,.4)}
+
+    /* ── ANIMACIONES GENÉRICAS ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fadeUp .5s var(--ease-out) both}
+    .fade-in-delay-1{animation-delay:.1s}
+    .fade-in-delay-2{animation-delay:.2s}
+    .fade-in-delay-3{animation-delay:.3s}
+
+    /* ── SHAKE ── */
+    @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(5px)}}
+    .shake{animation:shake .45s var(--ease-out)}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:899px){
+      .sidebar{order:2}
+      .mission-area{order:1}
+    }
+    @media(max-width:520px){
+      .btn-validate{padding:.75rem 1.5rem;font-size:.7rem}
+      .victory-code-value{font-size:1.2rem}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+    }
+  </style>
 </head>
-<body class="reto-body">
+<body>
 
-  <header class="navbar">
-    <div class="navbar-inner">
-      <div class="clock" id="clock">45:00</div>
+<!-- Fondo animado -->
+<div class="bg-scene" aria-hidden="true">
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+  <div class="bg-orb orb3"></div>
+  <canvas id="p-canvas"></canvas>
+</div>
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
-      <div class="progress-wrap">
-        <div class="progress" aria-label="Progreso de retos">
-          <div class="progress-bar" id="progress-bar"></div>
-        </div>
-        <div class="progress-txt" id="progress-txt">0 / 6</div>
+<!-- Pantalla de victoria -->
+<div class="victory-screen" id="victory-screen" role="dialog" aria-labelledby="victory-title" aria-modal="true">
+  <div class="victory-hex" id="victory-hex" aria-hidden="true">🔓</div>
+  <h2 class="victory-title" id="victory-title">¡CÓDIGO RECUPERADO!</h2>
+  <p class="victory-subtitle" id="victory-subtitle">Has resuelto el módulo correctamente y desbloqueado una clave del SistemaEduAlgo.</p>
+  <div class="victory-code">
+    <span class="victory-code-label">Clave obtenida</span>
+    <span class="victory-code-value" id="victory-code-value">—</span>
+  </div>
+  <div class="victory-xp">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <span id="victory-xp-value">+150 XP desbloqueados</span>
+  </div>
+  <a href="mapa.html" class="btn-mapa">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+    Continuar en el mapa
+  </a>
+</div>
+
+<!-- Navbar -->
+<header>
+  <nav class="navbar" aria-label="Navegación del reto">
+    <div class="nav-left">
+      <a href="mapa.html" class="nav-logo" aria-label="Eduquemos con TIC — inicio">
+        <!-- Logo SVG inline -->
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" stroke="#00e0ff" stroke-width="1.5" fill="rgba(0,224,255,0.08)"/>
+          <text x="14" y="18" text-anchor="middle" font-family="Orbitron,sans-serif" font-size="9" font-weight="700" fill="#00e0ff">ET</text>
+        </svg>
+        <span class="nav-logo-name">Eduquemos con TIC</span>
+      </a>
+      <div class="nav-divider" aria-hidden="true"></div>
+      <div class="reto-badge" aria-label="Reto activo">
+        <span class="reto-badge-dot" aria-hidden="true"></span>
+        <span id="reto-badge-text">MISIÓN 01</span>
       </div>
     </div>
-  </header>
+    <div class="nav-right">
+      <div class="progress-wrap" aria-label="Progreso de retos">
+        <span class="progress-label">Progreso</span>
+        <div class="progress-track" role="progressbar" aria-valuenow="16" aria-valuemin="0" aria-valuemax="100" aria-label="1 de 6 retos completados">
+          <div class="progress-fill" id="progress-fill" style="width:16%"></div>
+        </div>
+      </div>
+      <div class="clock-wrap" aria-live="polite" aria-label="Temporizador">
+        <span class="clock-label">Tiempo</span>
+        <span class="clock" id="clock">60:00</span>
+      </div>
+      <a href="mapa.html" class="btn-back" aria-label="Volver al mapa">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Mapa
+      </a>
+    </div>
+  </nav>
+</header>
 
-  <main class="reto-shell">
-    <section class="reto-header" aria-labelledby="reto-titulo">
-      <div class="reto-eyebrow" id="reto-eyebrow">Nivel · Tipo de reto</div>
-      <h1 id="reto-titulo">Título del reto</h1>
-      <div class="reto-tags" id="reto-tags"></div>
-    </section>
+<!-- Contenido principal -->
+<main>
 
-    <section class="reto-content">
-      <article class="reto-card">
-        <h2>Contexto de la misión</h2>
-        <p id="reto-narrativa">
-          Aquí aparecerá la narrativa del reto.
-        </p>
-      </article>
+  <!-- Área izquierda -->
+  <section class="mission-area" aria-label="Área del reto">
 
-      <article class="reto-card">
-        <form id="form-reto" novalidate>
-          <fieldset class="reto-fieldset">
-            <legend id="reto-enunciado">
-              Aquí aparecerá el enunciado del reto.
-            </legend>
+    <!-- Encabezado de misión -->
+    <div class="mission-header fade-in">
+      <div class="mission-eyebrow">
+        <span class="eyebrow-line" aria-hidden="true"></span>
+        <span id="mission-eyebrow-text">Módulo 1 · Álgebra</span>
+        <span class="eyebrow-line" aria-hidden="true"></span>
+      </div>
+      <h1 class="mission-title" id="mission-title">
+        Restaurar subsistema <span id="mission-title-span">Cuadrado de Binomio</span>
+      </h1>
+      <p class="mission-desc" id="mission-desc">El algoritmo de calificaciones usa productos notables. Identifica la forma expandida correcta del cuadrado de binomio para reparar el módulo.</p>
+      <div class="mission-meta">
+        <span class="meta-chip chip-dificultad" id="chip-dificultad">⚡ Básico</span>
+        <span class="meta-chip chip-tipo" id="chip-tipo">Opción múltiple</span>
+        <span class="meta-chip chip-xp" id="chip-xp">★ 150 XP</span>
+      </div>
+    </div>
 
-            <div
-              id="reto-opciones"
-              class="opciones"
-              aria-describedby="instruccion-opciones feedback"
-            >
-            </div>
+    <!-- Tarjeta de pregunta -->
+    <div class="question-card fade-in fade-in-delay-1">
+      <div class="question-label">Enunciado del problema</div>
+      <p class="question-text" id="question-text">Cargando...</p>
 
-            <p id="instruccion-opciones" class="text-help">
-              Selecciona una opción y luego presiona “Validar respuesta”.
-            </p>
-          </fieldset>
+      <!-- Opciones -->
+      <div class="opciones" id="opciones-container" role="radiogroup" aria-labelledby="question-text"></div>
 
-          <div class="reto-actions">
-            <button type="button" class="btn btn-primary btn-validate" id="btn-validar" disabled>
-              Validar respuesta
-            </button>
+      <!-- Botón validar -->
+      <div class="btn-validate-wrap">
+        <button class="btn-validate" id="btn-validate" disabled aria-label="Validar respuesta seleccionada">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          Validar respuesta
+        </button>
+      </div>
+    </div>
 
-            <button type="button" class="btn btn-secondary" id="btn-siguiente">
-              Siguiente misión →
-            </button>
-          </div>
-        </form>
+  </section>
 
-        <section
-          id="feedback"
-          class="feedback-card"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div class="feedback-top">
-            <span id="fb-icon" aria-hidden="true">ℹ️</span>
-            <h3 id="fb-title">Retroalimentación</h3>
-          </div>
-          <div id="fb-text">
-            Aquí aparecerán las pistas, correcciones o explicaciones.
-          </div>
-        </section>
-      </article>
-    </section>
-  </main>
+  <!-- Sidebar derecho -->
+  <aside class="sidebar fade-in fade-in-delay-2" aria-label="Panel de apoyo">
 
-  <script src="js/gameEngine.js"></script>
+    <!-- Pista -->
+    <div class="hint-card">
+      <div class="hint-header">
+        <span class="hint-title">Pista cifrada</span>
+        <span class="hint-cost" id="hint-cost">−30s</span>
+      </div>
+      <div class="hint-locked" id="hint-locked">
+        <div class="hint-lock-icon" aria-hidden="true">🔐</div>
+        <p>Desencripta la pista a cambio de tiempo en el reloj.</p>
+      </div>
+      <p class="hint-text" id="hint-text" aria-live="polite"></p>
+      <button class="btn-hint" id="btn-hint" aria-label="Revelar pista (cuesta 30 segundos)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:.3rem" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        Desencriptar pista
+      </button>
+    </div>
+
+    <!-- Intentos -->
+    <div class="attempts-card">
+      <div class="attempts-title">Intentos del módulo</div>
+      <div class="attempts-dots" id="attempts-dots" aria-label="Historial de intentos"></div>
+    </div>
+
+    <!-- Código secreto -->
+    <div class="code-card">
+      <div class="code-title">Código de Justicia Numérica</div>
+      <div class="code-display" id="code-display" aria-label="Código secreto parcialmente revelado"></div>
+    </div>
+
+  </aside>
+
+</main>
+
+<!-- Feedback formativo -->
+<div class="feedback-overlay" aria-live="assertive">
+  <div class="feedback-card" id="feedback-card" role="alert">
+    <div class="feedback-header">
+      <div class="feedback-status">
+        <div class="feedback-icon" id="feedback-icon" aria-hidden="true"></div>
+        <span class="feedback-title" id="feedback-title"></span>
+      </div>
+      <button class="btn-close-feedback" id="btn-close-feedback" aria-label="Cerrar feedback">×</button>
+    </div>
+    <div class="feedback-body" id="feedback-body"></div>
+    <div class="feedback-actions" id="feedback-actions"></div>
+  </div>
+</div>
+
+<script>
+/* ──────────────────────────────────────────────
+   DATOS DE RETOS
+────────────────────────────────────────────── */
+const RETOS = {
+  1: {
+    modulo: 'Módulo 1 · Álgebra',
+    titulo: 'Cuadrado de Binomio',
+    desc: 'El algoritmo de calificaciones usa productos notables. Identifica la forma expandida correcta del cuadrado de binomio para restaurar el módulo.',
+    dificultad: '⚡ Básico',
+    xp: 150,
+    codigoSecretoLabel: 'ALF-7X',
+    codigoLetra: 'A',
+    pregunta: 'El presupuesto de la institución se modela con la expresión (x + 5)². Expande correctamente este binomio para restaurar el módulo de cálculo.',
+    opciones: [
+      { id: 'a', texto: 'x² + 25' },
+      { id: 'b', texto: 'x² + 5x + 25' },
+      { id: 'c', texto: 'x² + 10x + 25' },
+      { id: 'd', texto: 'x² + 10x − 25' },
+    ],
+    correcta: 'c',
+    pista: 'Recuerda: (a + b)² = a² + 2ab + b². Identifica quién es "a" y quién es "b" en la expresión dada.',
+    feedbackCorrecto: '<strong>¡Módulo restaurado!</strong> La fórmula del cuadrado de la suma es <span class="formula">(a + b)² = a² + 2ab + b²</span>. Con a = x y b = 5 obtienes <span class="formula">x² + 2(x)(5) + 5² = x² + 10x + 25</span>.',
+    feedbackIncorrecto: 'Revisa la fórmula: <span class="formula">(a + b)² = a² + 2ab + b²</span>. El término del medio es el doble del producto de los dos términos. No olvides ese <strong>2ab</strong>.',
+  },
+  2: {
+    modulo: 'Módulo 2 · Álgebra',
+    titulo: 'Cuadrado con Diferencia',
+    desc: 'El sistema de distribución de recursos usa la diferencia de binomios al cuadrado. Expande correctamente para desbloquearlo.',
+    dificultad: '⚡ Básico',
+    xp: 150,
+    codigoSecretoLabel: 'BET-3Y',
+    codigoLetra: 'B',
+    pregunta: 'Los descuentos de la tienda escolar siguen el patrón (2x − 3)². Expande esta expresión para que el módulo de inventario funcione.',
+    opciones: [
+      { id: 'a', texto: '4x² − 9' },
+      { id: 'b', texto: '4x² − 12x + 9' },
+      { id: 'c', texto: '4x² + 12x + 9' },
+      { id: 'd', texto: '2x² − 12x + 9' },
+    ],
+    correcta: 'b',
+    pista: 'Usa (a − b)² = a² − 2ab + b². Aquí a = 2x y b = 3. Calcula cada término con cuidado.',
+    feedbackCorrecto: '<strong>¡Inventario desbloqueado!</strong> <span class="formula">(2x − 3)² = (2x)² − 2(2x)(3) + 3² = 4x² − 12x + 9</span>.',
+    feedbackIncorrecto: 'La fórmula es <span class="formula">(a − b)² = a² − 2ab + b²</span>. Ojo: el término del medio lleva signo negativo. Verifica a = 2x y b = 3.',
+  },
+  3: {
+    modulo: 'Módulo 3 · Álgebra',
+    titulo: 'Diferencia de Cuadrados',
+    desc: 'El módulo de asistencia opera con diferencias de cuadrados. Identifica el producto factorizado equivalente.',
+    dificultad: '⚡⚡ Medio',
+    xp: 200,
+    codigoSecretoLabel: 'GAM-9Z',
+    codigoLetra: 'C',
+    pregunta: '¿Cuál es la factorización completa de la expresión 9x² − 16?',
+    opciones: [
+      { id: 'a', texto: '(3x − 4)²' },
+      { id: 'b', texto: '(9x − 16)(9x + 16)' },
+      { id: 'c', texto: '(3x − 4)(3x + 4)' },
+      { id: 'd', texto: '(3x + 4)²' },
+    ],
+    correcta: 'c',
+    pista: 'Diferencia de cuadrados: a² − b² = (a − b)(a + b). Identifica cuál es la raíz cuadrada de 9x² y de 16.',
+    feedbackCorrecto: '<strong>¡Asistencia recuperada!</strong> <span class="formula">9x² − 16 = (3x)² − 4² = (3x − 4)(3x + 4)</span>.',
+    feedbackIncorrecto: 'Usa <span class="formula">a² − b² = (a − b)(a + b)</span>. Calcula √(9x²) = 3x y √16 = 4.',
+  },
+  4: {
+    modulo: 'Módulo 4 · Álgebra',
+    titulo: 'Cubo de Binomio',
+    desc: 'El registro de proyectos escolares usa el cubo de un binomio. Expande correctamente para restaurarlo.',
+    dificultad: '⚡⚡⚡ Avanzado',
+    xp: 250,
+    codigoSecretoLabel: 'DEL-2W',
+    codigoLetra: 'D',
+    pregunta: 'Expande completamente (x + 2)³ para recuperar el módulo de proyectos escolares.',
+    opciones: [
+      { id: 'a', texto: 'x³ + 6x² + 12x + 8' },
+      { id: 'b', texto: 'x³ + 8' },
+      { id: 'c', texto: 'x³ + 2x² + 4x + 8' },
+      { id: 'd', texto: 'x³ + 6x² + 6x + 8' },
+    ],
+    correcta: 'a',
+    pista: '(a + b)³ = a³ + 3a²b + 3ab² + b³. Aquí a = x, b = 2. Calcula coeficiente por coeficiente.',
+    feedbackCorrecto: '<strong>¡Proyectos restaurados!</strong> <span class="formula">(x+2)³ = x³ + 3x²(2) + 3x(4) + 8 = x³ + 6x² + 12x + 8</span>.',
+    feedbackIncorrecto: 'Aplica <span class="formula">(a+b)³ = a³ + 3a²b + 3ab² + b³</span>. Con a=x, b=2: los coeficientes serán 1, 6, 12, 8.',
+  },
+  5: {
+    modulo: 'Módulo 5 · Factorización',
+    titulo: 'Factorización Compuesta',
+    desc: 'El módulo de horarios requiere factorizar trinomios complejos. Encuentra la forma factorizada.',
+    dificultad: '⚡⚡⚡ Avanzado',
+    xp: 250,
+    codigoSecretoLabel: 'EPS-5V',
+    codigoLetra: 'E',
+    pregunta: 'Factoriza completamente el trinomio 2x² + 7x + 3 para restaurar el módulo de horarios.',
+    opciones: [
+      { id: 'a', texto: '(2x + 1)(x + 3)' },
+      { id: 'b', texto: '(x + 1)(2x + 3)' },
+      { id: 'c', texto: '(2x − 1)(x − 3)' },
+      { id: 'd', texto: '(2x + 3)(x + 1)' },
+    ],
+    correcta: 'a',
+    pista: 'Busca dos números que multipliquen 2·3 = 6 y sumen 7. Esos son 1 y 6. Descompón el término medio.',
+    feedbackCorrecto: '<strong>¡Horarios restaurados!</strong> Factorizando por agrupación: <span class="formula">2x² + x + 6x + 3 = x(2x+1) + 3(2x+1) = (2x+1)(x+3)</span>.',
+    feedbackIncorrecto: 'Usa el método AC: multiplica los coeficientes extremos (2·3=6) y busca dos factores que sumen el coeficiente del término medio (7). Esos son 1 y 6.',
+  },
+  6: {
+    modulo: 'Módulo 6 · Fracciones',
+    titulo: 'Binomio con Fracciones',
+    desc: 'El último módulo del SistemaEduAlgo opera con fracciones algebraicas. Simplifica para restaurarlo.',
+    dificultad: '⚡⚡⚡⚡ Experto',
+    xp: 300,
+    codigoSecretoLabel: 'ZET-1K',
+    codigoLetra: 'F',
+    pregunta: 'Expande y simplifica completamente (x/2 + 3)².',
+    opciones: [
+      { id: 'a', texto: 'x²/4 + 3x + 9' },
+      { id: 'b', texto: 'x²/2 + 6x + 9' },
+      { id: 'c', texto: 'x²/4 + 6x + 9' },
+      { id: 'd', texto: 'x² + 3x + 9' },
+    ],
+    correcta: 'a',
+    pista: 'Aplica (a+b)² con a = x/2 y b = 3. Recuerda: (x/2)² = x²/4 y el término medio es 2·(x/2)·3 = 3x.',
+    feedbackCorrecto: '<strong>¡SistemaEduAlgo restaurado!</strong> <span class="formula">(x/2+3)² = x²/4 + 2·(x/2)·3 + 9 = x²/4 + 3x + 9</span>.',
+    feedbackIncorrecto: 'Recuerda operar la fracción: <span class="formula">(x/2)² = x²/4</span> y el término medio es <span class="formula">2·(x/2)·3 = 3x</span>.',
+  },
+};
+
+/* ──────────────────────────────────────────────
+   ESTADO GLOBAL (no localStorage)
+────────────────────────────────────────────── */
+const state = {
+  retoId: 1,
+  reto: null,
+  intentos: [],
+  maxIntentos: 3,
+  respondido: false,
+  hintUsed: false,
+  timerSecs: 3600,
+  timerInterval: null,
+};
+
+/* ──────────────────────────────────────────────
+   PARTÍCULAS DE FONDO
+────────────────────────────────────────────── */
+(function initParticles(){
+  const c = document.getElementById('p-canvas');
+  const ctx = c.getContext('2d');
+  let W, H, ps = [];
+  class P {
+    constructor(){this.reset(true)}
+    reset(rand){
+      this.x = Math.random()*W;
+      this.y = rand ? Math.random()*H : H+4;
+      this.vy = -(.15+Math.random()*.25);
+      this.vx = (Math.random()-.5)*.1;
+      this.r = .6+Math.random()*1.2;
+      this.a = Math.random()*.55;
+      this.col = Math.random()>.6?'0,224,255':'168,85,247';
+    }
+    draw(){
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${this.col},${this.a})`;ctx.fill();
+    }
+    update(){
+      this.x+=this.vx;this.y+=this.vy;
+      if(this.y<-4) this.reset(false);
+    }
+  }
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;ps=[];const n=Math.floor(W*H/14000);for(let i=0;i<n;i++)ps.push(new P())}
+  window.addEventListener('resize',resize);resize();
+  (function loop(){requestAnimationFrame(loop);ctx.clearRect(0,0,W,H);ps.forEach(p=>{p.update();p.draw()})})();
+})();
+
+/* ──────────────────────────────────────────────
+   CONFETTI
+────────────────────────────────────────────── */
+function launchConfetti(){
+  const cv = document.getElementById('confetti-canvas');
+  cv.style.opacity = '1';
+  const ctx = cv.getContext('2d');
+  cv.width = window.innerWidth; cv.height = window.innerHeight;
+  const cols = ['#00e0ff','#22d37a','#a855f7','#f6a821','#ffffff'];
+  const pieces = Array.from({length:120},()=>({
+    x:Math.random()*cv.width, y:-10,
+    vx:(Math.random()-0.5)*5, vy:2+Math.random()*4,
+    r:3+Math.random()*5, col:cols[Math.floor(Math.random()*cols.length)],
+    rot:Math.random()*Math.PI*2, vr:(Math.random()-0.5)*.2, life:1
+  }));
+  let frame = 0;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    pieces.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.07; p.rot+=p.vr; p.life-=0.008;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.globalAlpha=Math.max(0,p.life);
+      ctx.fillStyle=p.col; ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);
+      ctx.restore();
+    });
+    frame++;
+    if(frame<220) requestAnimationFrame(draw);
+    else { ctx.clearRect(0,0,cv.width,cv.height); cv.style.opacity='0'; }
+  }
+  draw();
+}
+
+/* ──────────────────────────────────────────────
+   TIMER
+────────────────────────────────────────────── */
+function fmtTime(s){
+  const m=Math.floor(s/60), ss=s%60;
+  return String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+}
+function startTimer(){
+  const el = document.getElementById('clock');
+  state.timerInterval = setInterval(()=>{
+    state.timerSecs--;
+    el.textContent = fmtTime(state.timerSecs);
+    if(state.timerSecs <= 300) el.classList.add('critical');
+    else el.classList.remove('critical');
+    if(state.timerSecs <= 0){ clearInterval(state.timerInterval); el.textContent='00:00'; }
+  },1000);
+  el.textContent = fmtTime(state.timerSecs);
+}
+
+/* ──────────────────────────────────────────────
+   RENDERIZAR RETO
+────────────────────────────────────────────── */
+function renderReto(id){
+  state.retoId = id;
+  state.reto = RETOS[id] || RETOS[1];
+  const r = state.reto;
+
+  document.getElementById('reto-badge-text').textContent = `MISIÓN 0${id}`;
+  document.getElementById('mission-eyebrow-text').textContent = r.modulo;
+  document.getElementById('mission-title-span').textContent = r.titulo;
+  document.getElementById('mission-desc').textContent = r.desc;
+  document.getElementById('chip-dificultad').textContent = r.dificultad;
+  document.getElementById('chip-xp').textContent = `★ ${r.xp} XP`;
+
+  document.getElementById('question-text').textContent = r.pregunta;
+
+  // Opciones
+  const container = document.getElementById('opciones-container');
+  container.innerHTML = '';
+  const letras = ['A','B','C','D'];
+  r.opciones.forEach((op, i) => {
+    const label = document.createElement('label');
+    label.className = 'opcion-pro';
+    label.setAttribute('for', `op-${op.id}`);
+    label.innerHTML = `
+      <input class="radio-oculto" type="radio" name="respuesta" id="op-${op.id}" value="${op.id}" aria-label="Opción ${letras[i]}: ${op.texto}">
+      <div class="opcion-pro-inner">
+        <div class="opcion-letra">${letras[i]}</div>
+        <div class="opcion-texto">${op.texto}</div>
+        <svg class="opcion-icon ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+        <svg class="opcion-icon err" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>`;
+    label.querySelector('input').addEventListener('change', onOpcionChange);
+    container.appendChild(label);
+  });
+
+  // Intentos
+  renderIntentos();
+
+  // Código secreto (caracteres)
+  const codeDisplay = document.getElementById('code-display');
+  codeDisplay.innerHTML = '';
+  const codeChars = r.codigoSecretoLabel.split('');
+  codeChars.forEach(ch => {
+    const div = document.createElement('div');
+    div.className = 'code-char';
+    div.textContent = '?';
+    div.setAttribute('aria-label', 'Carácter del código oculto');
+    codeDisplay.appendChild(div);
+  });
+
+  document.getElementById('hint-text').textContent = r.pista;
+}
+
+function renderIntentos(){
+  const container = document.getElementById('attempts-dots');
+  container.innerHTML = '';
+  for(let i = 0; i < state.maxIntentos; i++){
+    const dot = document.createElement('div');
+    dot.className = 'attempt-dot';
+    dot.setAttribute('aria-label', `Intento ${i+1}`);
+    if(i < state.intentos.length){
+      if(state.intentos[i]){ dot.classList.add('used-correct'); dot.textContent='✓'; }
+      else { dot.classList.add('used-wrong'); dot.textContent='✗'; }
+    }
+    container.appendChild(dot);
+  }
+}
+
+/* ──────────────────────────────────────────────
+   SELECCIÓN DE OPCIÓN
+────────────────────────────────────────────── */
+function onOpcionChange(){
+  if(!state.respondido) document.getElementById('btn-validate').disabled = false;
+}
+
+/* ──────────────────────────────────────────────
+   VALIDAR RESPUESTA
+────────────────────────────────────────────── */
+document.getElementById('btn-validate').addEventListener('click', validarRespuesta);
+
+function validarRespuesta(){
+  if(state.respondido) return;
+  const selected = document.querySelector('input[name="respuesta"]:checked');
+  if(!selected) return;
+
+  const val = selected.value;
+  const correcto = val === state.reto.correcta;
+
+  state.intentos.push(correcto);
+  renderIntentos();
+
+  // Marcar opciones visualmente
+  const todas = document.querySelectorAll('.opcion-pro');
+  todas.forEach(label => {
+    const inp = label.querySelector('input');
+    if(inp.value === val){
+      label.classList.add(correcto ? 'correct' : 'incorrect');
+    }
+    if(!correcto && inp.value === state.reto.correcta){
+      label.classList.add('reveal-correct');
+    }
+    inp.disabled = true;
+  });
+
+  document.getElementById('btn-validate').disabled = true;
+
+  if(correcto){
+    state.respondido = true;
+    revealCode();
+    setTimeout(()=>showFeedback(true), 400);
+    setTimeout(()=>showVictory(), 3200);
+  } else {
+    const agotados = state.intentos.length >= state.maxIntentos;
+    if(agotados){
+      state.respondido = true;
+      setTimeout(()=>showFeedback(false, true), 400);
+    } else {
+      const quedan = state.maxIntentos - state.intentos.length;
+      // Shake a la tarjeta
+      const qcard = document.querySelector('.question-card');
+      qcard.classList.remove('shake');
+      void qcard.offsetWidth;
+      qcard.classList.add('shake');
+      setTimeout(()=>showFeedback(false, false, quedan), 400);
+    }
+  }
+}
+
+/* ──────────────────────────────────────────────
+   REVELAR CÓDIGO
+────────────────────────────────────────────── */
+function revealCode(){
+  const chars = document.querySelectorAll('.code-char');
+  const code = state.reto.codigoSecretoLabel;
+  chars.forEach((ch, i) => {
+    setTimeout(()=>{
+      ch.textContent = code[i];
+      ch.classList.add('revealed');
+      ch.setAttribute('aria-label', `Carácter revelado: ${code[i]}`);
+    }, i * 200);
+  });
+}
+
+/* ──────────────────────────────────────────────
+   FEEDBACK
+────────────────────────────────────────────── */
+function showFeedback(correcto, agotado = false, intentosRestantes = 0){
+  const card = document.getElementById('feedback-card');
+  const icon = document.getElementById('feedback-icon');
+  const title = document.getElementById('feedback-title');
+  const body = document.getElementById('feedback-body');
+  const actions = document.getElementById('feedback-actions');
+
+  card.className = 'feedback-card';
+  void card.offsetWidth;
+
+  if(correcto){
+    card.classList.add('correct', 'visible');
+    icon.textContent = '✓';
+    title.textContent = '¡Código recuperado!';
+    body.innerHTML = state.reto.feedbackCorrecto;
+    actions.innerHTML = `<button class="btn-next" id="btn-next-reto">Continuar en el mapa →</button>`;
+    document.getElementById('btn-next-reto').addEventListener('click', ()=>{ window.location.href='mapa.html'; });
+    launchConfetti();
+  } else if(agotado){
+    card.classList.add('incorrect', 'visible');
+    icon.textContent = '✗';
+    title.textContent = 'Intentos agotados';
+    body.innerHTML = state.reto.feedbackIncorrecto;
+    actions.innerHTML = `<button class="btn-retry" id="btn-retry">Reintentar misión</button><a href="mapa.html" class="btn-next" style="text-decoration:none;display:flex;align-items:center;justify-content:center">Volver al mapa</a>`;
+    document.getElementById('btn-retry').addEventListener('click', reiniciarReto);
+  } else {
+    card.classList.add('incorrect', 'visible');
+    icon.textContent = '✗';
+    title.textContent = `Incorrecto — ${intentosRestantes} intento${intentosRestantes>1?'s':''} restante${intentosRestantes>1?'s':''}`;
+    body.innerHTML = state.reto.feedbackIncorrecto;
+    actions.innerHTML = `<button class="btn-retry" id="btn-retry-partial">Intentar de nuevo</button>`;
+    document.getElementById('btn-retry-partial').addEventListener('click', ()=>{
+      hideFeedback();
+      const todas = document.querySelectorAll('.opcion-pro');
+      todas.forEach(l => {
+        l.classList.remove('incorrect','correct','reveal-correct');
+        const inp = l.querySelector('input');
+        inp.checked = false;
+        inp.disabled = false;
+      });
+      document.getElementById('btn-validate').disabled = true;
+    });
+  }
+}
+
+function hideFeedback(){
+  const card = document.getElementById('feedback-card');
+  card.classList.remove('visible');
+}
+
+document.getElementById('btn-close-feedback').addEventListener('click', hideFeedback);
+
+/* ──────────────────────────────────────────────
+   VICTORIA
+────────────────────────────────────────────── */
+function showVictory(){
+  hideFeedback();
+  const vs = document.getElementById('victory-screen');
+  document.getElementById('victory-code-value').textContent = state.reto.codigoSecretoLabel;
+  document.getElementById('victory-xp-value').textContent = `+${state.reto.xp} XP desbloqueados`;
+  vs.classList.add('active');
+  launchConfetti();
+}
+
+/* ──────────────────────────────────────────────
+   REINICIAR
+────────────────────────────────────────────── */
+function reiniciarReto(){
+  hideFeedback();
+  state.intentos = [];
+  state.respondido = false;
+  renderReto(state.retoId);
+}
+
+/* ──────────────────────────────────────────────
+   PISTA
+────────────────────────────────────────────── */
+document.getElementById('btn-hint').addEventListener('click', ()=>{
+  if(state.hintUsed || state.respondido) return;
+  state.hintUsed = true;
+  state.timerSecs = Math.max(0, state.timerSecs - 30);
+  document.getElementById('clock').textContent = fmtTime(state.timerSecs);
+  document.getElementById('hint-locked').style.display = 'none';
+  document.getElementById('hint-text').classList.add('visible');
+  document.getElementById('btn-hint').disabled = true;
+});
+
+/* ──────────────────────────────────────────────
+   INICIALIZACIÓN
+────────────────────────────────────────────── */
+(function init(){
+  // Leer ?id= del URL
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get('id')) || 1;
+  renderReto(id);
+  startTimer();
+})();
+</script>
 </body>
 </html>
