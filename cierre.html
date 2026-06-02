@@ -1,58 +1,220 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cierre de misión | Escape Room Matemático</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <title>Misión Finalizada — Escape Room Algebraico</title>
+
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+    :root {
+      --bg: #0a0c10; --surface: #0f1117; --surface-2: #151820; --border: rgba(255,255,255,0.07);
+      --accent: #38BDF8; --accent-2: #818CF8; --gold: #F59E0B; --green: #34D399; --red: #EF4444;
+      --text: #e2e8f0; --muted: #64748b; 
+      --font-body: 'Satoshi', sans-serif; --font-mono: 'Orbitron', monospace;
+      --radius: 12px; --radius-lg: 20px;
+    }
+
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      min-height: 100dvh; display: flex; flex-direction: column; overflow-x: hidden;
+    }
+
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: linear-gradient(rgba(56,189,248,.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(56,189,248,.03) 1px, transparent 1px);
+      background-size: 60px 60px; pointer-events: none;
+    }
+
+    main {
+      position: relative; z-index: 1; flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem 1.5rem; gap: 1.5rem;
+    }
+
+    .card {
+      width: 100%; max-width: 580px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      box-shadow: 0 0 50px rgba(0,0,0,0.4);
+      text-align: center;
+      animation: fade-up 0.8s ease both;
+    }
+
+    /* Variantes de estado */
+    .card.success { border-color: rgba(52,211,153,0.3); box-shadow: 0 0 60px rgba(52,211,153,0.1); }
+    .card.timeout { border-color: rgba(239,68,68,0.3); box-shadow: 0 0 60px rgba(239,68,68,0.1); }
+
+    .card-body { padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; }
+
+    .icon-wrap {
+      width: 80px; height: 80px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; margin-bottom: 1.5rem;
+    }
+    .success .icon-wrap { background: rgba(52,211,153,0.1); border: 2px solid rgba(52,211,153,0.4); color: var(--green); }
+    .timeout .icon-wrap { background: rgba(239,68,68,0.1); border: 2px solid rgba(239,68,68,0.4); color: var(--red); }
+
+    .eyebrow {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.5rem;
+    }
+    .success .eyebrow { color: var(--green); }
+    .timeout .eyebrow { color: var(--red); }
+
+    .titulo {
+      font-family: var(--font-mono); font-size: clamp(1.8rem, 4vw, 2.5rem); line-height: 1.1;
+      margin-bottom: 1rem; font-weight: 900;
+    }
+    .success .titulo { color: #fff; text-shadow: 0 0 20px rgba(52,211,153,0.4); }
+    .timeout .titulo { color: #fff; text-shadow: 0 0 20px rgba(239,68,68,0.4); }
+
+    .mensaje { font-size: 1rem; line-height: 1.6; color: #94a3b8; margin-bottom: 2rem; max-width: 480px; }
+    .mensaje strong { color: #fff; }
+
+    /* Stats */
+    .stats-container {
+      display: flex; gap: 1rem; width: 100%; justify-content: center; margin-bottom: 2.5rem;
+    }
+    .stat-box {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.5rem; flex: 1; max-width: 200px;
+    }
+    .stat-val { font-family: var(--font-mono); font-size: 1.8rem; font-weight: 700; color: var(--accent); margin-bottom: 0.2rem; }
+    .success .stat-box .stat-val { color: var(--green); }
+    .stat-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* Botón */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
+      padding: 1rem 2rem; font-family: var(--font-mono); font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; border: none; border-radius: var(--radius);
+      cursor: pointer; transition: 0.2s ease; width: 100%; max-width: 320px;
+    }
+    .success .btn {
+      background: linear-gradient(135deg, var(--green) 0%, #10b981 100%); color: #000;
+      box-shadow: 0 0 30px rgba(52,211,153,0.3);
+    }
+    .timeout .btn {
+      background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%); color: #000;
+      box-shadow: 0 0 30px rgba(56,189,248,0.3);
+    }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+    footer {
+      position: relative; z-index: 1; text-align: center; padding: 1rem;
+      font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent); }
+
+    @keyframes fade-up { from {opacity:0; transform:translateY(20px)} to {opacity:1; transform:translateY(0)} }
+
+    @media (max-width: 520px) {
+      .card-body { padding: 2rem 1.25rem; }
+      .stats-container { flex-direction: column; }
+      .stat-box { max-width: 100%; }
+    }
+  </style>
 </head>
-<body class="cierre-body">
+<body>
 
-  <main class="cierre-card" aria-labelledby="main-title">
-    <div id="medalla" aria-hidden="true">🏆</div>
+  <div class="bg-grid" aria-hidden="true"></div>
 
-    <div id="state-badge" class="state-badge success">
-      ✦ Sistema restaurado
+  <main>
+    <div id="resultado-card" class="card" role="main">
+      <div class="card-body">
+
+        <div class="icon-wrap" id="icon-resultado">🏆</div>
+
+        <p class="eyebrow" id="text-eyebrow">Evaluación del Sistema</p>
+        <h1 class="titulo" id="text-titulo">MISIÓN CUMPLIDA</h1>
+
+        <p class="mensaje" id="text-mensaje">
+          Has restaurado con éxito el algoritmo central. Las decisiones matemáticas han vuelto a ser exactas.
+        </p>
+
+        <div class="stats-container">
+          <div class="stat-box">
+            <div class="stat-val" id="stat-retos">0/6</div>
+            <div class="stat-lbl">Retos Superados</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-tiempo">00:00</div>
+            <div class="stat-lbl">Tiempo Empleado</div>
+          </div>
+        </div>
+
+        <button id="btn-reiniciar" class="btn">
+          <span>REINICIAR MISIÓN</span>
+        </button>
+
+      </div>
     </div>
-
-    <h1 id="main-title" class="main-title success">
-      ¡Misión cumplida!
-    </h1>
-
-    <p class="cierre-message" id="mensaje-texto">
-      Has completado la ruta de retos del escape room matemático.
-      Cada decisión correcta ayudó a restaurar el sistema del colegio y a demostrar
-      dominio sobre productos notables, factorización y simplificación algebraica.
-    </p>
-
-    <section class="stats" aria-label="Resumen de resultados">
-      <div class="stat-card">
-        <span class="label">Retos resueltos</span>
-        <span class="value" id="stat-retos">0/6</span>
-      </div>
-
-      <div class="stat-card">
-        <span class="label">Tiempo utilizado</span>
-        <span class="value" id="stat-tiempo">00:00</span>
-      </div>
-
-      <div class="stat-card">
-        <span class="label">Progreso total</span>
-        <span class="value" id="stat-pct">0%</span>
-      </div>
-    </section>
-
-    <section class="cierre-actions" aria-label="Acciones finales">
-      <button type="button" class="btn btn-primary" id="btn-reset">
-        Reiniciar misión
-      </button>
-
-      <button type="button" class="btn btn-secondary" id="btn-mapa">
-        Volver al mapa
-      </button>
-    </section>
   </main>
 
-  <script src="js/gameEngine.js"></script>
+  <footer>Desarrollado por <span>Eduquemos con TIC</span> · Matemáticas 8° · 2026</footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const TOTAL_RETOS = 6;
+      const DURATION_SEC = 45 * 60;
+
+      let estado = { startTime: Date.now(), resueltos: [], penalizacion: 0 };
+      try {
+        const saved = sessionStorage.getItem('er-state');
+        if(saved) estado = JSON.parse(saved);
+      } catch(e){}
+
+      const resueltosCount = Array.isArray(estado.resueltos) ? estado.resueltos.length : 0;
+      const exito = resueltosCount >= TOTAL_RETOS;
+
+      // Cálculo de tiempo
+      const elapsedRaw = Math.floor((Date.now() - estado.startTime) / 1000);
+      const penalizacion = estado.penalizacion || 0;
+      const totalTimeUsed = Math.min(elapsedRaw + penalizacion, DURATION_SEC); // no superar los 45 min
+
+      const m = Math.floor(totalTimeUsed / 60);
+      const s = totalTimeUsed % 60;
+      const timeStr = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+
+      // Elementos del DOM
+      const card = document.getElementById('resultado-card');
+      const icon = document.getElementById('icon-resultado');
+      const eyebrow = document.getElementById('text-eyebrow');
+      const titulo = document.getElementById('text-titulo');
+      const mensaje = document.getElementById('text-mensaje');
+
+      document.getElementById('stat-retos').textContent = resueltosCount + '/' + TOTAL_RETOS;
+      document.getElementById('stat-tiempo').textContent = timeStr;
+
+      if(exito){
+        card.classList.add('success');
+        icon.textContent = '🏆';
+        eyebrow.textContent = 'SISTEMA RESTAURADO';
+        titulo.textContent = 'MISIÓN CUMPLIDA';
+        mensaje.innerHTML = 'Has restaurado con éxito el algoritmo central utilizando tu <strong>pensamiento algebraico</strong>. Las decisiones matemáticas han vuelto a ser exactas.';
+      } else {
+        card.classList.add('timeout');
+        icon.textContent = '⏳';
+        eyebrow.textContent = 'SISTEMA BLOQUEADO';
+        titulo.textContent = 'TIEMPO AGOTADO';
+        mensaje.innerHTML = 'No alcanzó el tiempo para restaurar todas las decisiones del sistema. Pero cada reto resuelto fue un paso importante. <strong>Usa lo aprendido y vuelve a intentarlo.</strong>';
+      }
+
+      // Lógica de reiniciar
+      document.getElementById('btn-reiniciar').addEventListener('click', () => {
+        sessionStorage.removeItem('er-state');
+        window.location.href = 'index.html';
+      });
+    });
+  </script>
 </body>
 </html>
