@@ -3,221 +3,169 @@
 // ============================================================
 
 // ──────────────────────────────────────────────────────────
-//  BASE DE DATOS DE RETOS
+//  BASE DE DATOS DE RETOS COMPLETA · ESCAPE ROOM ALGEBRAICO
 // ──────────────────────────────────────────────────────────
+
 const RETOS = [
   {
     id: 1,
+    tipo: 1, // Selección Múltiple (Clásico)
     titulo: "El mural que nadie midió",
-    eyebrow: "Nivel 1 · Cuadrado de binomio · (a+b)²",
+    eyebrow: "Nivel 1 · Cuadrado de binomio · (a+b)¹",
     tags: [
       { label: "Nivel 1 — Básico", cls: "rtag-green" },
       { label: "(a+b)²", cls: "rtag-purple" },
       { label: "Área", cls: "rtag-gold" }
     ],
-    narrativa: `El sistema aprobó un presupuesto para un mural cuyo lado mide
-    <strong>(3x + 5)</strong> metros. Calculó el área usando solo
-    <em>9x² + 25</em>, ignorando el término central.
-    El presupuesto quedó subvalorado. ¿Cuál es el área correcta del mural?`,
-    enunciado: "Desarrolla correctamente: (3x + 5)²",
+    narrativa: `El software de infraestructura aprobó el presupuesto para un mural artístico en el patio principal cuyo lado mide <strong>(3x + 5)</strong> metros. Sin embargo, el algoritmo calculó el área usando la expresión simplista <em>9x² + 25</em>, ignorando por completo la existencia de la zona central de la superficie. Como el presupuesto quedó subvalorado debido a este vacío geométrico, los materials no alcanzarán. ¿Cuál es el área matemática real que el sistema debió procesar?`,
+    enunciado: "Desarrolla correctamente el producto notable: (3x + 5)²",
     opciones: [
       {
         id: "1a",
         texto: "9x² + 25",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Olvidaste el término del <em>doble producto</em>.
-        El cuadrado de un binomio <em>nunca</em> es solo la suma de cuadrados.
-        Recuerda: <em>(a+b)² = a² + 2ab + b²</em>. Aquí
-        <em>a = 3x</em> y <em>b = 5</em>, así que el doble producto es
-        <em>2·(3x)·5 = 30x</em>.`
+        feedback: `<strong>Incorrecto.</strong> El algoritmo cometió el error clásico: asumir que el cuadrado de un binomio es solo la suma de los cuadrados individuales. Olvidaste el <em>doble producto</em>. Recuerda: <em>(a+b)² = a² + 2ab + b²</em>. Al ser <em>a = 3x</em> y <em>b = 5</em>, el término central indispensable es <em>2 · (3x) · 5 = 30x</em>.`
       },
       {
         id: "1b",
         texto: "9x² + 15x + 25",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> El coeficiente del término central está mal.
-        El doble producto es <em>2·(3x)·5 = 30x</em>, no <em>15x</em>.
-        Un error frecuente es multiplicar los términos sin aplicar el factor 2.`
+        feedback: `<strong>Incorrecto.</strong> El coeficiente del término central está mal calculado. Multiplicaste los términos del binomio (3x · 5 = 15x), pero olvidaste aplicar el factor doble de la regla. El producto central real es <em>2 · (3x) · 5 = 30x</em>.`
       },
       {
         id: "1c",
         texto: "9x² + 30x + 25",
         correcta: true,
-        feedback: `<strong>¡Correcto!</strong> <em>(3x+5)² = (3x)² + 2·(3x)·5 + 5² = 9x² + 30x + 25</em>.
-        El término <em>30x</em> representa el doble producto que el sistema ignoró.
-        En contexto real, este término corresponde a los dos rectángulos de área
-        <em>3x·5</em> que forman parte del cuadrado total.`
+        feedback: `<strong>¡Correcto!</strong> Aplicaste perfectamente la estructura de la identidad: <em>(3x+5)² = (3x)² + 2·(3x)·5 + 5² = 9x² + 30x + 25</em>. El término <em>30x</em> representa el área combinada de las secciones intermedias del mural que el sistema había borrado de la planificación.`
       },
       {
         id: "1d",
         texto: "6x² + 30x + 10",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Parece que multiplicaste los coeficientes
-        de forma lineal. Para elevar al cuadrado un binomio se aplica
-        <em>(a+b)² = a² + 2ab + b²</em>, no se distribuye la potencia sobre cada término
-        sumando coeficientes.`
+        feedback: `<strong>Incorrecto.</strong> Confundiste la operación de elevar al cuadrado con multiplicar por dos de forma lineal (asumiste que 3x al cuadrado es 6x y 5 al cuadrado es 10). Recuerda que una potencia implica multiplicar un término por sí mismo: <em>(3x) · (3x) = 9x²</em> y <em>5 · 5 = 25</em>.`
       }
     ]
   },
   {
     id: 2,
+    tipo: 2, // Arrastrar y Soltar (Drag & Drop)
     titulo: "El terreno que se recortó",
     eyebrow: "Nivel 2 · Cuadrado de diferencia · (a−b)²",
     tags: [
       { label: "Nivel 2 — Fácil", cls: "rtag-green" },
       { label: "(a−b)²", cls: "rtag-purple" },
-      { label: "Factor común", cls: "rtag-pink" }
+      { label: "Distribución espacial", cls: "rtag-pink" }
     ],
-    narrativa: `El colegio redujo el terreno de su huerto restando <strong>4</strong> metros
-    a cada lado. El nuevo lado mide <strong>(5x − 4)</strong>. El sistema calculó
-    el área como <em>25x² + 16</em>, cambiando el signo del término central.
-    Esto sobreestimó el espacio disponible y se compraron más semillas de las necesarias.
-    ¿Cuál es el área correcta?`,
-    enunciado: "Desarrolla correctamente: (5x − 4)²",
+    narrativa: `Para ampliar los pasillos externos, el sistema automatizado redujo las dimensiones del huerto escolar restando 4 metros a cada lado. El nuevo terreno quedó cuadrado con un lado equivalente a <strong>(5x − 4)</strong> metros. No obstante, el procesador registró el área final como <em>25x² + 16</em>, alterando por completo la naturaleza de la reducción. Esta lectura errónea sobreestimó el espacio real, provocando que se comprara un exceso inútil de semillas agrícolas. ¿Qué expresión matemática restablece el cálculo correcto?`,
+    enunciado: "Arrastra el desarrollo correcto para la reducción del área: (5x − 4)²",
     opciones: [
       {
         id: "2a",
         texto: "25x² + 16",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Falta completamente el término central.
-        <em>(a−b)² = a²−2ab+b²</em>. Con <em>a=5x</em> y <em>b=4</em>,
-        el doble producto es <em>2·5x·4 = 40x</em> y va <strong>restando</strong>.`
+        feedback: `<strong>Incorrecto.</strong> Al omitir el término central, el sistema actúa como si restarle dimensiones a un terreno no afectara su área de forma escalonada. Falta el término <em>-2ab</em> de la estructura <em>(a-b)² = a² - 2ab + b²</em>.`
       },
       {
         id: "2b",
         texto: "25x² + 40x + 16",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> El término central tiene signo equivocado.
-        En el cuadrado de una <em>diferencia</em> el término central es siempre
-        <strong>negativo</strong>: <em>(a−b)² = a²−2ab+b²</em>.`
+        feedback: `<strong>Incorrecto.</strong> Calculaste la magnitud del término central correctamente, pero fallaste en la operación del signo. Si estamos restando dimensiones en el binomio original, el término central del trinomio resultante debe ser estrictamente <strong>negativo</strong>.`
       },
       {
         id: "2c",
         texto: "25x² − 40x + 16",
         correcta: true,
-        feedback: `<strong>¡Correcto!</strong> <em>(5x−4)² = 25x²−40x+16</em>.
-        El signo negativo del término central <em>−40x</em> es clave: indica que
-        al restar dimensión al terreno, el área disminuye más de lo que parece si
-        solo se consideran los cuadrados extremos.`
+        feedback: `<strong>¡Correcto!</strong> El desarrollo geométrico exacto es <em>(5x−4)² = 25x² − 40x + 16</em>. El signo negativo en el término <em>-40x</em> es el indicador crítico que demuestra cómo el área disminuye progresivamente al contraer los límites de la zona de cultivo.`
       },
       {
         id: "2d",
         texto: "25x² − 20x + 16",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> El coeficiente del término central es errado.
-        El doble producto es <em>2·(5x)·4 = 40x</em>, no <em>20x</em>.
-        Recuerda que el coeficiente 2 multiplica el producto de los dos términos del binomio.`
+        feedback: `<strong>Incorrecto.</strong> Omitiste el multiplicador constante de la regla matemática. Determinaste el producto simple de los términos (5x · 4 = 20x), pero la ecuación del cambio exige el doble de dicho valor: <em>2 · (5x) · 4 = 40x</em>.`
       }
     ]
   },
   {
     id: 3,
+    tipo: 3, // Escribir "correcto" al frente
     titulo: "El contenedor de doble cara",
     eyebrow: "Nivel 3 · Diferencia de cuadrados · (a+b)(a−b)",
     tags: [
       { label: "Nivel 3 — Medio", cls: "rtag-gold" },
-      { label: "(a+b)(a−b) = a²−b²", cls: "rtag-purple" },
+      { label: "(a+b)(a−b)", cls: "rtag-purple" },
       { label: "Diferencia cuadrados", cls: "rtag-pink" }
     ],
-    narrativa: `El sistema debe calcular el área de una losa rectangular con lados
-    <strong>(7x + 6)</strong> y <strong>(7x − 6)</strong>. El sistema desarrolló
-    el producto como <em>49x² + 84x − 84x − 36</em> pero luego "simplificó"
-    incorrectamente llegando a <em>49x² + 36</em>. Ese error hizo que se
-    ordenara más material del necesario. ¿Cuál es el resultado correcto?`,
-    enunciado: "Calcula correctamente: (7x + 6)(7x − 6)",
+    narrativa: `El departamento de logística requiere recubrir una losa industrial de almacenamiento con dimensiones asimétricas: un largo de <strong>(7x + 6)</strong> metros y un ancho de <strong>(7x − 6)</strong> metros. El microcontrolador expandió el producto de las dimensiones como <em>49x² + 84x − 84x − 36</em>, pero su base de datos simplificó de forma errónea los signos internos guardando la expresión final como <em>49x² + 36</em>. De no corregirse, este error en los planos generará un desfase en el presupuesto de compra del material. ¿Cuál es el producto neto real?`,
+    enunciado: "Analiza las opciones y escribe la palabra <strong>correcto</strong> frente a la simplificación válida de: (7x + 6)(7x − 6)",
     opciones: [
       {
         id: "3a",
         texto: "49x² + 36",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Este es el error del sistema: sumar los
-        cuadrados en lugar de restarlos. El producto notable de una suma por una
-        diferencia siempre produce <em>a²−b²</em>. Los términos cruzados se cancelan
-        y el resultado es siempre una <strong>resta</strong>.`
+        feedback: `<strong>Incorrecto.</strong> Este es exactamente el bug del sistema de almacenamiento: transformar un producto de binomios conjugados en una suma de cuadrados. Al multiplicar términos con signos opuestos, el último término (+6 · -6) debe ser obligatoriamente una <strong>resta</strong>.`
       },
       {
         id: "3b",
         texto: "49x² − 36",
         correcta: true,
-        feedback: `<strong>¡Correcto!</strong> <em>(7x+6)(7x−6) = (7x)²−6² = 49x²−36</em>.
-        Los términos cruzados <em>+42x</em> y <em>−42x</em> se anulan exactamente.
-        Esta identidad es muy eficiente: evita desarrollar cuatro términos y
-        permite calcular áreas diferenciales con solo dos operaciones.`
+        feedback: `<strong>¡Correcto!</strong> Identificaste la diferencia de cuadrados perfecta: <em>(7x+6)(7x−6) = (7x)² − 6² = 49x² − 36</em>. Los términos lineales opuestos (+42x y -42x) se anulan de manera exacta, optimizando la expresión a solo dos componentes.`
       },
       {
         id: "3c",
         texto: "49x² − 84x − 36",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Los términos cruzados <em>+42x</em> y
-        <em>−42x</em> suman cero y deben desaparecer. Si aparece un término con <em>x</em>
-        en el resultado de <em>(a+b)(a−b)</em>, es una señal de que el producto
-        notable no fue aplicado correctamente.`
+        feedback: `<strong>Incorrecto.</strong> Agrupaste erróneamente los productos cruzados asumiendo que ambos tenían signos negativos. En una estructura conjugada, un término sumado y otro restado de igual magnitud producen cero, eliminando cualquier rastro de la variable lineal x.`
       },
       {
         id: "3d",
         texto: "49x² + 84x − 36",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> De nuevo aparece un término lineal que no
-        debería existir. Recuerda: <em>(a+b)(a−b) = a²−b²</em> siempre.
-        Los términos medios se cancelan por ser opuestos: <em>+ab</em> y <em>−ab</em>.`
+        feedback: `<strong>Incorrecto.</strong> Conservaste un término lineal positivo que no tiene justificación algebraica. Recuerda que los productos internos intermedios (+42x y -42x) se cancelan mutuamente de forma total.`
       }
     ]
   },
   {
     id: 4,
+    tipo: 2, // Arrastrar y Soltar (Se evalúa igual que el Tipo 2)
     titulo: "El tanque de agua del colegio",
     eyebrow: "Nivel 4 · Cubo de binomio · (2x+3)³",
     tags: [
       { label: "Nivel 4 — Medio-alto", cls: "rtag-gold" },
-      { label: "(a+b)³", cls: "rtag-purple" },
+      { label: "(2x+3)³", cls: "rtag-purple" },
       { label: "Volumen cúbico", cls: "rtag-pink" }
     ],
-    narrativa: `El colegio instaló un tanque cúbico de lado <strong>(2x + 3)</strong> dm.
-    El sistema calculó el volumen como <em>8x³ + 27</em>, ignorando los
-    términos interiores. El pedido de agua quedó 60% subestimado en ciertos
-    valores de <em>x</em>. ¿Cuál es el volumen correcto del tanque?`,
-    enunciado: "Desarrolla completamente: (2x + 3)³",
+    narrativa: `Como parte del plan de contingencia hídrica, la escuela instaló un tanque de reserva cúbico cuya arista mide <strong>(2x + 3)</strong> decímetros. El procesador centralizado estimó la capacidad total usando la fórmula lineal errónea <em>8x³ + 27</em>, omitiendo las zonas de expansión volumétrica interna. En un escenario de alta demanda, este error de cálculo causará que el suministro se agote un 60% antes de lo previsto por falta de volumen real registrado. ¿Qué polinomio describe la capacidad cúbica verdadera?`,
+    enunciado: "Arrastra la opción con el polinomio tridimensional exacto que representa el volumen: (2x + 3)³",
     opciones: [
       {
         id: "4a",
         texto: "8x³ + 27",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Este es exactamente el error del sistema.
-        <em>(a+b)³ ≠ a³+b³</em>. El desarrollo completo tiene <strong>4 términos</strong>
-        con coeficientes 1-3-3-1. Los términos intermedios
-        <em>3a²b</em> y <em>3ab²</em> representan volúmenes reales del cubo.`
+        feedback: `<strong>Incorrecto.</strong> El sistema ignoró por completo la tridimensionalidad espacial. Un cubo de binomio no se reduce a elevar sus extremos. Requiere un desarrollo detallado de 4 términos bajo el patrón clásico de coeficientes algebraicos 1-3-3-1.`
       },
       {
         id: "4b",
         texto: "8x³ + 12x² + 18x + 27",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Revisa los coeficientes de los términos
-        intermedios. Con <em>a=2x</em> y <em>b=3</em>:
-        <em>3a²b = 3·(2x)²·3 = 36x²</em> y
-        <em>3ab² = 3·(2x)·9 = 54x</em>. Los coeficientes 12 y 18 no son correctos.`
+        feedback: `<strong>Incorrecto.</strong> Los coeficientes intermedios calculados se quedaron cortos. Al aplicar la regla del triple del primero al cuadrado por el segundo <em>3a²b</em> y el triple del primero por el segundo al cuadrado <em>3ab²</em>, debes procesar las potencias internas antes de multiplicar por 3.`
       },
       {
         id: "4c",
         texto: "8x³ + 36x² + 54x + 27",
         correcta: true,
-        feedback: `<strong>¡Correcto!</strong>
-        <em>(2x+3)³ = (2x)³ + 3·(2x)²·3 + 3·(2x)·3² + 3³
-        = 8x³ + 36x² + 54x + 27</em>.
-        Los coeficientes 36 y 54 se obtienen aplicando correctamente
-        <em>3a²b</em> y <em>3ab²</em>. Omitirlos subestima el volumen real del tanque.`
+        feedback: `<strong>¡Correcto!</strong> Desarrollaste el volumen completo de forma impecable: <em>(2x)³ + 3·(2x)²·3 + 3·(2x)·3² + 3³ = 8x³ + 36x² + 54x + 27</em>. Estos términos centrales representan la capacidad real de almacenamiento que evitará el desabastecimiento hídrico.`
       },
       {
         id: "4d",
         texto: "6x³ + 36x² + 54x + 27",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> El primer término es <em>(2x)³ = 8x³</em>,
-        no <em>6x³</em>. Al elevar al cubo un monomio con coeficiente se aplica
-        <em>(ka)³ = k³·a³</em>, por lo que <em>(2x)³ = 2³·x³ = 8x³</em>.`
+        feedback: `<strong>Incorrecto.</strong> El primer término presenta una falla operativa grave. Al elevar al cubo el monomio inicial <em>(2x)³</em>, debes aplicar el exponente tanto a la variable como al coeficiente numérico: <em>2³ = 8</em>, no <em>2 · 3 = 6</em>.`
       }
     ]
   },
   {
     id: 5,
+    tipo: 5, // Escribir la respuesta exacta
     titulo: "El festival de matemáticas",
     eyebrow: "Nivel 5 · Factorización compuesta · Factor común + diferencia de cuadrados",
     tags: [
@@ -225,110 +173,77 @@ const RETOS = [
       { label: "Factor común", cls: "rtag-purple" },
       { label: "Diferencia de cuadrados", cls: "rtag-gold" }
     ],
-    narrativa: `El presupuesto de tres proyectos escolares se modela con la expresión
-    <strong>50x³ − 72x</strong>. El sistema dice que es irreducible y la usa
-    directamente para distribuir fondos, generando montos inexactos.
-    El equipo debe factorizar completamente para detectar la estructura real
-    del presupuesto.`,
-    enunciado: "Factoriza completamente: 50x³ − 72x",
+    narrativa: `El fondo monetario asignado para los proyectos estudiantiles del festival se rige bajo la expresión polinómica <strong>50x³ − 72x</strong>. El sistema informático de auditoría bloqueó los desembolsos tras catalogar esta expresión como "irreducible", distribuyendo fondos fijos arbitrarios que perjudican la compra de materiales para los prototipos. Para disolver el bloqueo y revelar la verdadera estructura de costos, debes descomponer la expresión en sus factores algebraicos primos absolutos.`,
+    enunciado: "Factoriza la expresión completamente para destrabar los fondos: 50x³ − 72x",
+    instruccionExtra: "Escribe la respuesta factorizada sin usar ningún espacio en blanco. El orden estricto debe ser: primero el factor común monomio, seguido de los binomios ordenados (de mayor a menor grado en las x). Ejemplo exacto de formato: 2x(5x+6)(5x-6)",
+    respuestaExacta: "2x(5x+6)(5x-6)",
     opciones: [
       {
         id: "5a",
         texto: "x(50x² − 72)",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Se extrajo el factor <em>x</em> pero no
-        el numérico. El MCD de 50 y 72 es <em>2</em>, por lo tanto el factor común
-        completo es <em>2x</em>. Además, la expresión <em>50x²−72</em> sigue siendo
-        factorizable como diferencia de cuadrados tras extraer el 2.`
+        feedback: `<strong>Incorrecto.</strong> Extrajiste con éxito el factor común literal (x), pero pasaste por alto que tanto 50 como 72 comparten un Máximo Común Divisor numérico igual a 2. Además, el binomio interno resultante aún se puede seguir factorizando.`
       },
       {
         id: "5b",
         texto: "2x(25x² − 36)",
         correcta: false,
-        feedback: `<strong>Incorrecto — incompleto.</strong> Extrajiste correctamente el
-        factor <em>2x</em>, pero <em>25x²−36</em> es una <strong>diferencia de cuadrados</strong>:
-        <em>25x²−36 = (5x)²−6² = (5x+6)(5x−6)</em>.
-        Una factorización completa no deja expresiones factorizables sin desarrollar.`
+        feedback: `<strong>Incorrecto — Factorización incompleta.</strong> El paso inicial es correcto al extraer el factor común <em>2x</em>, pero el sistema rechaza la solución porque el binomio interior es una <strong>diferencia de cuadrados perfectos</strong> elemental que debe ser descompuesta en binomios conjugados.`
       },
       {
         id: "5c",
         texto: "2x(5x + 6)(5x − 6)",
         correcta: true,
-        feedback: `<strong>¡Correcto!</strong>
-        <em>50x³−72x = 2x(25x²−36) = 2x(5x+6)(5x−6)</em>.
-        El proceso tiene dos etapas: primero extraer el factor común <em>2x</em>,
-        luego identificar la diferencia de cuadrados <em>(5x)²−6²</em>.
-        Esta estructura revela que el presupuesto tiene una distribución
-        simétrica y factorizable de forma exacta.`
+        feedback: `<strong>¡Correcto!</strong> Ejecutaste la auditoría de forma impecable. Primero aislaste el factor común general <em>2x</em> y luego desarmaste la diferencia de cuadrados restante <em>(5x)² − 6²</em> en sus componentes conjugados. El presupuesto ahora es completamente transparente.`
       },
       {
         id: "5d",
         texto: "2(25x³ − 36x)",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Se extrajo el factor numérico 2 pero no
-        el literal <em>x</em>. El MCD completo es <em>2x</em> porque todos los
-        términos son divisibles tanto por 2 como por <em>x</em>. Siempre se debe
-        extraer simultáneamente la parte numérica y literal del factor común.`
+        feedback: `<strong>Incorrecto.</strong> Realizaste la extracción numérica pero dejaste la variable x dentro de los términos del polinomio, impidiendo que se revele la verdadera estructura cuadrática interna. Ambos términos compartían la variable x con exponente común.`
       }
     ]
   },
   {
     id: 6,
+    tipo: 6, // Código Final + Animación
     titulo: "La fórmula justa del sistema",
     eyebrow: "Nivel 6 · Experto · Binomio con fracciones + simplificación",
     tags: [
       { label: "Nivel 6 — Experto", cls: "rtag-pink" },
       { label: "Misión final", cls: "rtag-purple" },
-      { label: "Bloom: Creación", cls: "rtag-gold" }
+      { label: "Criterio analítico", cls: "rtag-gold" }
     ],
-    narrativa: `La fórmula de bonificación del sistema usa la expresión
-    <strong>(½x + 4)² − 16</strong>. El sistema la simplifica erróneamente
-    como <em>¼x²</em>, ignorando todos los demás términos. Esto hace que
-    estudiantes con baja participación reciban bonificación cero cuando en
-    realidad les corresponde un valor positivo. El equipo debe corregir el
-    desarrollo y simplificación completa de la expresión.`,
-    enunciado: "Desarrolla y simplifica completamente: (½x + 4)² − 16",
+    narrativa: `El núcleo lógico del sistema evalúa la asignación de becas de transporte utilizando la compleja ecuación de rendimiento <strong>(½x + 4)² − 16</strong>. Debido a una simplificación de código descuidada en los servidores centrales, el software redujo el algoritmo simplemente a <em>¼x²</em>, eliminando el componente de asistencia semanal representado por la variable lineal. Esto ha provocado que decenas de estudiantes con un excelente proceso de mejora queden excluidos. Resuelve el desarrollo y deduce la simplificación definitiva para generar el código de acceso que restaurará los derechos de la comunidad estudiantil.`,
+    enunciado: "Desarrolla y simplifica al máximo la ecuación de asignación: (½x + 4)² − 16",
     opciones: [
       {
         id: "6a",
         texto: "¼x²",
+        codigo: "ALFA-00",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Esta es exactamente la simplificación
-        errónea del sistema. El desarrollo correcto es:
-        <em>(½x+4)² = ¼x² + 4x + 16</em>, y al restar 16:
-        <em>¼x² + 4x + 16 − 16 = ¼x² + 4x</em>.
-        El término <em>4x</em> es el que garantiza bonificación positiva
-        para participación mayor a cero.`
+        feedback: `<strong>Código Denegado.</strong> Ese es precisamente el error técnico del software central. Al desarrollar el binomio al cuadrado, se omitió por completo el doble producto del primer término por el segundo, borrando el beneficio lineal real de los estudiantes.`
       },
       {
         id: "6b",
         texto: "¼x² + 4x + 16",
+        codigo: "DELTA-44",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> Desarrollaste bien el cuadrado del
-        binomio pero olvidaste restar el <em>−16</em> final.
-        <em>(½x+4)²−16 = ¼x²+4x+16−16 = ¼x²+4x</em>.
-        Los términos <em>+16</em> y <em>−16</em> se cancelan exactamente.`
+        feedback: `<strong>Código Denegado.</strong> Lograste expandir la potencia del binomio correctamente en sus tres términos independientes, pero olvidaste procesar el operador externo de cancelación de la ecuación original (el término <em>-16</em> final).`
       },
       {
         id: "6c",
         texto: "¼x² + 4x",
+        codigo: "EAP-2026",
         correcta: true,
-        feedback: `<strong>¡Correcto!</strong>
-        <em>(½x+4)²−16 = (½x)²+2·(½x)·4+4²−16 = ¼x²+4x+16−16 = ¼x²+4x</em>.
-        Esta expresión puede factorizarse como <em>x(¼x+4)</em>, mostrando que
-        la bonificación es siempre proporcional a la participación <em>x</em>.
-        Has dominado el álgebra con coeficientes fraccionarios y simplificación
-        simultánea. <strong>¡El sistema queda completamente restaurado!</strong>`
+        feedback: `<strong>¡CÓDIGO CORRECTO! SISTEMA RESTAURADO CON ÉXITO.</strong> El desarrollo analítico es perfecto: <em>¼x² + 4x + 16 − 16 = ¼x² + 4x</em>. Al cancelar de forma exacta las constantes numéricas, el término lineal <em>4x</em> sobrevive, garantizando que cada estudiante reciba su valoración con total equidad social y matemática. ¡Has completado la misión educativa!`
       },
       {
         id: "6d",
         texto: "¼x² + 2x",
+        codigo: "SIGMA-88",
         correcta: false,
-        feedback: `<strong>Incorrecto.</strong> El término central del cuadrado del
-        binomio es <em>2·(½x)·4 = 4x</em>, no <em>2x</em>.
-        Al calcular el doble producto con <em>a=½x</em> y <em>b=4</em>:
-        <em>2ab = 2·½x·4 = 4x</em>. El factor <em>½</em> de <em>a</em> ya está
-        incluido en el cálculo, no lo elimines antes de tiempo.`
+        feedback: `<strong>Código Denegado.</strong> El término central lineal quedó mal simplificado. Recuerda calcular el doble producto de forma estricta: <em>2 · (½x) · 4</em>. El coeficiente 2 se cancela con la fracción ½, dejando únicamente el multiplicador de la segunda constante, que es 4x, no 2x.`
       }
     ]
   }
@@ -479,7 +394,6 @@ function initReto() {
   const enunciadoEl = $id("reto-enunciado");
   const tagsEl = $id("reto-tags");
   const opcionesEl = $id("reto-opciones");
-
   const btnValidar = $id("btn-validar");
   const feedback = $id("feedback");
   const fbIcon = $id("fb-icon");
@@ -487,14 +401,18 @@ function initReto() {
   const fbText = $id("fb-text");
   const btnSiguiente = $id("btn-siguiente");
 
-  let seleccionado = null;
   let yaRespondio = false;
   let erroresConsecutivos = 0;
 
   if (eyebrowEl) eyebrowEl.innerHTML = reto.eyebrow;
   if (tituloEl) tituloEl.innerHTML = reto.titulo;
   if (narrativaEl) narrativaEl.innerHTML = reto.narrativa;
-  if (enunciadoEl) enunciadoEl.innerHTML = reto.enunciado;
+  
+  let textoEnunciado = reto.enunciado;
+  if (reto.instruccionExtra) {
+      textoEnunciado += `<br><small style="color:#ffd700; display:block; margin-top:10px;">👉 ${reto.instruccionExtra}</small>`;
+  }
+  if (enunciadoEl) enunciadoEl.innerHTML = textoEnunciado;
 
   if (tagsEl) {
     tagsEl.innerHTML = "";
@@ -503,49 +421,218 @@ function initReto() {
     });
   }
 
+  // ==========================================
+  // RENDERIZADO DINÁMICO SEGÚN EL TIPO DE RETO
+  // ==========================================
   if (opcionesEl) {
     opcionesEl.innerHTML = "";
-    const letras = ["A", "B", "C", "D"];
-
-    reto.opciones.forEach((o, index) => {
-      opcionesEl.innerHTML += `
-        <label class="opcion-pro" for="${o.id}">
-          <input
-            type="radio"
-            name="opcion_er"
-            id="${o.id}"
-            value="${o.id}"
-            class="radio-oculto"
-          >
-          <div class="opcion-pro-inner">
-            <div class="opcion-letra">${letras[index]}</div>
+    const letras = ["A", "B", "C", "D", "E"];
+    
+    // TIPO 1: Selección Múltiple (Radio Buttons)
+    if (reto.tipo === 1) {
+      reto.opciones.forEach((o, idx) => {
+        opcionesEl.innerHTML += `
+          <label class="opcion-pro" for="${o.id}">
+            <input type="radio" name="opcion_er" id="${o.id}" value="${o.id}" class="radio-oculto">
+            <div class="opcion-pro-inner">
+              <div class="opcion-letra">${letras[idx]}</div>
+              <div class="opcion-texto">${o.texto}</div>
+            </div>
+          </label>`;
+      });
+      opcionesEl.addEventListener("change", (e) => {
+        if (!yaRespondio && e.target.matches('input[type="radio"]')) btnValidar.disabled = false;
+      });
+    }
+    
+    // TIPO 2: Arrastrar y Soltar
+    else if (reto.tipo === 2) {
+      let dragHTML = `<div class="drop-area" id="zona-drop" style="border: 2px dashed #ccc; padding: 30px; text-align: center; margin-bottom: 20px; border-radius: 8px;">Arrastra la opción correcta AQUÍ</div>`;
+      dragHTML += `<div class="drag-items-container" style="display:flex; flex-direction:column; gap:10px;">`;
+      
+      reto.opciones.forEach((o, idx) => {
+        dragHTML += `
+          <div class="drag-item opcion-pro-inner" draggable="true" data-id="${o.id}" style="cursor: grab; border:1px solid #555; padding: 10px; border-radius:5px; background:rgba(0,0,0,0.5);">
+            <div class="opcion-letra">${letras[idx]}</div>
             <div class="opcion-texto">${o.texto}</div>
-          </div>
-        </label>
+          </div>`;
+      });
+      dragHTML += `</div>`;
+      opcionesEl.innerHTML = dragHTML;
+
+      const zonaDrop = $id("zona-drop");
+      const dragItems = document.querySelectorAll(".drag-item");
+
+      dragItems.forEach(item => {
+        item.addEventListener("dragstart", (e) => {
+          if (yaRespondio) return;
+          e.dataTransfer.setData("text/plain", e.target.dataset.id);
+        });
+      });
+
+      zonaDrop.addEventListener("dragover", (e) => e.preventDefault());
+      zonaDrop.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if (yaRespondio) return;
+        const droppedId = e.dataTransfer.getData("text/plain");
+        const draggedElement = document.querySelector(`.drag-item[data-id="${droppedId}"]`);
+        if (!draggedElement) return;
+        
+        // CORRECCIÓN: Si ya hay una opción en el drop, la devolvemos al contenedor original en vez de borrarla
+        const elementoExistente = zonaDrop.querySelector(".drag-item");
+        const containerItems = opcionesEl.querySelector(".drag-items-container");
+        if (elementoExistente && containerItems) {
+          containerItems.appendChild(elementoExistente);
+        }
+        
+        zonaDrop.innerHTML = "";
+        zonaDrop.appendChild(draggedElement);
+        zonaDrop.dataset.seleccionado = droppedId;
+        btnValidar.disabled = false;
+      });
+    }
+
+    // TIPO 3: Escribir "correcto" al frente de la opción
+    else if (reto.tipo === 3) {
+      reto.opciones.forEach((o, idx) => {
+        opcionesEl.innerHTML += `
+          <div class="opcion-pro type-3" style="display:flex; align-items:center; gap: 10px; margin-bottom:10px;">
+            <div class="opcion-pro-inner" style="flex-grow: 1;">
+              <div class="opcion-letra">${letras[idx]}</div>
+              <div class="opcion-texto">${o.texto}</div>
+            </div>
+            <input type="text" class="input-correcto" data-id="${o.id}" placeholder="Escribe 'correcto' aquí..." style="padding: 10px; border-radius: 5px; width: 180px;">
+          </div>`;
+      });
+      
+      opcionesEl.addEventListener("input", (e) => {
+        if (!yaRespondio && e.target.matches(".input-correcto")) {
+           btnValidar.disabled = false;
+        }
+      });
+    }
+
+    // TIPO 5: Escribir la respuesta libremente
+    else if (reto.tipo === 5) {
+      opcionesEl.innerHTML = `
+        <div style="text-align: center; margin-top: 20px;">
+          <input type="text" id="input-respuesta-abierta" placeholder="Ej: 2x(5x+6)(5x-6)" style="padding: 15px; font-size: 1.2rem; width: 80%; border-radius: 8px; border: 2px solid #555; background: #222; color: #fff; text-align: center;">
+        </div>`;
+        
+      $id("input-respuesta-abierta").addEventListener("input", (e) => {
+        if (!yaRespondio && e.target.value.trim().length > 0) btnValidar.disabled = false;
+      });
+    }
+
+    // TIPO 6: Códigos + Animación Final
+    else if (reto.tipo === 6) {
+      let htmlCodigos = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 20px;">`;
+      reto.opciones.forEach((o) => {
+        htmlCodigos += `
+          <div style="background: #111; padding: 15px; border-radius: 8px; border: 1px solid #444; text-align:center;">
+             <p style="margin:0 0 10px 0; font-family: monospace;">Opción: ${o.texto}</p>
+             <span style="background: #ffd700; color: #000; padding: 5px 10px; font-weight: bold; border-radius: 3px;">CÓDIGO: ${o.codigo}</span>
+          </div>`;
+      });
+      htmlCodigos += `</div>`;
+      
+      htmlCodigos += `
+        <div class="terminal-box" style="text-align:center; background:#000; padding:20px; border-radius:8px; border: 2px solid #0f0;">
+          <h3 style="color:#0f0; margin-top:0; font-family:monospace;">>_ INGRESE CÓDIGO DE DESBLOQUEO FINAL</h3>
+          <input type="text" id="input-codigo-final" placeholder="..." style="padding: 10px; font-size: 1.5rem; text-align: center; text-transform: uppercase; font-family: monospace; width: 60%;">
+        </div>
       `;
-    });
+      opcionesEl.innerHTML = htmlCodigos;
 
-    opcionesEl.addEventListener("change", (e) => {
-      if (yaRespondio) return;
-      if (!e.target.matches('input[type="radio"]')) return;
-
-      seleccionado = e.target.value;
-      if (btnValidar) btnValidar.disabled = false;
-    });
+      $id("input-codigo-final").addEventListener("input", (e) => {
+        if (!yaRespondio && e.target.value.trim().length > 0) btnValidar.disabled = false;
+      });
+    }
   }
 
+  // ==========================================
+  // LÓGICA DE VALIDACIÓN CENTRAL
+  // ==========================================
   if (btnValidar) {
     btnValidar.disabled = true;
 
     btnValidar.addEventListener("click", () => {
-      if (!seleccionado || yaRespondio) return;
+      if (yaRespondio) return;
 
-      const opcionSeleccionada = reto.opciones.find((o) => o.id === seleccionado);
-      if (!opcionSeleccionada) return;
+      let esCorrecto = false;
+      let feedbackTexto = "";
+      let opcionExitosa = reto.opciones.find(o => o.correcta); 
 
-      if (opcionSeleccionada.correcta) {
+      switch(reto.tipo) {
+        case 1:
+          const radioSel = document.querySelector('input[name="opcion_er"]:checked');
+          if(radioSel) {
+            const op = reto.opciones.find(o => o.id === radioSel.value);
+            esCorrecto = op.correcta;
+            feedbackTexto = op.feedback;
+          }
+          break;
+          
+        case 2:
+          const dropZone = $id("zona-drop");
+          if(dropZone && dropZone.dataset.seleccionado) {
+            const op = reto.opciones.find(o => o.id === dropZone.dataset.seleccionado);
+            esCorrecto = op.correcta;
+            feedbackTexto = op.feedback;
+          }
+          break;
+          
+        case 3:
+          const inputs = document.querySelectorAll(".input-correcto");
+          let correctaMarcada = false;
+          let falsaMarcada = false;
+
+          inputs.forEach(input => {
+            const val = input.value.trim().toLowerCase();
+            const esLaOpcionCorrecta = reto.opciones.find(o => o.id === input.dataset.id).correcta;
+            if (val === "correcto" || val === "correcta") {
+                if (esLaOpcionCorrecta) correctaMarcada = true;
+                else falsaMarcada = true;
+            }
+          });
+
+          esCorrecto = (correctaMarcada && !falsaMarcada);
+          if (esCorrecto) {
+            feedbackTexto = opcionExitosa.feedback;
+          } else {
+            feedbackTexto = `<strong>Incorrecto.</strong> Debes escribir "correcto" SOLO en la opción verdadera.`;
+          }
+          break;
+          
+        case 5:
+          // CORRECCIÓN: Limpieza profunda de espacios y estandarización de guiones de resta (- y −)
+          const inputRespuesta = $id("input-respuesta-abierta").value.trim().replace(/\s+/g, '').toLowerCase().replace(/−/g, '-');
+          const pos1 = "2x(5x+6)(5x-6)".toLowerCase();
+          const pos2 = "2x(5x-6)(5x+6)".toLowerCase(); // Admite con mutabilidad el orden de factores conjugados
+
+          if (inputRespuesta === pos1 || inputRespuesta === pos2) {
+            esCorrecto = true;
+            feedbackTexto = opcionExitosa.feedback;
+          } else {
+            feedbackTexto = "<strong>Incorrecto.</strong> Revisa tus signos, factores y asegúrate de no usar espacios.";
+          }
+          break;
+
+        case 6:
+          const inputCodigo = $id("input-codigo-final").value.trim().toUpperCase();
+          if (inputCodigo === opcionExitosa.codigo) {
+            esCorrecto = true;
+            feedbackTexto = opcionExitosa.feedback;
+            lanzarAnimacionFinal();
+          } else {
+            feedbackTexto = "<strong>CÓDIGO DENEGADO.</strong> El código ingresado no corresponde a la solución correcta.";
+          }
+          break;
+      }
+
+      if (esCorrecto) {
         erroresConsecutivos = 0;
-        mostrarFeedback(true, opcionSeleccionada.feedback, false);
+        mostrarFeedback(true, feedbackTexto, false);
 
         const res = loadResueltos();
         if (!res.includes(id)) {
@@ -556,20 +643,14 @@ function initReto() {
         if (btnSiguiente) {
           btnSiguiente.classList.add("visible");
           const nextId = id + 1;
-
           if (nextId > TOTAL_RETOS) {
             btnSiguiente.textContent = "Ver resultados →";
-            btnSiguiente.onclick = () => {
-              window.location.href = "cierre.html";
-            };
+            btnSiguiente.onclick = () => window.location.href = "cierre.html";
           } else {
             btnSiguiente.textContent = "Siguiente misión →";
-            btnSiguiente.onclick = () => {
-              window.location.href = `reto.html?id=${nextId}`;
-            };
+            btnSiguiente.onclick = () => window.location.href = `reto.html?id=${nextId}`;
           }
         }
-
         yaRespondio = true;
         bloquearOpciones();
         btnValidar.disabled = true;
@@ -582,12 +663,10 @@ function initReto() {
           const pista = construirPista(reto);
           mostrarFeedback(false, pista, true);
         } else {
-          const opCorrecta = reto.opciones.find((o) => o.correcta);
-          marcarRespuestaCorrecta(opCorrecta?.id);
-
+          marcarRespuestaCorrecta(opcionExitosa?.id);
           const mensaje = `
-            <strong>Respuesta correcta:</strong> ${opCorrecta ? opCorrecta.texto : ""}<br><br>
-            ${opCorrecta ? opCorrecta.feedback : "Revisa el procedimiento del producto notable."}
+            <strong>Respuesta correcta:</strong> ${opcionExitosa ? opcionExitosa.texto : ""}<br><br>
+            ${opcionExitosa ? opcionExitosa.feedback : "Revisa el procedimiento."}
           `;
           mostrarFeedback(false, mensaje, false);
 
@@ -598,17 +677,12 @@ function initReto() {
           if (btnSiguiente) {
             btnSiguiente.classList.add("visible");
             const nextId = id + 1;
-
             if (nextId > TOTAL_RETOS) {
               btnSiguiente.textContent = "Ver resultados →";
-              btnSiguiente.onclick = () => {
-                window.location.href = "cierre.html";
-              };
+              btnSiguiente.onclick = () => window.location.href = "cierre.html";
             } else {
               btnSiguiente.textContent = "Continuar →";
-              btnSiguiente.onclick = () => {
-                window.location.href = `reto.html?id=${nextId}`;
-              };
+              btnSiguiente.onclick = () => window.location.href = `reto.html?id=${nextId}`;
             }
           }
         }
@@ -619,98 +693,88 @@ function initReto() {
   function descontarCincoMinutos() {
     const currentStart = loadStart();
     if (!currentStart) return;
-
     saveStart(currentStart - (5 * 60 * 1000));
   }
 
+  // CORRECCIÓN: Pistas dinámicas personalizadas pedagógicamente según el reto
   function construirPista(retoActual) {
-    const texto = (retoActual.enunciado || "").toLowerCase();
-
-    if (texto.includes("²") && texto.includes("+")) {
-      return `
-        <strong>Pista:</strong> Revisa los <strong>tres términos</strong> del cuadrado de un binomio:
-        cuadrado del primero, doble producto y cuadrado del segundo.
-        El error suele estar en el <strong>término central</strong>.
-      `;
+    switch (retoActual.id) {
+      case 1:
+        return `<strong>Pista:</strong> Recuerda la estructura del cuadrado de un binomio: <em>(a + b)² = a² + 2ab + b²</em>. No olvides calcular el doble producto del primer término por el segundo: <em>2 · (3x) · 5</em>.`;
+      case 2:
+        return `<strong>Pista:</strong> Al elevar un binomio con resta al cuadrado: <em>(a - b)² = a² - 2ab + b²</em>. El término central debe ser obligatoriamente negativo y recuerda elevar el coeficiente numérico: <em>(5x)² = 25x²</em>.`;
+      case 3:
+        return `<strong>Pista:</strong> Estás ante una diferencia de cuadrados (binomios conjugados): <em>(a + b)(a - b) = a² - b²</em>. Los términos intermedios (+42x y -42x) se anulan por completo.`;
+      case 4:
+        return `<strong>Pista:</strong> Desarrolla el cubo de un binomio siguiendo la regla: <em>(a + b)³ = a³ + 3a²b + 3ab² + b³</em>. Eleva con cuidado cada término y procesa las potencias internas antes de multiplicar por 3.`;
+      case 5:
+        return `<strong>Pista:</strong> Primero extrae el Máximo Común Divisor numérico y la variable común: <em>2x</em>. Luego, el binomio restante <em>(25x² - 36)</em> es una diferencia de cuadrados que debes descomponer en binomios conjugados.`;
+      case 6:
+        return `<strong>Pista:</strong> Desarrolla la potencia del binomio al cuadrado <em>(½x + 4)²</em> en sus tres términos independientes. Luego, cancela la constante resultante restando el <em>16</em> exterior.`;
+      default:
+        return `<strong>Pista:</strong> Revisa el patrón del producto notable, el signo y el coeficiente del ejercicio.`;
     }
-
-    if (texto.includes("²") && texto.includes("−")) {
-      return `
-        <strong>Pista:</strong> En el cuadrado de una diferencia, el término del medio
-        depende de <strong>2ab</strong> y lleva <strong>signo negativo</strong>.
-        Revisa con cuidado el signo del término lineal.
-      `;
-    }
-
-    if (texto.includes("(7x + 6)(7x − 6)") || texto.includes("7x + 6")) {
-      return `
-        <strong>Pista:</strong> Cuando aparece una suma por una diferencia,
-        los términos cruzados se <strong>cancelan</strong>. Si tu resultado conserva
-        un término con <em>x</em>, conviene revisar otra vez.
-      `;
-    }
-
-    if (texto.includes("³")) {
-      return `
-        <strong>Pista:</strong> El cubo de un binomio no se resuelve con solo dos términos.
-        Verifica la estructura completa de <strong>cuatro términos</strong> y los coeficientes intermedios.
-      `;
-    }
-
-    if (texto.includes("factoriza")) {
-      return `
-        <strong>Pista:</strong> Busca primero un <strong>factor común</strong>.
-        Después revisa si la expresión restante todavía admite otra factorización notable.
-      `;
-    }
-
-    if (texto.includes("½x")) {
-      return `
-        <strong>Pista:</strong> Con coeficientes fraccionarios, el error más común está en el
-        <strong>doble producto</strong>. Calcula con calma \(2ab\) antes de simplificar.
-      `;
-    }
-
-    return `
-      <strong>Pista:</strong> Revisa el patrón del producto notable, el signo
-      y el coeficiente del término central antes de volver a intentar.
-    `;
   }
 
   function mostrarFeedback(correcta, texto, permitirReintento = false) {
     if (!feedback || !fbIcon || !fbTitle || !fbText) return;
-
     feedback.className = `feedback-card ${correcta ? "correct" : "incorrect"} visible`;
     fbIcon.textContent = correcta ? "✅" : "⚠️";
     fbTitle.textContent = correcta ? "¡Respuesta correcta!" : "Respuesta incorrecta";
     fbText.innerHTML = texto;
-
     yaRespondio = !permitirReintento;
   }
 
   function bloquearOpciones() {
     if (!opcionesEl) return;
-    const radios = opcionesEl.querySelectorAll('input[type="radio"]');
-    radios.forEach((radio) => {
-      radio.disabled = true;
-    });
+    const inputs = opcionesEl.querySelectorAll('input');
+    inputs.forEach(input => input.disabled = true);
+    const dragItems = opcionesEl.querySelectorAll('.drag-item');
+    dragItems.forEach(item => item.draggable = false);
   }
 
   function marcarRespuestaCorrecta(idCorrecta) {
     if (!opcionesEl || !idCorrecta) return;
-
-    let radioCorrecto = null;
-    try {
-      radioCorrecto = opcionesEl.querySelector(`#${CSS.escape(idCorrecta)}`);
-    } catch {
-      radioCorrecto = opcionesEl.querySelector(`input[value="${idCorrecta}"]`);
+    let elementoCorrecto = null;
+    
+    if (reto.tipo === 1 || reto.tipo === 3) {
+      elementoCorrecto = opcionesEl.querySelector(`[data-id="${idCorrecta}"], input[value="${idCorrecta}"]`);
+      if (elementoCorrecto) {
+        const label = elementoCorrecto.closest(".opcion-pro");
+        if (label) label.classList.add("correcta");
+      }
+    } 
+    // CORRECCIÓN: Resaltado visual para opciones arrastrables cuando se agotan los intentos
+    else if (reto.tipo === 2) {
+      elementoCorrecto = opcionesEl.querySelector(`.drag-item[data-id="${idCorrecta}"]`);
+      if (elementoCorrecto) {
+        elementoCorrecto.style.border = "2px solid #28a745";
+        elementoCorrecto.style.backgroundColor = "rgba(40, 167, 69, 0.2)";
+      }
+      const zonaDrop = $id("zona-drop");
+      if (zonaDrop) zonaDrop.style.borderColor = "#28a745";
     }
+  }
 
-    if (!radioCorrecto) return;
-
-    const label = radioCorrecto.closest(".opcion-pro");
-    if (label) {
-      label.classList.add("correcta");
+  function lanzarAnimacionFinal() {
+    const confeti = document.createElement("div");
+    confeti.innerHTML = "🎉 SISTEMA DESBLOQUEADO 🎉";
+    confeti.style.position = "fixed";
+    confeti.style.top = "50%";
+    confeti.style.left = "50%";
+    confeti.style.transform = "translate(-50%, -50%)";
+    confeti.style.fontSize = "4rem";
+    confeti.style.color = "#0f0";
+    confeti.style.textShadow = "0 0 20px #0f0";
+    confeti.style.zIndex = "9999";
+    confeti.style.animation = "latido 1s infinite";
+    document.body.appendChild(confeti);
+    
+    if (!document.getElementById("animacion-css")) {
+        const style = document.createElement("style");
+        style.id = "animacion-css";
+        style.innerHTML = `@keyframes latido { 0% {transform: translate(-50%, -50%) scale(1);} 50% {transform: translate(-50%, -50%) scale(1.2);} 100% {transform: translate(-50%, -50%) scale(1);} }`;
+        document.head.appendChild(style);
     }
   }
 }
