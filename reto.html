@@ -3,478 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Escape Room — Reto</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg:      #07050F;
-      --bg2:     #100D20;
-      --surface: rgba(22,15,45,0.9);
-      --purple:  #A855F7;
-      --pink:    #EC4899;
-      --gold:    #FBBF24;
-      --green:   #10B981;
-      --red:     #EF4444;
-      --text:    #F1F0FF;
-      --muted:   rgba(241,240,255,0.55);
-      --border:  rgba(168,85,247,0.28);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: "Space Grotesk", system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Aurora */
-    .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-    .aurora-blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.18; animation: drift 14s ease-in-out infinite alternate; }
-    .blob-1 { width: 500px; height: 500px; background: var(--purple); top: -180px; left: -80px;  animation-duration: 13s; }
-    .blob-2 { width: 400px; height: 400px; background: var(--pink);   bottom: -100px; right: -120px; animation-duration: 17s; animation-delay: -6s; }
-    @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(30px,20px) scale(1.07); } }
-
-    body::after {
-      content: ""; position: fixed; inset: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(168,85,247,0.015) 2px, rgba(168,85,247,0.015) 4px);
-      pointer-events: none; z-index: 1;
-    }
-
-    /* ══ NAVBAR ══ */
-    .navbar {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(7,5,15,0.92);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-      padding: 0.7rem 1.5rem;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    }
-
-    .nav-back {
-      font-family: "Space Mono", monospace;
-      font-size: 0.7rem;
-      color: var(--purple);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      display: flex; align-items: center; gap: 0.4rem;
-      transition: color 0.2s;
-    }
-    .nav-back:hover { color: var(--pink); }
-
-    .nav-right { display: flex; align-items: center; gap: 1rem; }
-
-    .clock-wrap {
-      display: flex; align-items: center; gap: 0.45rem;
-      background: rgba(168,85,247,0.1);
-      border: 1px solid rgba(168,85,247,0.3);
-      border-radius: 8px;
-      padding: 0.3rem 0.8rem;
-    }
-    .clock {
-      font-family: "Space Mono", monospace;
-      font-size: 0.98rem; font-weight: 700;
-      color: var(--purple); letter-spacing: 0.1em;
-      min-width: 48px;
-    }
-    .clock.warning { color: var(--gold); animation: blink 0.8s step-end infinite; }
-    .clock.danger  { color: var(--red);  animation: blink 0.5s step-end infinite; }
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
-
-    .progress-wrap { min-width: 120px; display: flex; flex-direction: column; gap: 0.18rem; }
-    .progress-lbl {
-      font-family: "Space Mono", monospace;
-      font-size: 0.58rem; color: var(--muted);
-      letter-spacing: 0.1em; text-transform: uppercase;
-      display: flex; justify-content: space-between;
-    }
-    .progress-bg { height: 4px; border-radius: 999px; background: rgba(168,85,247,0.15); overflow: hidden; }
-    .progress-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--purple), var(--pink)); transition: width 0.5s ease; }
-
-    @media (max-width: 500px) {
-      .progress-wrap { display: none; }
-    }
-
-    /* ══ LAYOUT ══ */
-    .page {
-      position: relative; z-index: 2;
-      max-width: 700px; margin: 0 auto;
-      padding: 2rem 1.25rem 4rem;
-      display: flex; flex-direction: column; gap: 2rem;
-    }
-
-    /* ══ HEADER DEL RETO ══ */
-    .reto-header {
-      display: flex; flex-direction: column; gap: 0.6rem;
-    }
-
-    .reto-eyebrow {
-      display: flex; align-items: center; gap: 0.75rem;
-      font-family: "Space Mono", monospace;
-      font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--pink);
-    }
-
-    .reto-eyebrow-line {
-      flex: 1; height: 1px;
-      background: linear-gradient(90deg, var(--pink), transparent);
-    }
-
-    .reto-num-badge {
-      background: rgba(236,72,153,0.15);
-      border: 1px solid rgba(236,72,153,0.4);
-      border-radius: 6px;
-      padding: 0.2rem 0.6rem;
-      font-size: 0.65rem; font-weight: 700;
-      color: var(--pink); white-space: nowrap;
-    }
-
-    .reto-titulo {
-      font-size: clamp(1.4rem, 4vw, 1.9rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-      background: linear-gradient(135deg, var(--text) 40%, var(--purple) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-
-    .reto-tags { display: flex; gap: 0.45rem; flex-wrap: wrap; }
-    .rtag {
-      font-size: 0.62rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 0.2rem 0.65rem; border-radius: 999px;
-    }
-    .rtag-purple { background: rgba(168,85,247,0.12); color: var(--purple); border: 1px solid rgba(168,85,247,0.3); }
-    .rtag-pink   { background: rgba(236,72,153,0.1);  color: var(--pink);   border: 1px solid rgba(236,72,153,0.3); }
-    .rtag-gold   { background: rgba(251,191,36,0.1);  color: var(--gold);   border: 1px solid rgba(251,191,36,0.3); }
-
-    /* ══ NARRATIVA DEL RETO ══ */
-    .narrativa-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.4rem 1.5rem;
-      display: grid; grid-template-columns: 3px 1fr; gap: 0 1rem;
-      position: relative; overflow: hidden;
-      backdrop-filter: blur(12px);
-    }
-
-    .narrativa-card::before {
-      content: ""; position: absolute;
-      top: 0; right: 0; width: 80px; height: 80px;
-      background: var(--purple); border-radius: 50%;
-      filter: blur(40px); opacity: 0.15;
-    }
-
-    .narrativa-stripe {
-      border-radius: 3px;
-      background: linear-gradient(180deg, var(--purple), var(--pink));
-    }
-
-    .narrativa-inner { display: flex; flex-direction: column; gap: 0.5rem; }
-
-    .narrativa-label {
-      font-family: "Space Mono", monospace;
-      font-size: 0.62rem; color: var(--purple);
-      letter-spacing: 0.15em; text-transform: uppercase;
-    }
-
-    .narrativa-text {
-      font-size: 0.95rem; line-height: 1.7; color: var(--muted);
-    }
-    .narrativa-text strong { color: var(--text); }
-
-    /* ══ OPCIONES ══ */
-    .opciones-section { display: flex; flex-direction: column; gap: 0.85rem; }
-
-    .opciones-label {
-      font-family: "Space Mono", monospace;
-      font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .opcion-item {
-      display: flex; align-items: flex-start; gap: 1rem;
-      padding: 1.1rem 1.25rem;
-      border-radius: 14px;
-      border: 1px solid rgba(168,85,247,0.18);
-      background: rgba(22,15,45,0.6);
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s, transform 0.15s;
-      position: relative; overflow: hidden;
-    }
-
-    .opcion-item:hover {
-      border-color: rgba(168,85,247,0.5);
-      background: rgba(168,85,247,0.08);
-      transform: translateX(3px);
-    }
-
-    .opcion-item.selected {
-      border-color: var(--purple);
-      background: rgba(168,85,247,0.12);
-      box-shadow: 0 0 0 1px rgba(168,85,247,0.25);
-    }
-
-    .opcion-item.correct {
-      border-color: var(--green);
-      background: rgba(16,185,129,0.1);
-      box-shadow: 0 0 0 1px rgba(16,185,129,0.25);
-    }
-
-    .opcion-item.incorrect {
-      border-color: var(--red);
-      background: rgba(239,68,68,0.08);
-      box-shadow: 0 0 0 1px rgba(239,68,68,0.2);
-    }
-
-    .opcion-radio {
-      width: 20px; height: 20px; border-radius: 50%;
-      border: 2px solid rgba(168,85,247,0.4);
-      flex-shrink: 0; margin-top: 1px;
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .opcion-item.selected  .opcion-radio { border-color: var(--purple); background: var(--purple); }
-    .opcion-item.correct   .opcion-radio { border-color: var(--green);  background: var(--green); }
-    .opcion-item.incorrect .opcion-radio { border-color: var(--red);    background: var(--red); }
-
-    .opcion-radio-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--bg); opacity: 0;
-      transition: opacity 0.15s;
-    }
-
-    .opcion-item.selected  .opcion-radio-dot,
-    .opcion-item.correct   .opcion-radio-dot,
-    .opcion-item.incorrect .opcion-radio-dot { opacity: 1; }
-
-    .opcion-text {
-      font-size: 0.9rem; line-height: 1.55; color: var(--text);
-    }
-
-    /* Input radio oculto */
-    .opcion-item input[type="radio"] { display: none; }
-
-    /* ══ BOTÓN VALIDAR ══ */
-    .btn-wrap { display: flex; justify-content: center; }
-
-    .btn-validar {
-      padding: 0.9rem 3rem;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 0.95rem; font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--bg);
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      border: none; border-radius: 12px;
-      cursor: pointer; overflow: hidden;
-      box-shadow: 0 0 25px rgba(168,85,247,0.3);
-      transition: transform 0.2s, filter 0.2s, box-shadow 0.2s;
-      animation: btn-breathe 3s ease-in-out infinite;
-    }
-
-    .btn-validar:hover {
-      transform: scale(1.04);
-      box-shadow: 0 0 45px rgba(168,85,247,0.5);
-    }
-
-    .btn-validar:active { transform: scale(0.97); }
-    .btn-validar:disabled {
-      opacity: 0.4; cursor: not-allowed;
-      animation: none; transform: none;
-    }
-
-    @keyframes btn-breathe {
-      0%,100% { box-shadow: 0 0 20px rgba(168,85,247,0.25); }
-      50%      { box-shadow: 0 0 40px rgba(168,85,247,0.5); }
-    }
-
-    /* ══ FEEDBACK FORMATIVO ══ */
-    .feedback-card {
-      border-radius: 16px;
-      padding: 1.4rem 1.5rem;
-      display: flex; flex-direction: column; gap: 0.8rem;
-      backdrop-filter: blur(12px);
-      opacity: 0; transform: translateY(14px);
-      transition: opacity 0.45s ease, transform 0.45s ease;
-      pointer-events: none;
-    }
-
-    .feedback-card.visible {
-      opacity: 1; transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    .feedback-card.correct {
-      background: rgba(16,185,129,0.1);
-      border: 1px solid rgba(16,185,129,0.4);
-    }
-
-    .feedback-card.incorrect {
-      background: rgba(239,68,68,0.08);
-      border: 1px solid rgba(239,68,68,0.35);
-    }
-
-    .feedback-head {
-      display: flex; align-items: center; gap: 0.75rem;
-    }
-
-    .feedback-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; flex-shrink: 0;
-    }
-
-    .feedback-card.correct   .feedback-icon { background: rgba(16,185,129,0.2); }
-    .feedback-card.incorrect .feedback-icon { background: rgba(239,68,68,0.15); }
-
-    .feedback-title {
-      font-size: 1rem; font-weight: 700;
-    }
-
-    .feedback-card.correct   .feedback-title { color: var(--green); }
-    .feedback-card.incorrect .feedback-title { color: var(--red);   }
-
-    .feedback-theory-label {
-      font-family: "Space Mono", monospace;
-      font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); margin-top: 0.2rem;
-    }
-
-    .feedback-text {
-      font-size: 0.88rem; line-height: 1.7; color: var(--muted);
-    }
-
-    .feedback-text strong { color: var(--text); }
-
-    .btn-siguiente {
-      align-self: flex-end;
-      padding: 0.65rem 1.75rem;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 0.85rem; font-weight: 700;
-      color: var(--bg);
-      background: linear-gradient(135deg, var(--green), #34D399);
-      border: none; border-radius: 10px; cursor: pointer;
-      transition: transform 0.2s, filter 0.2s;
-      display: none;
-    }
-    .btn-siguiente.visible { display: flex; align-items: center; gap: 0.4rem; }
-    .btn-siguiente:hover { transform: scale(1.04); filter: brightness(1.1); }
-
-    /* ══ FOOTER ══ */
-    .foot {
-      position: relative; z-index: 2;
-      display: flex; justify-content: space-between;
-      max-width: 700px; margin: 0 auto;
-      padding: 1rem 1.25rem;
-      border-top: 1px solid rgba(168,85,247,0.12);
-      font-family: "Space Mono", monospace;
-      font-size: 0.6rem; letter-spacing: 0.1em;
-      color: var(--muted); text-transform: uppercase;
-      flex-wrap: wrap; gap: 0.4rem;
-    }
-
-    .foot-dot {
-      display: inline-block; width: 6px; height: 6px;
-      border-radius: 50%; background: var(--green);
-      box-shadow: 0 0 6px var(--green); margin-right: 0.35rem;
-      animation: blink2 2s ease-in-out infinite;
-    }
-
-    @keyframes blink2 { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-  </style>
+  <title>Reto | Escape Room Matemático</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="reto-body">
 
-  <div class="aurora">
-    <div class="aurora-blob blob-1"></div>
-    <div class="aurora-blob blob-2"></div>
-  </div>
+  <!-- Barra superior -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <div class="clock" id="clock">45:00</div>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <a href="mapa.html" class="nav-back">← Volver al mapa</a>
-    <div class="nav-right">
-      <div class="clock-wrap">
-        <span>⏱</span>
-        <span class="clock" id="clock">45:00</span>
-      </div>
       <div class="progress-wrap">
-        <div class="progress-lbl">
-          <span>Progreso</span>
-          <span id="progress-txt">0 / 6</span>
+        <div class="progress" aria-label="Progreso de retos">
+          <div class="progress-bar" id="progress-bar"></div>
         </div>
-        <div class="progress-bg">
-          <div class="progress-bar" id="progress-bar" style="width:0%"></div>
-        </div>
+        <div class="progress-txt" id="progress-txt">0 / 6</div>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <!-- Contenido dinámico del reto -->
-  <main class="page">
-
-    <!-- Header -->
-    <div class="reto-header">
-      <div class="reto-eyebrow">
-        <span id="reto-eyebrow-label">Laboratorio Algebraico</span>
-        <span class="reto-eyebrow-line"></span>
-        <span class="reto-num-badge" id="reto-num-badge">Reto 01</span>
-      </div>
-      <h1 class="reto-titulo" id="reto-titulo">Cargando...</h1>
+  <main class="reto-shell">
+    <!-- Encabezado narrativo del reto -->
+    <section class="reto-header" aria-labelledby="reto-titulo">
+      <div class="reto-eyebrow" id="reto-eyebrow">Nivel · Tipo de reto</div>
+      <h1 id="reto-titulo">Título del reto</h1>
       <div class="reto-tags" id="reto-tags"></div>
-    </div>
+    </section>
 
-    <!-- Narrativa contextual -->
-    <div class="narrativa-card">
-      <div class="narrativa-stripe"></div>
-      <div class="narrativa-inner">
-        <span class="narrativa-label">⚠ Alerta del sistema</span>
-        <p class="narrativa-text" id="reto-narrativa">...</p>
-      </div>
-    </div>
+    <section class="reto-content">
+      <!-- Contexto / narrativa -->
+      <article class="reto-card">
+        <h2>Contexto de la misión</h2>
+        <p id="reto-narrativa">
+          Aquí aparecerá la narrativa del reto.
+        </p>
+      </article>
 
-    <!-- Pregunta y opciones -->
-    <div class="opciones-section">
-      <span class="opciones-label">Selecciona la respuesta correcta</span>
-      <div id="reto-opciones"></div>
-    </div>
+      <!-- Pregunta -->
+      <article class="reto-card">
+        <form id="form-reto" novalidate>
+          <fieldset class="reto-fieldset">
+            <legend id="reto-enunciado">
+              Aquí aparecerá el enunciado del reto.
+            </legend>
 
-    <!-- Botón validar -->
-    <div class="btn-wrap">
-      <button class="btn-validar" id="btn-validar" disabled>
-        Validar respuesta →
-      </button>
-    </div>
+            <div
+              id="reto-opciones"
+              class="opciones"
+              aria-describedby="instruccion-opciones feedback"
+            >
+              <!-- Las opciones se insertan dinámicamente desde gameEngine.js -->
+            </div>
 
-    <!-- Feedback formativo -->
-    <div class="feedback-card" id="feedback">
-      <div class="feedback-head">
-        <div class="feedback-icon" id="fb-icon">🎯</div>
-        <div>
-          <div class="feedback-title" id="fb-title">...</div>
-          <div class="feedback-theory-label">Retroalimentación pedagógica</div>
-        </div>
-      </div>
-      <p class="feedback-text" id="fb-text">...</p>
-      <button class="btn-siguiente" id="btn-siguiente">
-        Siguiente misión →
-      </button>
-    </div>
+            <p id="instruccion-opciones" class="text-help">
+              Selecciona una opción y luego presiona “Validar respuesta”.
+            </p>
+          </fieldset>
 
+          <div class="reto-actions">
+            <button type="button" class="btn btn-primary btn-validate" id="btn-validar" disabled>
+              Validar respuesta
+            </button>
+
+            <button type="button" class="btn btn-secondary" id="btn-siguiente">
+              Siguiente misión →
+            </button>
+          </div>
+        </form>
+
+        <!-- Feedback -->
+        <section
+          id="feedback"
+          class="feedback-card"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="feedback-top">
+            <span id="fb-icon" aria-hidden="true">ℹ️</span>
+            <h3 id="fb-title">Retroalimentación</h3>
+          </div>
+          <div id="fb-text">
+            Aquí aparecerán las pistas, correcciones o explicaciones.
+          </div>
+        </section>
+      </article>
+    </section>
   </main>
 
-  <footer class="foot">
-    <span><span class="foot-dot"></span>Reto activo</span>
-    <span>Matemáticas · 8.° · Col · 2026</span>
-  </footer>
-
-  <script src="js/gameEngine.js"></script>
+  <script src="gameEngine.js"></script>
 </body>
 </html>
