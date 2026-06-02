@@ -1,767 +1,667 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mapa de Retos — Eduquemos con TIC</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de Misión — Escape Room Algebraico</title>
+
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+
     :root {
-      --bg:            #060d1a;
-      --surface:       #0b1628;
-      --surface-2:     #0f1e38;
-      --border:        rgba(0,224,255,0.12);
-      --border-strong: rgba(0,224,255,0.35);
-      --cyan:          #00e0ff;
-      --cyan-dim:      rgba(0,224,255,0.55);
-      --cyan-glow:     rgba(0,224,255,0.18);
-      --amber:         #f6a821;
-      --amber-glow:    rgba(246,168,33,0.18);
-      --green:         #22d37a;
-      --green-dim:     rgba(34,211,122,0.55);
-      --green-glow:    rgba(34,211,122,0.18);
-      --red:           #ff4e6a;
-      --gray:          rgba(148,163,184,0.5);
-      --text:          #e8f4ff;
-      --text-muted:    rgba(184,214,255,0.65);
-      --text-faint:    rgba(120,165,210,0.4);
-      --font-display:  'Orbitron','Segoe UI',sans-serif;
-      --font-body:     'Exo 2','Segoe UI',sans-serif;
+      --bg:        #0a0c10;
+      --surface:   #0f1117;
+      --surface-2: #151820;
+      --border:    rgba(255,255,255,0.07);
+      --accent:    #38BDF8;
+      --accent-2:  #818CF8;
+      --gold:      #F59E0B;
+      --green:     #34D399;
+      --pink:      #F472B6;
+      --red:       #F87171;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --font-body: 'Satoshi', sans-serif;
+      --font-mono: 'Orbitron', monospace;
+      --radius:    12px;
+      --radius-lg: 20px;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-    body{min-height:100dvh;font-family:var(--font-body);color:var(--text);background-color:var(--bg);overflow-x:hidden}
 
-    /* FONDO */
-    .bg-scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-    .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,224,255,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,224,255,0.045) 1px,transparent 1px);background-size:48px 48px;animation:gridScroll 18s linear infinite}
-    @keyframes gridScroll{0%{background-position:0 0}100%{background-position:48px 48px}}
-    .bg-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.28}
-    .bg-orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(0,224,255,.35) 0%,transparent 70%);top:-150px;left:-80px;animation:orbFloat 11s ease-in-out infinite alternate}
-    .bg-orb-2{width:380px;height:380px;background:radial-gradient(circle,rgba(246,168,33,.25) 0%,transparent 70%);bottom:-60px;right:-40px;animation:orbFloat 14s ease-in-out infinite alternate-reverse}
-    @keyframes orbFloat{0%{transform:translate(0,0)}100%{transform:translate(28px,20px)}}
-    #p-canvas{position:absolute;inset:0;width:100%;height:100%}
-
-    /* NAVBAR */
-    .navbar{position:sticky;top:0;z-index:50;background:rgba(6,13,26,0.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:.7rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-    .nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
-    .nav-logo-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-shadow:0 0 14px rgba(0,224,255,.45)}
-    .nav-logo svg{width:28px;height:28px;filter:drop-shadow(0 0 7px rgba(0,224,255,.45))}
-    .nav-right{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
-    .clock-wrap{display:flex;align-items:center;gap:.4rem}
-    .clock-label{font-size:.65rem;font-family:var(--font-display);letter-spacing:.12em;color:var(--text-faint);text-transform:uppercase}
-    .clock{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--amber);text-shadow:0 0 12px rgba(246,168,33,.5);letter-spacing:.08em;min-width:5ch;text-align:right}
-    .clock.warning{color:var(--red);text-shadow:0 0 12px rgba(255,78,106,.6);animation:clockBlink .8s ease-in-out infinite}
-    @keyframes clockBlink{0%,100%{opacity:1}50%{opacity:.5}}
-    .progress-wrap{display:flex;flex-direction:column;gap:3px;min-width:160px}
-    .progress-top{display:flex;justify-content:space-between;align-items:center}
-    .progress-label{font-size:.6rem;font-family:var(--font-display);letter-spacing:.1em;color:var(--text-faint);text-transform:uppercase}
-    .progress-count{font-size:.7rem;font-family:var(--font-display);font-weight:700;color:var(--cyan)}
-    .progress-track{width:100%;height:5px;background:rgba(148,163,184,.2);border-radius:9999px;overflow:hidden}
-    .progress-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:9999px;transition:.5s ease;width:0%}
-
-    /* PAGE */
-    .page{position:relative;z-index:1;padding:2rem 1.25rem 4rem}
-    .page-inner{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:1.75rem}
-
-    /* PANEL OPERACIÓN */
-    .op-panel{background:linear-gradient(140deg,rgba(11,22,40,.98) 0%,rgba(15,30,56,.95) 100%);border:1px solid var(--border-strong);border-radius:16px;padding:1.5rem 1.75rem;position:relative;overflow:hidden}
-    .op-panel::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--cyan) 40%,var(--cyan) 60%,transparent);opacity:.7}
-    .op-corner{position:absolute;width:16px;height:16px}
-    .op-corner-tl{top:7px;left:7px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
-    .op-corner-tr{top:7px;right:7px;border-top:2px solid var(--cyan);border-right:2px solid var(--cyan)}
-    .op-corner-bl{bottom:7px;left:7px;border-bottom:2px solid rgba(246,168,33,.6);border-left:2px solid rgba(246,168,33,.6)}
-    .op-corner-br{bottom:7px;right:7px;border-bottom:2px solid rgba(246,168,33,.6);border-right:2px solid rgba(246,168,33,.6)}
-    .op-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-display);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(0,224,255,.25);background:rgba(0,224,255,.06);border-radius:9999px;padding:.18rem .65rem;margin-bottom:.8rem}
-    .op-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:dotBlink 1.4s ease-in-out infinite}
-    @keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.25}}
-    .op-title{font-family:var(--font-display);font-size:clamp(1.1rem,.8rem + 1.5vw,1.7rem);font-weight:900;letter-spacing:-.01em;line-height:1.1;background:linear-gradient(135deg,#fff 20%,var(--cyan) 65%,#a8f0ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 18px rgba(0,224,255,.28));margin-bottom:.5rem}
-    .op-sub{font-size:.85rem;color:var(--cyan-dim);font-family:var(--font-display);letter-spacing:.06em;margin-bottom:1.2rem}
-    .alert-box{background:rgba(255,78,106,.07);border:1px solid rgba(255,78,106,.3);border-radius:10px;padding:.9rem 1.1rem;display:flex;gap:.75rem;align-items:flex-start;margin-bottom:1.1rem;position:relative;overflow:hidden}
-    .alert-box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--red),rgba(255,78,106,.3))}
-    .alert-icon{font-size:1.25rem;flex-shrink:0;margin-top:.05rem}
-    .alert-text{font-size:.84rem;color:rgba(255,200,210,.8);line-height:1.6}
-    .op-meta{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-top:.5rem}
-    .op-meta-item{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-family:var(--font-display);font-weight:600;letter-spacing:.06em;padding:.3rem .75rem;border-radius:9999px;border:1px solid}
-    .op-meta-time{color:var(--amber);border-color:rgba(246,168,33,.35);background:rgba(246,168,33,.07)}
-    .op-meta-obj{color:var(--green);border-color:rgba(34,211,122,.3);background:rgba(34,211,122,.06)}
-
-    /* ENCABEZADO MAPA */
-    .map-header{display:flex;align-items:center;gap:.75rem;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
-    .map-header::before,.map-header::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(246,168,33,.35))}
-    .map-header::after{background:linear-gradient(90deg,rgba(246,168,33,.35),transparent)}
-    .map-hint{text-align:center;font-size:.78rem;color:var(--text-faint);font-style:italic;margin-top:-.5rem}
-
-    /* ══ MODAL CÓDIGO ══ */
-    .modal-overlay{
-      position:fixed;inset:0;z-index:200;
-      background:rgba(6,13,26,0.85);
-      backdrop-filter:blur(8px);
-      display:flex;align-items:center;justify-content:center;
-      padding:1rem;
-      opacity:0;pointer-events:none;
-      transition:opacity .3s ease;
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      display: flex; flex-direction: column;
+      overflow-x: hidden;
     }
-    .modal-overlay.open{opacity:1;pointer-events:auto}
-    .modal-box{
-      background:linear-gradient(145deg,#0b1628,#0f1e38);
-      border:1px solid var(--border-strong);
-      border-radius:18px;
-      padding:2rem 1.75rem;
-      max-width:420px;width:100%;
-      position:relative;
-      transform:translateY(20px);
-      transition:transform .35s cubic-bezier(.16,1,.3,1);
-      box-shadow:0 0 60px rgba(0,224,255,.15);
+
+    /* ── Fondo ─────────────────────────────────────────── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+        linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);
+      background-size: 60px 60px; pointer-events: none;
     }
-    .modal-overlay.open .modal-box{transform:translateY(0)}
-    .modal-corner{position:absolute;width:14px;height:14px}
-    .modal-corner-tl{top:8px;left:8px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
-    .modal-corner-tr{top:8px;right:8px;border-top:2px solid var(--cyan);border-right:2px solid var(--cyan)}
-    .modal-corner-bl{bottom:8px;left:8px;border-bottom:2px solid rgba(246,168,33,.6);border-left:2px solid rgba(246,168,33,.6)}
-    .modal-corner-br{bottom:8px;right:8px;border-bottom:2px solid rgba(246,168,33,.6);border-right:2px solid rgba(246,168,33,.6)}
-
-    .modal-eyebrow{font-family:var(--font-display);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
-    .modal-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--amber);animation:dotBlink 1.4s ease-in-out infinite}
-    .modal-title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.4rem;line-height:1.3}
-    .modal-desc{font-size:.82rem;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6}
-
-    .modal-input-wrap{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
-    .modal-input-label{font-size:.65rem;font-family:var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint)}
-    .modal-input{
-      width:100%;padding:.75rem 1rem;
-      font-family:var(--font-display);font-size:1.1rem;font-weight:700;
-      letter-spacing:.25em;text-align:center;text-transform:uppercase;
-      background:rgba(0,224,255,.05);
-      border:1.5px solid rgba(0,224,255,.3);
-      border-radius:10px;color:var(--cyan);
-      outline:none;transition:border-color .2s,box-shadow .2s;
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 15% 20%,rgba(56,189,248,0.05) 0%,transparent 60%),
+        radial-gradient(ellipse 60% 40% at 85% 80%,rgba(129,140,248,0.04) 0%,transparent 60%);
+      pointer-events: none;
+      animation: glow-pulse 8s ease-in-out infinite alternate;
     }
-    .modal-input:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,224,255,.25)}
-    .modal-input.error{border-color:var(--red);color:var(--red);animation:shake .35s ease}
-    .modal-input.success{border-color:var(--green);color:var(--green)}
-    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    @keyframes glow-pulse { 0%{opacity:.6} 100%{opacity:1} }
 
-    .modal-msg{min-height:1.2rem;font-size:.78rem;text-align:center;font-family:var(--font-display);letter-spacing:.05em;margin-bottom:.75rem}
-    .modal-msg.error{color:var(--red)}
-    .modal-msg.success{color:var(--green)}
-
-    .modal-btns{display:flex;gap:.75rem}
-    .btn-modal-cancel{flex:1;padding:.65rem;font-family:var(--font-display);font-size:.75rem;font-weight:700;letter-spacing:.08em;color:var(--text-muted);background:transparent;border:1px solid rgba(148,163,184,.25);border-radius:9px;cursor:pointer;transition:border-color .2s,color .2s}
-    .btn-modal-cancel:hover{border-color:rgba(148,163,184,.5);color:var(--text)}
-    .btn-modal-ok{flex:2;padding:.65rem;font-family:var(--font-display);font-size:.75rem;font-weight:700;letter-spacing:.08em;color:#060d1a;background:linear-gradient(135deg,var(--cyan),var(--green));border:none;border-radius:9px;cursor:pointer;transition:filter .2s,transform .15s;box-shadow:0 0 18px rgba(0,224,255,.25)}
-    .btn-modal-ok:hover{filter:brightness(1.1);transform:scale(1.02)}
-    .btn-modal-ok:active{transform:scale(.97)}
-
-    /* NODOS */
-    .drow{display:flex;align-items:center;height:160px;position:relative}
-    .drow:nth-child(odd){justify-content:flex-start}
-    .drow:nth-child(even){justify-content:flex-end}
-    .drow{padding:0 32px}
-    .dnode{position:relative;display:flex;flex-direction:column;align-items:center;gap:.45rem;z-index:2}
-    .spacer{flex:1}
-
-    .node-circle{width:88px;height:88px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;cursor:pointer;transition:transform .25s ease,box-shadow .25s ease;text-decoration:none}
-    .node-circle.locked{background:rgba(15,30,56,.9);border:2px solid rgba(148,163,184,.2);cursor:not-allowed}
-    .node-circle.locked:hover{transform:none}
-    .node-circle.active{background:linear-gradient(145deg,rgba(0,224,255,.15),rgba(0,224,255,.05));border:2px solid var(--cyan);box-shadow:0 0 0 4px rgba(0,224,255,.1),0 0 24px rgba(0,224,255,.25);animation:nodeGlow 2s ease-in-out infinite alternate}
-    @keyframes nodeGlow{0%{box-shadow:0 0 0 4px rgba(0,224,255,.1),0 0 20px rgba(0,224,255,.2)}100%{box-shadow:0 0 0 6px rgba(0,224,255,.18),0 0 36px rgba(0,224,255,.38)}}
-    .node-circle.active:hover{transform:scale(1.06)}
-    .node-circle.completed{background:linear-gradient(145deg,rgba(34,211,122,.18),rgba(34,211,122,.06));border:2px solid var(--green);box-shadow:0 0 0 3px rgba(34,211,122,.1),0 0 18px rgba(34,211,122,.2)}
-    .node-circle.completed:hover{transform:scale(1.04)}
-
-    .node-num{font-family:var(--font-display);font-weight:900;font-size:1.4rem;line-height:1}
-    .locked .node-num{color:rgba(148,163,184,.35)}
-    .active .node-num{color:var(--cyan);text-shadow:0 0 10px rgba(0,224,255,.6)}
-    .completed .node-num{color:var(--green);text-shadow:0 0 10px rgba(34,211,122,.5)}
-    .node-icon{font-size:.85rem;line-height:1}
-
-    .node-label{text-align:center;max-width:110px}
-    .node-label-title{font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
-    .locked .node-label-title{color:rgba(148,163,184,.4)}
-    .active .node-label-title{color:var(--cyan)}
-    .completed .node-label-title{color:var(--green)}
-    .node-label-desc{font-size:.68rem;color:var(--text-faint);line-height:1.4}
-    .node-key{display:inline-flex;align-items:center;gap:3px;font-size:.58rem;font-family:var(--font-display);font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:9999px;margin-top:2px}
-    .completed .node-key{color:var(--green);border:1px solid rgba(34,211,122,.3);background:rgba(34,211,122,.08)}
-    .active .node-key{color:var(--amber);border:1px solid rgba(246,168,33,.3);background:rgba(246,168,33,.07)}
-    .locked .node-key{color:rgba(148,163,184,.3);border:1px solid rgba(148,163,184,.15);background:transparent}
-
-    /* Botón desbloquear (nodos bloqueados) */
-    .btn-unlock{
-      display:inline-flex;align-items:center;gap:4px;
-      font-family:var(--font-display);font-size:.55rem;font-weight:700;
-      letter-spacing:.08em;text-transform:uppercase;
-      padding:3px 10px;border-radius:9999px;margin-top:3px;
-      background:rgba(246,168,33,.08);
-      border:1px solid rgba(246,168,33,.3);
-      color:var(--amber);cursor:pointer;
-      transition:background .2s,border-color .2s;
+    /* ── Header ────────────────────────────────────────── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(10,12,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-    .btn-unlock:hover{background:rgba(246,168,33,.18);border-color:rgba(246,168,33,.55)}
+    .header-left {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .header-logo {
+      font-family: var(--font-mono); font-size: 0.8rem;
+      font-weight: 700; letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+    .header-sep {
+      width: 1px; height: 20px;
+      background: var(--border);
+    }
+    .header-title {
+      font-size: 0.82rem; color: var(--muted);
+      font-weight: 500;
+    }
 
-    /* Conectores mobile */
-    .connector-v{width:3px;height:60px;background:rgba(148,163,184,.2);margin:0 auto;border-radius:9999px}
-    .connector-v.active-line{background:linear-gradient(to bottom,var(--green),var(--cyan));box-shadow:0 0 8px rgba(0,224,255,.3)}
+    /* Reloj y progreso */
+    .header-right {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .clock-wrap {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+    .clock-icon { font-size: 0.9rem; }
+    #clock {
+      font-family: var(--font-mono); font-size: 0.95rem;
+      font-weight: 700; color: var(--green);
+      letter-spacing: 0.06em;
+      transition: color 0.3s ease;
+      min-width: 5ch;
+    }
+    #clock.warning { color: var(--gold); }
+    #clock.danger  { color: var(--red); animation: tick-danger 0.5s ease-in-out infinite alternate; }
+    @keyframes tick-danger { from{opacity:1} to{opacity:0.5} }
 
-    /* Desktop/Mobile switch */
-    @media(min-width:640px){.mobile-path{display:none}.desktop-path{display:block}}
-    @media(max-width:639px){.mobile-path{display:flex;flex-direction:column;align-items:center;gap:0}.desktop-path{display:none}}
+    #penalizacion-txt {
+      font-size: 0.72rem; color: var(--red);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+    #penalizacion-txt.hidden { display: none; }
 
-    .desktop-path{position:relative;width:100%}
-    .desktop-canvas{position:absolute;inset:0;pointer-events:none;overflow:visible}
-    .desktop-nodes{display:flex;flex-direction:column;gap:0}
+    .progreso-wrap {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; color: var(--muted);
+    }
+    #progress-txt {
+      font-family: var(--font-mono); font-size: 0.8rem;
+      color: var(--accent); font-weight: 700;
+    }
+    .barra-outer {
+      width: 80px; height: 6px;
+      background: var(--surface-2);
+      border-radius: 999px; overflow: hidden;
+    }
+    #progress-bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 999px;
+      transition: width 0.6s ease;
+    }
 
-    /* Mensaje final */
-    .mission-end{background:linear-gradient(135deg,rgba(34,211,122,.07),rgba(0,224,255,.05));border:1px solid rgba(34,211,122,.25);border-radius:14px;padding:1.25rem 1.5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.5rem}
-    .mission-end-icon{font-size:2rem}
-    .mission-end-title{font-family:var(--font-display);font-size:.9rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
-    .mission-end-text{font-size:.82rem;color:var(--text-muted);max-width:44ch}
+    /* ── Main ──────────────────────────────────────────── */
+    main {
+      position: relative; z-index: 1; flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center;
+      padding: 2rem 1.5rem 3rem;
+      gap: 2rem;
+    }
 
-    :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+    /* ── Título sección ────────────────────────────────── */
+    .mapa-header {
+      text-align: center;
+      animation: fade-up 0.6s ease both;
+    }
+    .mapa-eyebrow {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .mapa-titulo {
+      font-family: var(--font-mono);
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 900; color: var(--text);
+    }
+    .mapa-sub {
+      margin-top: 0.4rem; font-size: 0.88rem; color: var(--muted);
+    }
+    @keyframes fade-up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── Camino del mapa ───────────────────────────────── */
+    .mapa-path {
+      width: 100%; max-width: 720px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 0;
+    }
+
+    /* Conector entre nodos */
+    .conector {
+      display: flex; align-items: center;
+      flex-direction: column;
+      gap: 0;
+    }
+    .conector-line {
+      width: 3px; height: 36px;
+      background: linear-gradient(180deg, var(--border) 0%, rgba(56,189,248,0.15) 100%);
+      border-radius: 2px;
+      transition: background 0.4s ease;
+    }
+    .conector-line.done {
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+      box-shadow: 0 0 8px rgba(56,189,248,0.3);
+    }
+    .conector-arrow {
+      font-size: 0.7rem; color: var(--muted);
+      transition: color 0.3s ease;
+    }
+    .conector-arrow.done { color: var(--accent); }
+
+    /* ── Nodo ──────────────────────────────────────────── */
+    .nodo-wrap {
+      width: 100%; max-width: 580px;
+      animation: fade-up 0.5s ease both;
+    }
+    .nodo-wrap:nth-child(1)  { animation-delay: 0.05s; }
+    .nodo-wrap:nth-child(3)  { animation-delay: 0.10s; }
+    .nodo-wrap:nth-child(5)  { animation-delay: 0.15s; }
+    .nodo-wrap:nth-child(7)  { animation-delay: 0.20s; }
+    .nodo-wrap:nth-child(9)  { animation-delay: 0.25s; }
+    .nodo-wrap:nth-child(11) { animation-delay: 0.30s; }
+
+    /* El <a> nodo */
+    a.nodo {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      text-decoration: none; color: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease;
+      cursor: default;
+      width: 100%;
+    }
+
+    /* ── Estado: bloqueado ── */
+    a.nodo.locked {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+    }
+
+    /* ── Estado: disponible ── */
+    a.nodo.active-node {
+      border-color: rgba(56,189,248,0.4);
+      background: linear-gradient(135deg, rgba(56,189,248,0.04), rgba(129,140,248,0.03));
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(56,189,248,0.08), 0 4px 20px rgba(0,0,0,0.3);
+    }
+    a.nodo.active-node:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 45px rgba(56,189,248,0.2), 0 8px 32px rgba(0,0,0,0.4);
+      border-color: rgba(56,189,248,0.7);
+    }
+    a.nodo.active-node:active { transform: translateY(0); }
+
+    /* ── Estado: completado ── */
+    a.nodo.completed {
+      border-color: rgba(52,211,153,0.3);
+      background: linear-gradient(135deg, rgba(52,211,153,0.04), rgba(56,189,248,0.02));
+      cursor: pointer;
+      opacity: 0.85;
+    }
+    a.nodo.completed:hover {
+      transform: translateY(-2px);
+      border-color: rgba(52,211,153,0.6);
+      box-shadow: 0 0 25px rgba(52,211,153,0.12);
+      opacity: 1;
+    }
+
+    /* Icono del nodo */
+    .nodo-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 52px; height: 52px; border-radius: 14px;
+      font-size: 1.5rem; flex-shrink: 0;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    a.nodo.active-node .nodo-icon {
+      background: rgba(56,189,248,0.1);
+      border-color: rgba(56,189,248,0.35);
+      box-shadow: 0 0 16px rgba(56,189,248,0.2);
+    }
+    a.nodo.completed .nodo-icon {
+      background: rgba(52,211,153,0.1);
+      border-color: rgba(52,211,153,0.35);
+    }
+
+    /* Contenido textual */
+    .nodo-content { flex: 1; min-width: 0; }
+    .nodo-eyebrow {
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.2rem;
+    }
+    .nodo-titulo {
+      font-family: var(--font-mono); font-size: 0.9rem;
+      font-weight: 700; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .nodo-formula {
+      font-size: 0.8rem; color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Badge de estado */
+    .nodo-status-label {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.25rem 0.7rem; border-radius: 999px;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      white-space: nowrap; flex-shrink: 0;
+      border: 1px solid transparent;
+    }
+    .status-locked {
+      background: rgba(255,255,255,0.04);
+      border-color: var(--border); color: var(--muted);
+    }
+    .status-active {
+      background: rgba(56,189,248,0.12);
+      border-color: rgba(56,189,248,0.3);
+      color: var(--accent);
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+    @keyframes pulse-badge {
+      0%,100%{box-shadow:0 0 0 0 rgba(56,189,248,0.3)}
+      50%{box-shadow:0 0 0 6px rgba(56,189,248,0)}
+    }
+    .status-completed {
+      background: rgba(52,211,153,0.12);
+      border-color: rgba(52,211,153,0.3);
+      color: var(--green);
+    }
+
+    /* Flecha derecha */
+    .nodo-arrow {
+      font-size: 1.1rem; color: var(--muted);
+      flex-shrink: 0; opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    a.nodo.active-node .nodo-arrow,
+    a.nodo.completed   .nodo-arrow {
+      opacity: 1; color: var(--accent);
+    }
+    a.nodo:hover .nodo-arrow { transform: translateX(4px); }
+
+    /* ── Reto final especial ─────────────────────────── */
+    a.nodo[data-id="6"].active-node {
+      border-color: rgba(245,158,11,0.4);
+      background: linear-gradient(135deg,rgba(245,158,11,0.06),rgba(244,114,182,0.04));
+      box-shadow: 0 0 40px rgba(245,158,11,0.1);
+    }
+    a.nodo[data-id="6"].active-node .nodo-icon {
+      background: rgba(245,158,11,0.12);
+      border-color: rgba(245,158,11,0.4);
+      box-shadow: 0 0 20px rgba(245,158,11,0.2);
+    }
+    a.nodo[data-id="6"].active-node .nodo-status-label {
+      background: rgba(245,158,11,0.12);
+      border-color: rgba(245,158,11,0.35);
+      color: var(--gold);
+      animation: pulse-gold 2s ease-in-out infinite;
+    }
+    @keyframes pulse-gold {
+      0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.3)}
+      50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}
+    }
+    a.nodo[data-id="6"].active-node .nodo-arrow { color: var(--gold); }
+
+    /* ── Tags de dificultad ─────────────────────────── */
+    .nodo-tags { display: flex; gap: 0.4rem; margin-top: 0.35rem; flex-wrap: wrap; }
+    .ntag {
+      padding: 0.1em 0.5em; border-radius: 4px;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .ntag-green  { background:rgba(52,211,153,.12); color:var(--green); }
+    .ntag-gold   { background:rgba(245,158,11,.12); color:var(--gold); }
+    .ntag-pink   { background:rgba(244,114,182,.12);color:var(--pink); }
+    .ntag-purple { background:rgba(129,140,248,.12);color:var(--accent-2); }
+
+    /* ── Footer ─────────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 1rem;
+      font-size: 0.72rem; color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent); }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 520px) {
+      .header-title { display: none; }
+      .nodo-formula { display: none; }
+      .nodo-tags    { display: none; }
+      .barra-outer  { width: 50px; }
+    }
   </style>
 </head>
 <body>
 
-<!-- FONDO -->
-<div class="bg-scene" aria-hidden="true">
-  <div class="bg-grid"></div>
-  <div class="bg-orb bg-orb-1"></div>
-  <div class="bg-orb bg-orb-2"></div>
-  <canvas id="p-canvas"></canvas>
-</div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
 
-<!-- ══ MODAL DE CÓDIGO ══ -->
-<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-  <div class="modal-box">
-    <div class="modal-corner modal-corner-tl"></div>
-    <div class="modal-corner modal-corner-tr"></div>
-    <div class="modal-corner modal-corner-bl"></div>
-    <div class="modal-corner modal-corner-br"></div>
-
-    <div class="modal-eyebrow">Ingresar código de desbloqueo</div>
-    <h2 class="modal-title" id="modal-title">Módulo <span id="modal-reto-num">—</span> bloqueado</h2>
-    <p class="modal-desc">
-      Ingresa el <strong style="color:var(--amber)">Código de Justicia Numérica</strong>
-      obtenido al completar el reto anterior para desbloquear este módulo.
-    </p>
-
-    <div class="modal-input-wrap">
-      <label class="modal-input-label" for="modal-code-input">Código secreto</label>
-      <input
-        class="modal-input"
-        id="modal-code-input"
-        type="text"
-        maxlength="8"
-        placeholder="ALG-000"
-        autocomplete="off"
-        spellcheck="false"
-      />
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="header-left">
+      <span class="header-logo">EAP·2026</span>
+      <div class="header-sep" aria-hidden="true"></div>
+      <span class="header-title">Mapa de Misión</span>
     </div>
-    <div class="modal-msg" id="modal-msg"></div>
-    <div class="modal-btns">
-      <button class="btn-modal-cancel" id="btn-modal-cancel" type="button">Cancelar</button>
-      <button class="btn-modal-ok" id="btn-modal-ok" type="button">🔓 Desbloquear</button>
-    </div>
-  </div>
-</div>
-
-<!-- NAVBAR -->
-<header class="navbar">
-  <a href="index.html" class="nav-logo" aria-label="Volver al inicio">
-    <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
-      <rect x="4" y="8" width="40" height="26" rx="3" stroke="#00e0ff" stroke-width="2" fill="rgba(0,224,255,0.07)"/>
-      <rect x="8" y="12" width="32" height="18" rx="1.5" fill="rgba(0,224,255,0.12)" stroke="rgba(0,224,255,0.35)" stroke-width="1"/>
-      <line x1="11" y1="17" x2="22" y2="17" stroke="#00e0ff" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
-      <line x1="11" y1="21" x2="28" y2="21" stroke="#f6a821" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
-      <line x1="11" y1="25" x2="19" y2="25" stroke="#00e0ff" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
-      <text x="28" y="27" font-family="monospace" font-size="9" fill="#22d37a" opacity="0.9">\u03c0</text>
-    </svg>
-    <span class="nav-logo-name">Eduquemos con TIC</span>
-  </a>
-  <div class="nav-right">
-    <div class="clock-wrap">
-      <span class="clock-label">Tiempo</span>
-      <span class="clock" id="clock" aria-live="polite">60:00</span>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-top">
-        <span class="progress-label">Progreso</span>
-        <span class="progress-count" id="prog-count">0 / 6</span>
+    <div class="header-right">
+      <!-- Reloj -->
+      <div class="clock-wrap" aria-label="Tiempo restante">
+        <span class="clock-icon" aria-hidden="true">⏱</span>
+        <span id="clock" aria-live="polite">45:00</span>
+        <span id="penalizacion-txt" class="hidden" aria-live="assertive"></span>
       </div>
-      <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="6">
-        <div class="progress-fill" id="prog-fill"></div>
+      <!-- Progreso -->
+      <div class="progreso-wrap" aria-label="Retos completados">
+        <div class="barra-outer">
+          <div id="progress-bar" role="progressbar"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+        </div>
+        <span id="progress-txt">0/6</span>
       </div>
     </div>
-  </div>
-</header>
+  </header>
 
-<!-- PÁGINA -->
-<div class="page">
-<div class="page-inner">
+  <!-- ── MAIN ── -->
+  <main>
 
-  <section class="op-panel" aria-labelledby="op-title">
-    <div class="op-corner op-corner-tl"></div>
-    <div class="op-corner op-corner-tr"></div>
-    <div class="op-corner op-corner-bl"></div>
-    <div class="op-corner op-corner-br"></div>
-    <div class="op-eyebrow">🎮 Panel Central · Ruta de Misiones</div>
-    <h1 class="op-title" id="op-title">Operación: Restaurar SistemaEduAlgo</h1>
-    <div class="op-sub">🖥️ Nivel de acceso: AGENTE MATEMÁTICO</div>
-    <div class="alert-box" role="alert">
-      <span class="alert-icon">🚨</span>
-      <p class="alert-text">
-        <strong style="color:#ffa0b0">Alerta del sistema —</strong>
-        El núcleo digital de la institución educativa ha sido comprometido.
-        Los algoritmos matemáticos presentan errores que afectan
-        <strong style="color:#ffc8d0">presupuestos, calificaciones, distribución de recursos y proyectos escolares.</strong>
-      </p>
+    <div class="mapa-header">
+      <p class="mapa-eyebrow">Ruta de misión</p>
+      <h1 class="mapa-titulo">SELECCIONA TU RETO</h1>
+      <p class="mapa-sub">Completa cada nivel en orden para desbloquear el siguiente</p>
     </div>
-    <div class="op-meta">
-      <span class="op-meta-item op-meta-time">⏳ Tiempo límite: <strong>60 minutos</strong></span>
-      <span class="op-meta-item op-meta-obj">🔐 Recupera los <strong>6 Códigos de Justicia Numérica</strong> antes del bloqueo permanente</span>
-    </div>
-  </section>
 
-  <div class="map-header" aria-hidden="true">🗺️ Mapa de Retos</div>
-  <p class="map-hint">Cada misión superada entrega un <strong style="color:var(--amber)">Código Secreto</strong> que debes ingresar aquí para desbloquear el siguiente módulo.</p>
+    <!-- ── CAMINO ── -->
+    <div class="mapa-path" role="list" aria-label="Retos del escape room">
 
-  <!-- ══ DESKTOP PATH ══ -->
-  <div class="desktop-path" id="desktop-path" role="navigation" aria-label="Mapa de retos">
-    <svg class="desktop-canvas" id="path-svg" preserveAspectRatio="none" aria-hidden="true"></svg>
-    <div class="desktop-nodes" id="desktop-nodes">
-
-      <div class="drow"><div class="dnode" id="dnode-1" data-id="1">
-        <a href="reto.html?id=1" class="node-circle" id="circle-1" aria-label="Reto 1">
-          <span class="node-num">01</span><span class="node-icon" id="icon-1">🔓</span>
+      <!-- RETO 1 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-1" class="nodo locked" data-id="1"
+           href="#" aria-label="Reto 1: El mural que nadie midió">
+          <div class="nodo-icon" aria-hidden="true">🎨</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 1 · Cuadrado de suma</p>
+            <p class="nodo-titulo">El mural que nadie midió</p>
+            <p class="nodo-formula">(a+b)² = a² + 2ab + b²</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-green">Básico</span>
+              <span class="ntag ntag-purple">(a+b)²</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked" aria-label="Estado del reto">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
         </a>
-        <div class="node-label">
-          <div class="node-label-title">Reto 1</div>
-          <div class="node-label-desc">Cuadrado de binomio con suma</div>
-          <div class="node-key" id="key-1">⚡ Disponible</div>
-        </div>
-      </div><div class="spacer"></div></div>
+      </div>
 
-      <div class="drow"><div class="spacer"></div><div class="dnode" id="dnode-2" data-id="2">
-        <div class="node-circle locked" id="circle-2" aria-label="Reto 2 bloqueado">
-          <span class="node-num">02</span><span class="node-icon" id="icon-2">🔒</span>
-        </div>
-        <div class="node-label">
-          <div class="node-label-title">Reto 2</div>
-          <div class="node-label-desc">Cuadrado de binomio con diferencia</div>
-          <div class="node-key" id="key-2">🔒 Bloqueado</div>
-          <button class="btn-unlock" id="btn-2" onclick="abrirModal(2)" style="display:none">🔑 Ingresar código</button>
-        </div>
-      </div></div>
+      <!-- Conector 1→2 -->
+      <div class="conector" id="conector-1" aria-hidden="true">
+        <div class="conector-line" id="line-1"></div>
+        <span class="conector-arrow" id="arrow-1">▼</span>
+        <div class="conector-line"></div>
+      </div>
 
-      <div class="drow"><div class="dnode" id="dnode-3" data-id="3">
-        <div class="node-circle locked" id="circle-3" aria-label="Reto 3 bloqueado">
-          <span class="node-num">03</span><span class="node-icon" id="icon-3">🔒</span>
-        </div>
-        <div class="node-label">
-          <div class="node-label-title">Reto 3</div>
-          <div class="node-label-desc">Diferencia de cuadrados</div>
-          <div class="node-key" id="key-3">🔒 Bloqueado</div>
-          <button class="btn-unlock" id="btn-3" onclick="abrirModal(3)" style="display:none">🔑 Ingresar código</button>
-        </div>
-      </div><div class="spacer"></div></div>
+      <!-- RETO 2 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-2" class="nodo locked" data-id="2"
+           href="#" aria-label="Reto 2: El terreno que se recortó">
+          <div class="nodo-icon" aria-hidden="true">🌱</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 2 · Cuadrado de diferencia</p>
+            <p class="nodo-titulo">El terreno que se recortó</p>
+            <p class="nodo-formula">(a−b)² = a² − 2ab + b²</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-green">Fácil</span>
+              <span class="ntag ntag-purple">(a−b)²</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
 
-      <div class="drow"><div class="spacer"></div><div class="dnode" id="dnode-4" data-id="4">
-        <div class="node-circle locked" id="circle-4" aria-label="Reto 4 bloqueado">
-          <span class="node-num">04</span><span class="node-icon" id="icon-4">🔒</span>
-        </div>
-        <div class="node-label">
-          <div class="node-label-title">Reto 4</div>
-          <div class="node-label-desc">Cubo de binomio</div>
-          <div class="node-key" id="key-4">🔒 Bloqueado</div>
-          <button class="btn-unlock" id="btn-4" onclick="abrirModal(4)" style="display:none">🔑 Ingresar código</button>
-        </div>
-      </div></div>
+      <!-- Conector 2→3 -->
+      <div class="conector" id="conector-2" aria-hidden="true">
+        <div class="conector-line" id="line-2"></div>
+        <span class="conector-arrow" id="arrow-2">▼</span>
+        <div class="conector-line"></div>
+      </div>
 
-      <div class="drow"><div class="dnode" id="dnode-5" data-id="5">
-        <div class="node-circle locked" id="circle-5" aria-label="Reto 5 bloqueado">
-          <span class="node-num">05</span><span class="node-icon" id="icon-5">🔒</span>
-        </div>
-        <div class="node-label">
-          <div class="node-label-title">Reto 5</div>
-          <div class="node-label-desc">Factorización compuesta</div>
-          <div class="node-key" id="key-5">🔒 Bloqueado</div>
-          <button class="btn-unlock" id="btn-5" onclick="abrirModal(5)" style="display:none">🔑 Ingresar código</button>
-        </div>
-      </div><div class="spacer"></div></div>
+      <!-- RETO 3 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-3" class="nodo locked" data-id="3"
+           href="#" aria-label="Reto 3: El contenedor de doble cara">
+          <div class="nodo-icon" aria-hidden="true">📦</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 3 · Diferencia de cuadrados</p>
+            <p class="nodo-titulo">El contenedor de doble cara</p>
+            <p class="nodo-formula">(a+b)(a−b) = a² − b²</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-gold">Medio</span>
+              <span class="ntag ntag-purple">(a+b)(a−b)</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
 
-      <div class="drow"><div class="spacer"></div><div class="dnode" id="dnode-6" data-id="6">
-        <div class="node-circle locked" id="circle-6" aria-label="Reto 6 bloqueado">
-          <span class="node-num">06</span><span class="node-icon" id="icon-6">🔒</span>
-        </div>
-        <div class="node-label">
-          <div class="node-label-title">Reto 6</div>
-          <div class="node-label-desc">Binomio con fracciones</div>
-          <div class="node-key" id="key-6">🔒 Bloqueado</div>
-          <button class="btn-unlock" id="btn-6" onclick="abrirModal(6)" style="display:none">🔑 Ingresar código</button>
-        </div>
-      </div></div>
+      <!-- Conector 3→4 -->
+      <div class="conector" id="conector-3" aria-hidden="true">
+        <div class="conector-line" id="line-3"></div>
+        <span class="conector-arrow" id="arrow-3">▼</span>
+        <div class="conector-line"></div>
+      </div>
 
-    </div>
-  </div>
+      <!-- RETO 4 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-4" class="nodo locked" data-id="4"
+           href="#" aria-label="Reto 4: El tanque de agua del colegio">
+          <div class="nodo-icon" aria-hidden="true">💧</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 4 · Cubo de binomio</p>
+            <p class="nodo-titulo">El tanque de agua del colegio</p>
+            <p class="nodo-formula">(a+b)³ = a³ + 3a²b + 3ab² + b³</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-gold">Medio-alto</span>
+              <span class="ntag ntag-purple">(a+b)³</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
 
-  <!-- ══ MOBILE PATH ══ -->
-  <nav class="mobile-path" aria-label="Retos móvil" id="mobile-path">
-    <div class="dnode"><div class="node-circle" id="m-circle-1" aria-label="Reto 1"><span class="node-num">01</span><span class="node-icon" id="m-icon-1">🔓</span></div><div class="node-label"><div class="node-label-title">Reto 1</div><div class="node-label-desc">Cuadrado de binomio con suma</div><div class="node-key" id="m-key-1">⚡ Disponible</div></div></div>
-    <div class="connector-v" id="m-conn-1"></div>
-    <div class="dnode"><div class="node-circle locked" id="m-circle-2"><span class="node-num">02</span><span class="node-icon" id="m-icon-2">🔒</span></div><div class="node-label"><div class="node-label-title">Reto 2</div><div class="node-label-desc">Cuadrado de binomio con diferencia</div><div class="node-key" id="m-key-2">🔒 Bloqueado</div><button class="btn-unlock" id="m-btn-2" onclick="abrirModal(2)" style="display:none">🔑 Código</button></div></div>
-    <div class="connector-v" id="m-conn-2"></div>
-    <div class="dnode"><div class="node-circle locked" id="m-circle-3"><span class="node-num">03</span><span class="node-icon" id="m-icon-3">🔒</span></div><div class="node-label"><div class="node-label-title">Reto 3</div><div class="node-label-desc">Diferencia de cuadrados</div><div class="node-key" id="m-key-3">🔒 Bloqueado</div><button class="btn-unlock" id="m-btn-3" onclick="abrirModal(3)" style="display:none">🔑 Código</button></div></div>
-    <div class="connector-v" id="m-conn-3"></div>
-    <div class="dnode"><div class="node-circle locked" id="m-circle-4"><span class="node-num">04</span><span class="node-icon" id="m-icon-4">🔒</span></div><div class="node-label"><div class="node-label-title">Reto 4</div><div class="node-label-desc">Cubo de binomio</div><div class="node-key" id="m-key-4">🔒 Bloqueado</div><button class="btn-unlock" id="m-btn-4" onclick="abrirModal(4)" style="display:none">🔑 Código</button></div></div>
-    <div class="connector-v" id="m-conn-4"></div>
-    <div class="dnode"><div class="node-circle locked" id="m-circle-5"><span class="node-num">05</span><span class="node-icon" id="m-icon-5">🔒</span></div><div class="node-label"><div class="node-label-title">Reto 5</div><div class="node-label-desc">Factorización compuesta</div><div class="node-key" id="m-key-5">🔒 Bloqueado</div><button class="btn-unlock" id="m-btn-5" onclick="abrirModal(5)" style="display:none">🔑 Código</button></div></div>
-    <div class="connector-v" id="m-conn-5"></div>
-    <div class="dnode"><div class="node-circle locked" id="m-circle-6"><span class="node-num">06</span><span class="node-icon" id="m-icon-6">🔒</span></div><div class="node-label"><div class="node-label-title">Reto 6</div><div class="node-label-desc">Binomio con fracciones</div><div class="node-key" id="m-key-6">🔒 Bloqueado</div><button class="btn-unlock" id="m-btn-6" onclick="abrirModal(6)" style="display:none">🔑 Código</button></div></div>
-  </nav>
+      <!-- Conector 4→5 -->
+      <div class="conector" id="conector-4" aria-hidden="true">
+        <div class="conector-line" id="line-4"></div>
+        <span class="conector-arrow" id="arrow-4">▼</span>
+        <div class="conector-line"></div>
+      </div>
 
-  <div class="mission-end" aria-label="Meta final">
-    <div class="mission-end-icon">🏆</div>
-    <div class="mission-end-title">Sistema Restaurado</div>
-    <p class="mission-end-text">Completa los 6 retos para recuperar todos los Códigos de Justicia Numérica y restaurar el SistemaEduAlgo.</p>
-  </div>
+      <!-- RETO 5 -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-5" class="nodo locked" data-id="5"
+           href="#" aria-label="Reto 5: El festival de matemáticas">
+          <div class="nodo-icon" aria-hidden="true">🎪</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 5 · Factorización compuesta</p>
+            <p class="nodo-titulo">El festival de matemáticas</p>
+            <p class="nodo-formula">Factor común + diferencia de cuadrados</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-pink">Alto</span>
+              <span class="ntag ntag-purple">Factor común</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
 
-</div></div>
+      <!-- Conector 5→6 -->
+      <div class="conector" id="conector-5" aria-hidden="true">
+        <div class="conector-line" id="line-5"></div>
+        <span class="conector-arrow" id="arrow-5">▼</span>
+        <div class="conector-line"></div>
+      </div>
 
-<script>
-/* ═══════════════════════════════════════════════
-   ESTADO GLOBAL — sin localStorage
-═══════════════════════════════════════════════ */
-const TOTAL = 6;
+      <!-- RETO 6 — MISIÓN FINAL -->
+      <div class="nodo-wrap" role="listitem">
+        <a id="nodo-6" class="nodo locked" data-id="6"
+           href="#" aria-label="Reto 6: La fórmula justa del sistema — Misión final">
+          <div class="nodo-icon" aria-hidden="true">⚡</div>
+          <div class="nodo-content">
+            <p class="nodo-eyebrow">Nivel 6 · Misión final · Experto</p>
+            <p class="nodo-titulo">La fórmula justa del sistema</p>
+            <p class="nodo-formula">Binomios con fracciones · Simplificación</p>
+            <div class="nodo-tags">
+              <span class="ntag ntag-pink">Experto</span>
+              <span class="ntag ntag-gold">Misión final</span>
+            </div>
+          </div>
+          <span class="nodo-status-label status-locked">🔒 Bloqueado</span>
+          <span class="nodo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
 
-// Códigos secretos que el docente comparte con el estudiante
-// tras completar cada reto. El reto N entrega el código para desbloquear el reto N+1.
-const CODIGOS = {
-  2: "ALG-4X2",   // Se obtiene al completar Reto 1 → desbloquea Reto 2
-  3: "FAC-7K9",   // Se obtiene al completar Reto 2 → desbloquea Reto 3
-  4: "BIN-3Z1",   // Se obtiene al completar Reto 3 → desbloquea Reto 4
-  5: "POT-8M5",   // Se obtiene al completar Reto 4 → desbloquea Reto 5
-  6: "EXP-2W6"    // Se obtiene al completar Reto 5 → desbloquea Reto 6
-};
+    </div><!-- /.mapa-path -->
+  </main>
 
-// Estado inicial: reto 1 siempre activo
-// completados = lista de IDs completados, desbloqueados = IDs accesibles
-const estado = {
-  completados: [],
-  desbloqueados: [1],
-  xp: 0
-};
+  <footer>
+    Desarrollado por <span>Eduquemos con TIC</span> · Matemáticas 8° · 2026
+  </footer>
 
-// Leer estado desde URL (cuando vuelves del reto)
-(function leerURL() {
-  const p = new URLSearchParams(window.location.search);
-  if (p.get("completados")) {
-    estado.completados = p.get("completados").split(",").map(Number).filter(Boolean);
-  }
-  if (p.get("desbloqueados")) {
-    estado.desbloqueados = p.get("desbloqueados").split(",").map(Number).filter(Boolean);
-    if (!estado.desbloqueados.includes(1)) estado.desbloqueados.unshift(1);
-  }
-  if (p.get("xp")) estado.xp = parseInt(p.get("xp")) || 0;
-})();
+  <script src="gameEngine.js" defer></script>
 
-/* ═══════════════════════════════════════════════
-   RENDERIZAR MAPA
-═══════════════════════════════════════════════ */
-function estadoNodo(id) {
-  if (estado.completados.includes(id)) return "completed";
-  if (estado.desbloqueados.includes(id)) return "active";
-  return "locked";
-}
+  <!-- ── Lógica de desbloqueo garantizada ──
+       Este bloque se ejecuta DESPUÉS de que gameEngine.js llama initMapa().
+       Si gameEngine.js no está disponible, actúa como fallback autónomo.
+  ── -->
+  <script>
+    (function garantizarDesbloqueo() {
+      // Espera a que el DOM + gameEngine.js estén listos
+      document.addEventListener('DOMContentLoaded', function() {
+        // Pequeño delay para asegurar que initMapa() de gameEngine.js ya corrió
+        setTimeout(function() {
 
-function renderMapa() {
-  let completadosCount = estado.completados.length;
-  document.getElementById("prog-count").textContent = completadosCount + " / " + TOTAL;
-  document.getElementById("prog-fill").style.width = (completadosCount / TOTAL * 100) + "%";
+          // ── Lee el estado desde sessionStorage (igual que gameEngine.js Parte 2) ──
+          let estado = {};
+          try {
+            const raw = sessionStorage.getItem('er-state');
+            if (raw) estado = JSON.parse(raw);
+          } catch(e) {}
 
-  for (let i = 1; i <= TOTAL; i++) {
-    const est = estadoNodo(i);
-    actualizarNodo(i, est);
-  }
+          const resueltos = Array.isArray(estado.resueltos) ? estado.resueltos : [];
+          const TOTAL     = 6;
+          const siguiente = resueltos.length + 1; // id del próximo reto disponible
 
-  // SVG paths
-  setTimeout(drawPaths, 120);
-}
+          for (let id = 1; id <= TOTAL; id++) {
+            const nodo  = document.getElementById('nodo-' + id);
+            if (!nodo) continue;
 
-function actualizarNodo(id, est) {
-  // Desktop
-  const circle = document.getElementById("circle-" + id);
-  const icon   = document.getElementById("icon-" + id);
-  const key    = document.getElementById("key-" + id);
-  const btn    = document.getElementById("btn-" + id);
+            // Limpia clases previas
+            nodo.classList.remove('completed', 'active-node', 'locked');
+            const badge = nodo.querySelector('.nodo-status-label');
 
-  if (circle) {
-    circle.className = "node-circle " + est;
-    // El reto 1 siempre es clickeable; el resto solo si activo/completado
-    if (est === "active") {
-      // Reemplazar div por a
-      const a = document.createElement("a");
-      a.href = "reto.html?id=" + id + "&comp=" + estado.completados.join(",") + "&desbloq=" + estado.desbloqueados.join(",") + "&xp=" + estado.xp;
-      a.className = circle.className;
-      a.setAttribute("aria-label", "Reto " + id + " — disponible");
-      a.innerHTML = circle.innerHTML;
-      circle.parentNode.replaceChild(a, circle);
-    } else if (est === "completed") {
-      const a = document.createElement("a");
-      a.href = "reto.html?id=" + id + "&comp=" + estado.completados.join(",") + "&desbloq=" + estado.desbloqueados.join(",") + "&xp=" + estado.xp;
-      a.className = circle.className;
-      a.setAttribute("aria-label", "Reto " + id + " — completado");
-      a.innerHTML = circle.innerHTML;
-      circle.parentNode.replaceChild(a, circle);
-    }
-    if (document.getElementById("icon-" + id))
-      document.getElementById("icon-" + id).textContent = est === "completed" ? "✅" : est === "active" ? "🔓" : "🔒";
-  }
+            if (resueltos.includes(id)) {
+              // ── COMPLETADO ──
+              nodo.classList.add('completed');
+              nodo.href = 'reto.html?id=' + id;
+              nodo.removeAttribute('aria-disabled');
+              if (badge) {
+                badge.className = 'nodo-status-label status-completed';
+                badge.textContent = '✓ Completado';
+              }
+              // Conector previo se pone "done"
+              const lineEl  = document.getElementById('line-' + id);
+              const arrowEl = document.getElementById('arrow-' + id);
+              if (lineEl)  lineEl.classList.add('done');
+              if (arrowEl) arrowEl.classList.add('done');
 
-  if (key) {
-    if (est === "completed") key.textContent = "🔑 Clave obtenida";
-    else if (est === "active") key.textContent = "⚡ Disponible";
-    else key.textContent = "🔒 Bloqueado";
-  }
+            } else if (id === siguiente) {
+              // ── DISPONIBLE ──
+              nodo.classList.add('active-node');
+              nodo.href = 'reto.html?id=' + id;
+              nodo.removeAttribute('aria-disabled');
+              nodo.style.cursor = 'pointer';
+              if (badge) {
+                badge.className = 'nodo-status-label status-active';
+                badge.textContent = id === 6 ? '🔓 ¡Misión final!' : '🔓 Disponible';
+              }
 
-  // Botón desbloquear: mostrar solo en nodos bloqueados que son el siguiente al último completado
-  if (btn) {
-    const anteriorCompletado = estado.completados.includes(id - 1) || (id === 1);
-    const mostrar = est === "locked" && (id > 1) && (estado.completados.length >= id - 1) && !estado.desbloqueados.includes(id);
-    btn.style.display = mostrar ? "inline-flex" : "none";
-  }
+            } else {
+              // ── BLOQUEADO ──
+              nodo.classList.add('locked');
+              nodo.href = '#';
+              nodo.setAttribute('aria-disabled', 'true');
+              nodo.style.cursor = 'not-allowed';
+              if (badge) {
+                badge.className = 'nodo-status-label status-locked';
+                badge.textContent = '🔒 Bloqueado';
+              }
+            }
+          }
 
-  // Mobile (mismos cambios)
-  const mc = document.getElementById("m-circle-" + id);
-  const mi = document.getElementById("m-icon-" + id);
-  const mk = document.getElementById("m-key-" + id);
-  const mb = document.getElementById("m-btn-" + id);
-  const conn = document.getElementById("m-conn-" + (id - 1));
+          // Si todos están resueltos → cierre automático
+          if (resueltos.length >= TOTAL) {
+            window.location.href = 'cierre.html';
+          }
 
-  if (mc) {
-    mc.className = "node-circle " + est;
-    if (est !== "locked") {
-      const a = document.createElement("a");
-      a.href = "reto.html?id=" + id + "&comp=" + estado.completados.join(",") + "&desbloq=" + estado.desbloqueados.join(",") + "&xp=" + estado.xp;
-      a.className = mc.className;
-      a.setAttribute("aria-label", "Reto " + id);
-      a.innerHTML = mc.innerHTML;
-      mc.parentNode.replaceChild(a, mc);
-    }
-    if (document.getElementById("m-icon-" + id))
-      document.getElementById("m-icon-" + id).textContent = est === "completed" ? "✅" : est === "active" ? "🔓" : "🔒";
-  }
-  if (mk) {
-    if (est === "completed") mk.textContent = "🔑 Clave obtenida";
-    else if (est === "active") mk.textContent = "⚡ Disponible";
-    else mk.textContent = "🔒 Bloqueado";
-  }
-  if (mb) {
-    const mostrar = est === "locked" && id > 1 && estado.completados.length >= id - 1 && !estado.desbloqueados.includes(id);
-    mb.style.display = mostrar ? "inline-flex" : "none";
-  }
-  if (conn && est !== "locked") {
-    conn.classList.add("active-line");
-  }
-}
+        }, 80); // 80ms de margen para que gameEngine.js corra primero
+      });
+    })();
+  </script>
 
-/* ═══════════════════════════════════════════════
-   MODAL DE CÓDIGO
-═══════════════════════════════════════════════ */
-let modalRetoTarget = null;
-
-function abrirModal(retoId) {
-  modalRetoTarget = retoId;
-  document.getElementById("modal-reto-num").textContent = String(retoId).padStart(2, "0");
-  document.getElementById("modal-code-input").value = "";
-  document.getElementById("modal-code-input").className = "modal-input";
-  document.getElementById("modal-msg").textContent = "";
-  document.getElementById("modal-msg").className = "modal-msg";
-  document.getElementById("modal-overlay").classList.add("open");
-  setTimeout(() => document.getElementById("modal-code-input").focus(), 350);
-}
-
-function cerrarModal() {
-  document.getElementById("modal-overlay").classList.remove("open");
-  modalRetoTarget = null;
-}
-
-function verificarCodigo() {
-  const input = document.getElementById("modal-code-input");
-  const msg   = document.getElementById("modal-msg");
-  const val   = input.value.trim().toUpperCase();
-  const esperado = CODIGOS[modalRetoTarget];
-
-  if (!val) {
-    msg.textContent = "Ingresa el código antes de continuar.";
-    msg.className = "modal-msg error";
-    input.focus();
-    return;
-  }
-
-  if (val === esperado) {
-    input.className = "modal-input success";
-    msg.textContent = "✅ ¡Código correcto! Módulo desbloqueado.";
-    msg.className = "modal-msg success";
-
-    // Desbloquear el nodo
-    if (!estado.desbloqueados.includes(modalRetoTarget)) {
-      estado.desbloqueados.push(modalRetoTarget);
-    }
-
-    setTimeout(() => {
-      cerrarModal();
-      renderMapa();
-      // Scroll suave al nodo recién desbloqueado
-      const nodo = document.getElementById("dnode-" + modalRetoTarget) || document.getElementById("m-circle-" + modalRetoTarget);
-      if (nodo) nodo.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 1200);
-
-  } else {
-    input.className = "modal-input error";
-    msg.textContent = "❌ Código incorrecto. Revisa la clave de tu reto anterior.";
-    msg.className = "modal-msg error";
-    setTimeout(() => { input.className = "modal-input"; }, 800);
-  }
-}
-
-// Eventos modal
-document.getElementById("btn-modal-cancel").addEventListener("click", cerrarModal);
-document.getElementById("btn-modal-ok").addEventListener("click", verificarCodigo);
-document.getElementById("modal-code-input").addEventListener("keydown", e => {
-  if (e.key === "Enter") verificarCodigo();
-  if (e.key === "Escape") cerrarModal();
-});
-document.getElementById("modal-overlay").addEventListener("click", e => {
-  if (e.target === document.getElementById("modal-overlay")) cerrarModal();
-});
-
-/* ═══════════════════════════════════════════════
-   SVG PATHS DESKTOP
-═══════════════════════════════════════════════ */
-function drawPaths() {
-  if (window.innerWidth < 640) return;
-  const svg = document.getElementById("path-svg");
-  const container = document.getElementById("desktop-path");
-  const nodes = document.querySelectorAll(".dnode[data-id]");
-  if (!nodes.length) return;
-
-  const w = container.offsetWidth;
-  const h = container.offsetHeight;
-  svg.setAttribute("viewBox", "0 0 " + w + " " + h);
-  svg.setAttribute("width", w);
-  svg.setAttribute("height", h);
-  svg.innerHTML = "";
-
-  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-  defs.innerHTML = `
-    <linearGradient id="grad-active" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#22d37a"/>
-      <stop offset="100%" stop-color="#00e0ff"/>
-    </linearGradient>
-    <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  `;
-  svg.appendChild(defs);
-
-  const pr = container.getBoundingClientRect();
-  const centers = [];
-  nodes.forEach(n => {
-    // Buscar el círculo dentro del nodo (puede ser a o div)
-    const c = n.querySelector(".node-circle");
-    if (c) {
-      const cr = c.getBoundingClientRect();
-      centers.push({ x: cr.left - pr.left + cr.width / 2, y: cr.top - pr.top + cr.height / 2, id: parseInt(n.dataset.id) });
-    }
-  });
-
-  for (let i = 0; i < centers.length - 1; i++) {
-    const a = centers[i], b = centers[i + 1];
-    const stA = estadoNodo(a.id), stB = estadoNodo(b.id);
-
-    let stroke, glow;
-    if (stA === "completed" && stB === "completed") { stroke = "#22d37a"; glow = true; }
-    else if (stA === "completed" && stB === "active") { stroke = "url(#grad-active)"; glow = true; }
-    else { stroke = "rgba(148,163,184,0.18)"; glow = false; }
-
-    const cx = (a.x + b.x) / 2;
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", "M " + a.x + " " + a.y + " C " + cx + " " + a.y + ", " + cx + " " + b.y + ", " + b.x + " " + b.y);
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", stroke);
-    path.setAttribute("stroke-width", glow ? "3" : "2");
-    path.setAttribute("stroke-linecap", "round");
-    if (glow) path.setAttribute("filter", "url(#glow)");
-    svg.appendChild(path);
-
-    // Punto animado en línea activa
-    if (stA === "completed" && stB === "active") {
-      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      dot.setAttribute("r", "5");
-      dot.setAttribute("fill", "#00e0ff");
-      dot.setAttribute("filter", "url(#glow)");
-      dot.setAttribute("opacity", "0.9");
-      const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
-      anim.setAttribute("dur", "3s");
-      anim.setAttribute("repeatCount", "indefinite");
-      anim.setAttribute("path", "M " + a.x + " " + a.y + " C " + cx + " " + a.y + ", " + cx + " " + b.y + ", " + b.x + " " + b.y);
-      dot.appendChild(anim);
-      svg.appendChild(dot);
-    }
-  }
-}
-
-/* ═══════════════════════════════════════════════
-   TEMPORIZADOR
-═══════════════════════════════════════════════ */
-(function() {
-  const el = document.getElementById("clock");
-  let secs = 60 * 60;
-  function fmt(s) { const m = Math.floor(s/60), ss = s%60; return String(m).padStart(2,"0") + ":" + String(ss).padStart(2,"0"); }
-  el.textContent = fmt(secs);
-  setInterval(() => {
-    secs--;
-    el.textContent = fmt(secs);
-    if (secs <= 300) el.classList.add("warning");
-    if (secs <= 0) el.textContent = "00:00";
-  }, 1000);
-})();
-
-/* ═══════════════════════════════════════════════
-   PARTÍCULAS
-═══════════════════════════════════════════════ */
-(function() {
-  const c = document.getElementById("p-canvas"), ctx = c.getContext("2d");
-  let W, H, ps = [];
-  function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
-  function P() { this.reset(); }
-  P.prototype.reset = function() {
-    this.x = Math.random()*W; this.y = Math.random()*H;
-    this.r = Math.random()*1.4+.3;
-    this.vx = (Math.random()-.5)*.3; this.vy = (Math.random()-.5)*.3-.1;
-    this.a = Math.random()*.5+.1;
-    this.col = Math.random()>.75 ? "rgba(246,168,33," : "rgba(0,224,255,";
-  };
-  P.prototype.update = function() { this.x+=this.vx; this.y+=this.vy; if(this.y<-4||this.x<-4||this.x>W+4) this.reset(); };
-  P.prototype.draw = function() { ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=this.col+this.a+")"; ctx.fill(); };
-  function init() { ps=[]; const n=Math.floor(W*H/16000); for(let i=0;i<n;i++) ps.push(new P()); }
-  function loop() { ctx.clearRect(0,0,W,H); ps.forEach(p=>{p.update();p.draw()}); requestAnimationFrame(loop); }
-  window.addEventListener("resize", ()=>{ resize(); init(); });
-  resize(); init(); loop();
-})();
-
-/* ═══════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════ */
-document.addEventListener("DOMContentLoaded", () => {
-  renderMapa();
-  window.addEventListener("resize", () => setTimeout(drawPaths, 120));
-});
-</script>
 </body>
 </html>
