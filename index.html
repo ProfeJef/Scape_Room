@@ -37,19 +37,16 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       overflow-x: hidden;
     }
 
-    /* ── Fondo animado ─────────────────────────────────── */
     .bg-grid {
       position: fixed; inset: 0; z-index: 0;
       background-image:
         linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
+      background-size: 60px 60px; pointer-events: none;
     }
     .bg-glow {
       position: fixed; inset: 0; z-index: 0;
@@ -61,7 +58,6 @@
     }
     @keyframes glow-pulse { 0%{opacity:.6} 100%{opacity:1} }
 
-    /* ── Layout ─────────────────────────────────────────── */
     main {
       position: relative; z-index: 1; flex: 1;
       display: flex; flex-direction: column;
@@ -69,7 +65,6 @@
       padding: 2rem 1.5rem; gap: 1.5rem;
     }
 
-    /* ── Logo ───────────────────────────────────────────── */
     .logo-wrap {
       display: flex; flex-direction: column;
       align-items: center; gap: 0.6rem; text-align: center;
@@ -99,13 +94,9 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .subtitulo {
-      font-size: clamp(0.85rem, 2vw, 1rem);
-      color: var(--muted); font-weight: 500;
-    }
+    .subtitulo { font-size: clamp(0.85rem, 2vw, 1rem); color: var(--muted); font-weight: 500; }
     @keyframes fade-up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
-    /* ── Tarjetas ───────────────────────────────────────── */
     .card {
       width: 100%; max-width: 680px;
       background: var(--surface);
@@ -125,18 +116,15 @@
     }
     .dots { display: flex; gap: 0.4rem; }
     .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-r { background: #ef4444; }
-    .dot-y { background: #f59e0b; }
-    .dot-g { background: #22c55e; }
-    .card-body { padding: 1.75rem 1.75rem; }
+    .dot-r{background:#ef4444} .dot-y{background:#f59e0b} .dot-g{background:#22c55e}
+    .card-body { padding: 1.75rem; }
 
-    /* ── Competencia matemática ─────────────────────────── */
+    /* Competencia */
     .competencia-card {
       background: rgba(129,140,248,0.04);
       border: 1px solid rgba(129,140,248,0.2);
       border-radius: var(--radius);
-      padding: 1.25rem 1.4rem;
-      margin-bottom: 1.25rem;
+      padding: 1.25rem 1.4rem; margin-bottom: 1.25rem;
     }
     .seccion-label {
       display: flex; align-items: center; gap: 0.5rem;
@@ -144,80 +132,55 @@
       letter-spacing: 0.13em; text-transform: uppercase;
       color: var(--accent-2); margin-bottom: 0.75rem;
     }
-    .seccion-label svg { flex-shrink: 0; }
-
-    .competencia-texto {
-      font-size: 0.92rem; line-height: 1.75; color: #94a3b8;
-    }
+    .competencia-texto { font-size: 0.92rem; line-height: 1.75; color: #94a3b8; }
     .competencia-texto strong { color: var(--text); font-weight: 700; }
+    .chip { display:inline; padding:.1em .45em; border-radius:4px; font-weight:600; font-size:.88em; }
+    .chip-blue   { background:rgba(56,189,248,.15); color:var(--accent); }
+    .chip-purple { background:rgba(129,140,248,.15);color:var(--accent-2); }
+    .chip-pink   { background:rgba(244,114,182,.15);color:var(--pink); }
+    .chip-green  { background:rgba(52,211,153,.15); color:var(--green); }
+    .chip-gold   { background:rgba(245,158,11,.15); color:var(--gold); }
 
-    /* chips de color inline */
-    .chip {
-      display: inline; padding: 0.1em 0.45em;
-      border-radius: 4px; font-weight: 600; font-size: 0.88em;
-    }
-    .chip-blue   { background: rgba(56,189,248,0.15);  color: var(--accent); }
-    .chip-purple { background: rgba(129,140,248,0.15); color: var(--accent-2); }
-    .chip-pink   { background: rgba(244,114,182,0.15); color: var(--pink); }
-    .chip-green  { background: rgba(52,211,153,0.15);  color: var(--green); }
-    .chip-gold   { background: rgba(245,158,11,0.15);  color: var(--gold); }
+    /* Grid 2 columnas */
+    .dos-cols { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }
+    .obj-card, .reglas-card { border-radius:var(--radius); padding:1.1rem 1.2rem; }
+    .obj-card   { background:rgba(52,211,153,.04);  border:1px solid rgba(52,211,153,.18); }
+    .reglas-card{ background:rgba(245,158,11,.04);  border:1px solid rgba(245,158,11,.18); }
+    .obj-card .seccion-label   { color:var(--green); }
+    .reglas-card .seccion-label{ color:var(--gold); }
 
-    /* ── Grid Objetivos + Reglas ─────────────────────────── */
-    .dos-cols {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .obj-card, .reglas-card {
-      border-radius: var(--radius);
-      padding: 1.1rem 1.2rem;
-    }
-    .obj-card {
-      background: rgba(52,211,153,0.04);
-      border: 1px solid rgba(52,211,153,0.18);
-    }
-    .reglas-card {
-      background: rgba(245,158,11,0.04);
-      border: 1px solid rgba(245,158,11,0.18);
-    }
-    .obj-card .seccion-label  { color: var(--green); }
-    .reglas-card .seccion-label { color: var(--gold); }
+    .obj-list { list-style:none; display:flex; flex-direction:column; gap:.55rem; }
+    .obj-list li { display:flex; align-items:flex-start; gap:.5rem; font-size:.84rem; color:#94a3b8; line-height:1.4; }
+    .obj-list li::before { content:"•"; color:var(--green); font-size:1rem; flex-shrink:0; }
 
-    /* lista objetivos */
-    .obj-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
-    .obj-list li {
-      display: flex; align-items: flex-start; gap: 0.5rem;
-      font-size: 0.84rem; color: #94a3b8; line-height: 1.4;
-    }
-    .obj-list li::before {
-      content: "•"; color: var(--green);
-      font-size: 1rem; margin-top: -0.05em; flex-shrink: 0;
-    }
-
-    /* lista reglas numerada */
-    .reglas-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
-    .reglas-list li {
-      display: flex; align-items: flex-start; gap: 0.55rem;
-      font-size: 0.84rem; color: #94a3b8; line-height: 1.4;
-    }
+    .reglas-list { list-style:none; display:flex; flex-direction:column; gap:.55rem; }
+    .reglas-list li { display:flex; align-items:flex-start; gap:.55rem; font-size:.84rem; color:#94a3b8; line-height:1.4; }
     .regla-num {
-      display: flex; align-items: center; justify-content: center;
-      width: 18px; height: 18px; border-radius: 50%;
-      background: rgba(245,158,11,0.12);
-      border: 1px solid rgba(245,158,11,0.3);
-      font-size: 0.65rem; font-weight: 700; color: var(--gold);
-      flex-shrink: 0; margin-top: 0.05em;
+      display:flex; align-items:center; justify-content:center;
+      width:18px; height:18px; border-radius:50%;
+      background:rgba(245,158,11,.12); border:1px solid rgba(245,158,11,.3);
+      font-size:.65rem; font-weight:700; color:var(--gold); flex-shrink:0;
     }
 
-    /* ── Botón iniciar ───────────────────────────────────── */
+    /* Stats */
+    .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.65rem; margin-bottom:1.25rem; }
+    .stat-chip {
+      display:flex; flex-direction:column; align-items:center; gap:.3rem;
+      padding:.85rem .4rem;
+      background:rgba(255,255,255,.03); border:1px solid var(--border);
+      border-radius:var(--radius); text-align:center;
+    }
+    .stat-icon { font-size:1.2rem; }
+    .stat-val  { font-family:var(--font-mono); font-size:.9rem; font-weight:700; color:var(--accent); }
+    .stat-lbl  { font-size:.65rem; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; }
+
+    /* Botón */
     #btn-iniciar-mision {
       display: flex; align-items: center; justify-content: center;
       gap: 0.75rem; width: 100%;
       padding: 1rem 2rem;
-      font-family: var(--font-mono);
-      font-size: 1rem; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
+      font-family: var(--font-mono); font-size: 1rem;
+      font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
       color: #0a0c10;
       background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%);
       border: none; border-radius: var(--radius);
@@ -231,55 +194,28 @@
       filter: brightness(1.08);
     }
     #btn-iniciar-mision:active { transform: translateY(0); }
-    .btn-play { font-size: 1rem; }
     .btn-arrow { transition: transform 0.2s ease; }
     #btn-iniciar-mision:hover .btn-arrow { transform: translateX(5px); }
 
-    /* ── Advertencia tiempo ─────────────────────────────── */
+    /* Warning */
     .warning-strip {
-      display: flex; align-items: center; gap: 0.6rem;
-      margin-top: 1rem; padding: 0.6rem 1rem;
-      background: rgba(245,158,11,0.06);
-      border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 8px;
-      font-size: 0.78rem; color: #fbbf24;
+      display:flex; align-items:center; gap:.6rem;
+      margin-top:1rem; padding:.6rem 1rem;
+      background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.2);
+      border-radius:8px; font-size:.78rem; color:#fbbf24;
     }
 
-    /* ── Stats ──────────────────────────────────────────── */
-    .stats-grid {
-      display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 0.65rem; margin-bottom: 1.25rem;
-    }
-    .stat-chip {
-      display: flex; flex-direction: column; align-items: center;
-      gap: 0.3rem; padding: 0.85rem 0.4rem;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: var(--radius); text-align: center;
-    }
-    .stat-icon { font-size: 1.2rem; }
-    .stat-val {
-      font-family: var(--font-mono); font-size: 0.9rem;
-      font-weight: 700; color: var(--accent);
-    }
-    .stat-lbl {
-      font-size: 0.65rem; color: var(--muted);
-      letter-spacing: 0.08em; text-transform: uppercase;
-    }
-
-    /* ── Footer ─────────────────────────────────────────── */
     footer {
-      position: relative; z-index: 1;
-      text-align: center; padding: 1rem;
-      font-size: 0.72rem; color: var(--muted);
-      border-top: 1px solid var(--border);
+      position:relative; z-index:1;
+      text-align:center; padding:1rem;
+      font-size:.72rem; color:var(--muted);
+      border-top:1px solid var(--border);
     }
-    footer span { color: var(--accent); }
+    footer span { color:var(--accent); }
 
-    /* ── Responsive ─────────────────────────────────────── */
-    @media (max-width: 520px) {
-      .dos-cols { grid-template-columns: 1fr; }
-      .card-body { padding: 1.25rem 1rem; }
+    @media (max-width:520px) {
+      .dos-cols { grid-template-columns:1fr; }
+      .card-body { padding:1.25rem 1rem; }
     }
   </style>
 </head>
@@ -289,22 +225,16 @@
   <div class="bg-glow" aria-hidden="true"></div>
 
   <main>
-
-    <!-- Logo y título -->
     <div class="logo-wrap">
       <div class="logo-badge">EAP · Matemáticas 8°</div>
       <h1 class="titulo-principal">ESCAPE ROOM<br>ALGEBRAICO</h1>
       <p class="subtitulo">Binomios · Productos notables · Factorización</p>
     </div>
 
-    <!-- Tarjeta principal -->
     <div class="card" role="main">
-
       <div class="card-header">
         <div class="dots" aria-hidden="true">
-          <div class="dot dot-r"></div>
-          <div class="dot dot-y"></div>
-          <div class="dot dot-g"></div>
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
         </div>
         <span>SISTEMA · MISIÓN CLASIFICADA</span>
         <span>v2.0</span>
@@ -312,14 +242,11 @@
 
       <div class="card-body">
 
-        <!-- ── COMPETENCIA MATEMÁTICA ── -->
+        <!-- Competencia -->
         <div class="competencia-card">
           <div class="seccion-label">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
             </svg>
             Competencia matemática
           </div>
@@ -337,17 +264,12 @@
           </p>
         </div>
 
-        <!-- ── OBJETIVOS + REGLAS ── -->
+        <!-- Objetivos + Reglas -->
         <div class="dos-cols">
-
-          <!-- Objetivos -->
           <div class="obj-card">
             <div class="seccion-label">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"/>
-                <circle cx="12" cy="12" r="6"/>
-                <circle cx="12" cy="12" r="2"/>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
               </svg>
               Objetivos
             </div>
@@ -357,44 +279,24 @@
               <li>Avanzar por niveles restaurando el sistema.</li>
             </ul>
           </div>
-
-          <!-- Reglas -->
           <div class="reglas-card">
             <div class="seccion-label">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <polyline points="9 11 12 14 22 4"/>
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
               </svg>
               Reglas
             </div>
             <ol class="reglas-list">
-              <li>
-                <span class="regla-num">1</span>
-                Cada error descuenta 2 min.
-              </li>
-              <li>
-                <span class="regla-num">2</span>
-                Primer error → pista automática.
-              </li>
-              <li>
-                <span class="regla-num">3</span>
-                Segundo error → explicación.
-              </li>
-              <li>
-                <span class="regla-num">4</span>
-                Retos en orden estricto.
-              </li>
-              <li>
-                <span class="regla-num">5</span>
-                Completa los 6 para ganar.
-              </li>
+              <li><span class="regla-num">1</span>Cada error descuenta 2 min.</li>
+              <li><span class="regla-num">2</span>Primer error → pista automática.</li>
+              <li><span class="regla-num">3</span>Segundo error → explicación.</li>
+              <li><span class="regla-num">4</span>Retos en orden estricto.</li>
+              <li><span class="regla-num">5</span>Completa los 6 para ganar.</li>
             </ol>
           </div>
+        </div>
 
-        </div><!-- /.dos-cols -->
-
-        <!-- ── STATS ── -->
+        <!-- Stats -->
         <div class="stats-grid" aria-label="Parámetros de la misión">
           <div class="stat-chip">
             <span class="stat-icon" aria-hidden="true">⏱</span>
@@ -402,7 +304,7 @@
             <span class="stat-lbl">Tiempo</span>
           </div>
           <div class="stat-chip">
-            <span class="stat-icon" aria-hidden="true">🔐</span>
+            <span class="stat-icon" aria-hidden="true">🔒</span>
             <span class="stat-val">6</span>
             <span class="stat-lbl">Retos</span>
           </div>
@@ -413,32 +315,47 @@
           </div>
         </div>
 
-        <!-- ── BOTÓN INICIAR ── -->
-        <button id="btn-iniciar-mision"
-                aria-label="Iniciar la misión del escape room algebraico">
-          <span class="btn-play" aria-hidden="true">▶</span>
+        <!-- Botón -->
+        <button id="btn-iniciar-mision" aria-label="Iniciar la misión del escape room algebraico">
+          <span aria-hidden="true">▶</span>
           <span>Iniciar Misión</span>
           <span class="btn-arrow" aria-hidden="true">→</span>
         </button>
 
-        <!-- Advertencia -->
-        <div class="warning-strip" role="note" aria-live="polite">
+        <!-- Warning -->
+        <div class="warning-strip" role="note">
           <span aria-hidden="true">⚠</span>
-          <span>
-            Cada 3 errores consecutivos en un reto descuentan
-            <strong>2 minutos</strong> del tiempo disponible.
-          </span>
+          <span>Cada 3 errores consecutivos en un reto descuentan <strong>2 minutos</strong> del tiempo disponible.</span>
         </div>
 
-      </div><!-- /.card-body -->
-    </div><!-- /.card -->
-
+      </div>
+    </div>
   </main>
 
   <footer>
     Desarrollado por <span>Eduquemos con TIC</span> · Matemáticas 8° · 2026
   </footer>
 
+  <!-- ── Lógica del botón embebida (no depende de gameEngine.js) ── -->
+  <script>
+    document.getElementById('btn-iniciar-mision').addEventListener('click', function() {
+      // Reinicia el estado en sessionStorage
+      var estado = {
+        startTime:       Date.now(),
+        resueltos:       [],
+        penalizacion:    0,
+        intentosPorReto: {}
+      };
+      try {
+        sessionStorage.setItem('er-state', JSON.stringify(estado));
+      } catch(e) {}
+
+      // Navega al mapa
+      window.location.href = 'mapa.html';
+    });
+  </script>
+
+  <!-- gameEngine.js se carga también por si el resto del juego lo necesita -->
   <script src="gameEngine.js" defer></script>
 
 </body>
