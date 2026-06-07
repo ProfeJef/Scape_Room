@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reto — Escape Room Algebraico</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Misión Finalizada — Escape Room Algebraico</title>
 
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,14 +26,38 @@
     .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(56,189,248,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
     .bg-glow{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 70% 50% at 15% 20%,rgba(56,189,248,.05) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 85% 80%,rgba(129,140,248,.04) 0%,transparent 60%);pointer-events:none}
 
+    /* ── HEADER PREMIUM ── */
     header {
-      position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between;
-      padding:.75rem 1.25rem; background:rgba(10,12,16,.88); backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(10,12,16,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-    .header-left{display:flex;align-items:center;gap:.75rem}
-    .header-logo{font-family:var(--font-mono);font-size:.8rem;font-weight:700;letter-spacing:.08em;color:var(--accent)}
-    .header-title{font-size:.82rem;color:var(--muted)}
-    .header-right{display:flex;align-items:center;gap:1rem}
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .logo-link { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    
+    /* Configuración específica para el SVG en el Header */
+    .logo-svg { 
+      width: 40px; 
+      height: 40px; 
+      display: block;
+      filter: drop-shadow(0 0 4px rgba(56,189,248,0.3));
+    }
+    
+    .logo-text {
+      font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #00FFFF, #B026FF);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: flex; align-items: center;
+    }
+    .logo-text span {
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 500;
+      color: #E2E8F0; -webkit-text-fill-color: #E2E8F0;
+      margin: 0 0.35rem; text-transform: lowercase;
+    }
+
+    .header-right { display: flex; align-items: center; gap: 1rem; }
     .clock-wrap{display:flex;align-items:center;gap:.5rem;padding:.4rem .9rem;background:var(--surface-2);border:1px solid var(--border);border-radius:999px}
     #clock{font-family:var(--font-mono);font-size:.95rem;font-weight:700;color:var(--green);min-width:5ch}
     #clock.warning{color:var(--gold)} #clock.danger{color:var(--red)}
@@ -43,16 +67,30 @@
     #progress-txt{font-family:var(--font-mono);font-size:.8rem;color:var(--accent);font-weight:700}
 
     main { position:relative; z-index:1; flex:1; display:flex; justify-content:center; padding:1.5rem; }
-    .reto-shell { width:100%; max-width:940px; display:grid; grid-template-columns: 1.2fr .8fr; gap:1rem; }
+    .reto-shell { width:100%; max-width:1000px; display:grid; grid-template-columns: 1.3fr .7fr; gap:1rem; }
     .panel {
       background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
       box-shadow:0 0 40px rgba(56,189,248,.05),0 16px 40px rgba(0,0,0,.35);
     }
-    .panel-body{padding:1.25rem 1.25rem 1.35rem}
+    .panel-body{padding:1.5rem}
 
     .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.55rem}
     .titulo{font-family:var(--font-mono);font-size:clamp(1.1rem,2.2vw,1.6rem);line-height:1.2;margin-bottom:.9rem}
-    .narrativa{font-size:.95rem;line-height:1.72;color:#9fb0c6;margin-bottom:1rem}
+
+    /* Contenedor Flex para la imagen y la narrativa */
+    .narrativa-container {
+      display: flex; gap: 1.2rem; margin-bottom: 1.2rem; align-items: stretch;
+    }
+    .narrativa-img {
+      flex-shrink: 0; width: 170px; background: rgba(0,0,0,0.2);
+      border: 1px solid var(--border); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 15px; position: relative;
+    }
+    .narrativa-img svg { width: 100%; height: auto; max-height: 140px; }
+    .narrativa-text { flex: 1; }
+
+    .narrativa{font-size:.95rem;line-height:1.72;color:#9fb0c6;margin-bottom:0}
     .enunciado-box{background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.15);border-radius:14px;padding:1rem;margin-bottom:1rem}
     .enunciado{font-size:1rem;color:var(--text);line-height:1.6}
     .tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1rem}
@@ -101,7 +139,7 @@
     .mini-box .l{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
     .hint-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:14px;padding:.9rem;color:#f6c56c;font-size:.84rem;line-height:1.6}
 
-    .actions{display:flex;gap:.75rem;margin-top:1rem;flex-wrap:wrap}
+    .actions{display:flex;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap}
     button.btn{
       border:none;border-radius:14px;padding:.9rem 1rem;cursor:pointer;font-weight:700;letter-spacing:.05em;transition:.2s ease
     }
@@ -123,9 +161,12 @@
 
     @media (max-width: 860px){
       .reto-shell{grid-template-columns:1fr}
+      .narrativa-container { flex-direction: column; }
+      .narrativa-img { width: 100%; height: 160px; }
+      .narrativa-img svg { height: 140px; max-width: 100%; }
     }
     @media (max-width: 520px){
-      header{padding:.75rem .8rem}.header-title{display:none}.barra-outer{width:56px}
+      header{padding:.75rem .8rem} .logo-text span { display: none; } .barra-outer{width:56px}
       main{padding:1rem}.panel-body,.sidebar-card{padding:1rem}.type-3{flex-direction:column;align-items:stretch}.input-correcto{width:100%}
     }
   </style>
@@ -134,15 +175,45 @@
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-glow" aria-hidden="true"></div>
 
+  <!-- ── HEADER PREMIUM ── -->
   <header>
     <div class="header-left">
-      <span class="header-logo">EAP·2026</span>
-      <span class="header-title">Panel de resolución</span>
+      <a href="index.html" class="logo-link">
+        
+        <!-- ÍCONO SVG CEREBRO-CIRCUITO -->
+        <svg class="logo-svg" viewBox="50 50 200 200" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <circle cx="150" cy="150" r="90" fill="none" stroke="#00FFFF" stroke-width="2" stroke-dasharray="12 6 3 6" opacity="0.4"/>
+            <path d="M 150 80 L 90 105 L 150 130 L 210 105 Z" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M 120 120 V 145 L 150 158 L 180 145 V 120" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round"/>
+            <g stroke="#00FFFF" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 145 135 C 120 130, 100 140, 95 155 C 85 155, 80 170, 90 180 C 80 190, 85 210, 100 215 C 95 225, 110 235, 125 230 C 135 235, 145 225, 145 215 Z"/>
+            </g>
+            <g stroke="#B026FF" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 155 135 V 235"/>
+              <path d="M 155 155 H 170 L 180 145 H 195"/> <circle cx="195" cy="145" r="5" fill="#B026FF"/>
+              <path d="M 155 175 H 165 L 175 185 H 205"/> <circle cx="205" cy="185" r="5" fill="#B026FF"/>
+              <path d="M 155 195 H 175 L 185 205 H 195"/> <circle cx="195" cy="205" r="5" fill="#B026FF"/>
+            </g>
+          </g>
+        </svg>
+
+        <!-- TEXTO DEL LOGO -->
+        <span class="logo-text">Eduquémonos<span>con</span>TIC</span>
+      </a>
     </div>
+
+    <!-- Reloj y Progreso -->
     <div class="header-right">
-      <div class="clock-wrap"><span aria-hidden="true">⏱</span><span id="clock">45:00</span></div>
-      <div class="progreso-wrap">
-        <div class="barra-outer"><div id="progress-bar"></div></div>
+      <div class="clock-wrap" aria-label="Tiempo restante">
+        <span class="clock-icon" aria-hidden="true">⏱</span>
+        <span id="clock" aria-live="polite">45:00</span>
+        <span id="penalizacion-txt" class="hidden" aria-live="assertive"></span>
+      </div>
+      <div class="progreso-wrap" aria-label="Retos completados">
+        <div class="barra-outer">
+          <div id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+        </div>
         <span id="progress-txt">0/6</span>
       </div>
     </div>
@@ -155,19 +226,27 @@
           <p id="reto-eyebrow" class="eyebrow">Nivel</p>
           <h1 id="reto-titulo" class="titulo">Título del reto</h1>
           <div id="reto-tags" class="tags"></div>
-          <div id="reto-narrativa" class="narrativa"></div>
+
+          <div class="narrativa-container">
+            <div id="reto-imagen-container" class="narrativa-img">
+              <!-- La imagen SVG se inyectará aquí -->
+            </div>
+            <div class="narrativa-text">
+              <div id="reto-narrativa" class="narrativa"></div>
+            </div>
+          </div>
+
           <div class="enunciado-box"><div id="reto-enunciado" class="enunciado"></div></div>
           <div id="reto-opciones" class="opciones"></div>
 
           <div class="actions">
             <button id="btn-validar" class="btn">VALIDAR RESPUESTA</button>
             <button id="btn-siguiente" class="btn">SIGUIENTE MISIÓN</button>
-            <button id="btn-mapa" class="btn btn-sec" type="button">VOLVER AL MAPA</button>
           </div>
 
           <div id="feedback" class="feedback-card">
             <div class="feedback-head">
-              <span id="fb-icon">ℹ️</span>
+              <span id="fb-icon"></span>
               <strong id="fb-title">Estado</strong>
             </div>
             <div id="fb-text"></div>
@@ -193,23 +272,53 @@
   <footer>Desarrollado por <span>Eduquemos con TIC</span> · Matemáticas 8° · 2026</footer>
 
   <script>
+    // ─── 1. CORRECCIÓN MATEMÁTICA E INYECCIÓN DE IMÁGENES SVG PRECISAS ───
     const RETOS = [
       {
         id:1, tipo:1, titulo:'El mural que nadie midió', eyebrow:'Nivel 1 · Cuadrado de suma',
         tags:[{label:'Básico',cls:'rtag-green'},{label:'(a+b)²',cls:'rtag-purple'},{label:'Área',cls:'rtag-gold'}],
-        narrativa:'El software de infraestructura aprobó el presupuesto para un mural artístico cuyo lado mide <strong>3x + 5</strong> metros. Sin embargo, el algoritmo calculó el área usando la expresión <em>9x² + 25</em>, ignorando la zona central. Corrige el cálculo real del área.',
+        imagen: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <rect width="10" height="10" fill="none" stroke="rgba(56,189,248,0.1)"/>
+            </pattern>
+          </defs>
+          <rect x="20" y="20" width="80" height="80" fill="url(#grid)" stroke="var(--accent)" stroke-width="2"/>
+          <line x1="75" y1="20" x2="75" y2="100" stroke="var(--accent)" stroke-dasharray="4" stroke-width="1.5"/>
+          <line x1="20" y1="75" x2="100" y2="75" stroke="var(--accent)" stroke-dasharray="4" stroke-width="1.5"/>
+          <text x="47" y="52" font-size="12" fill="var(--accent)" font-family="monospace" text-anchor="middle">3x²</text>
+          <text x="87" y="52" font-size="10" fill="var(--text)" font-family="monospace" text-anchor="middle">15x</text>
+          <text x="47" y="91" font-size="10" fill="var(--text)" font-family="monospace" text-anchor="middle">15x</text>
+          <text x="87" y="91" font-size="10" fill="var(--text)" font-family="monospace" text-anchor="middle">25</text>
+          <path d="M20 10 v-4 M100 10 v-4 M20 8 h80" stroke="var(--muted)" fill="none"/>
+          <text x="60" y="5" font-size="9" fill="var(--muted)" font-family="monospace" text-anchor="middle">3x + 5</text>
+        </svg>`,
+        narrativa:'El software de infraestructura aprobó el presupuesto para un mural artístico cuyo lado mide <strong>(3x + 5)</strong> metros. Sin embargo, el algoritmo calculó el área usando la expresión <em>9x² + 25</em>, ignorando la zona central. Corrige el cálculo real del área.',
         enunciado:'Desarrolla correctamente el producto notable <strong>(3x + 5)²</strong>.',
         opciones:[
-          {id:'1a',texto:'9x² + 25',correcta:false,feedback:'<strong>Incorrecto.</strong> Falta el doble producto. Recuerda: <em>(a+b)² = a² + 2ab + b²</em>.'},
+          {id:'1a',texto:'9x² + 25',correcta:false,feedback:'<strong>Incorrecto.</strong> Falta el doble producto. Recuerda: <em>(a+b)² = a² + 2ab + b²</em>. El término central es <em>2(3x)(5) = 30x</em>.'},
           {id:'1b',texto:'9x² + 15x + 25',correcta:false,feedback:'<strong>Incorrecto.</strong> Calculaste <em>ab</em>, pero faltó multiplicar por 2.'},
-          {id:'1c',texto:'9x² + 30x + 25',correcta:true,feedback:'<strong>¡Correcto!</strong> Aplicaste bien la identidad: <em>(3x+5)² = 9x² + 30x + 25</em>.'},
-          {id:'1d',texto:'6x + 30x + 10',correcta:false,feedback:'<strong>Incorrecto.</strong> Confundiste elevar al cuadrado con duplicar términos.'}
+          {id:'1c',texto:'9x² + 30x + 25',correcta:true,feedback:'<strong>¡Correcto!</strong> Aplicaste bien la identidad: <em>(3x+5)² = (3x)² + 2(3x)(5) + 5² = 9x² + 30x + 25</em>.'},
+          {id:'1d',texto:'6x² + 30x + 10',correcta:false,feedback:'<strong>Incorrecto.</strong> Confundiste elevar al cuadrado con duplicar términos. (3x)² es 9x², no 6x².'}
         ]
       },
       {
         id:2, tipo:2, titulo:'El terreno que se recortó', eyebrow:'Nivel 2 · Cuadrado de diferencia',
         tags:[{label:'Fácil',cls:'rtag-green'},{label:'(a-b)²',cls:'rtag-purple'},{label:'Espacial',cls:'rtag-pink'}],
-        narrativa:'El sistema redujo las dimensiones de un huerto escolar a <strong>5x - 4</strong>. Registró el área como <em>25x² + 16</em>, ignorando el cambio intermedio. Restaura el cálculo correcto.',
+        imagen: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="20" width="80" height="80" fill="rgba(244,114,182,0.05)" stroke="var(--muted)" stroke-dasharray="2" stroke-width="1"/>
+          <rect x="20" y="20" width="55" height="55" fill="rgba(244,114,182,0.2)" stroke="var(--pink)" stroke-width="2"/>
+          <!-- Cotas -->
+          <path d="M20 10 v-4 M100 10 v-4 M20 8 h80" stroke="var(--muted)" fill="none"/>
+          <text x="60" y="5" font-size="9" fill="var(--muted)" font-family="monospace" text-anchor="middle">5x</text>
+          <path d="M10 20 h-4 M10 100 h-4 M8 20 v80" stroke="var(--muted)" fill="none"/>
+          <text x="3" y="60" font-size="9" fill="var(--muted)" font-family="monospace" text-anchor="middle" transform="rotate(-90 3,60)">5x</text>
+          <!-- Recortes -->
+          <text x="87" y="50" font-size="9" fill="var(--red)" font-family="monospace" text-anchor="middle">-4</text>
+          <text x="47" y="90" font-size="9" fill="var(--red)" font-family="monospace" text-anchor="middle">-4</text>
+          <text x="47" y="50" font-size="11" fill="var(--pink)" font-family="monospace" text-anchor="middle">(5x - 4)²</text>
+        </svg>`,
+        narrativa:'El sistema redujo las dimensiones de un huerto escolar a <strong>(5x - 4)</strong>. Registró el área como <em>25x² + 16</em>, ignorando el cambio intermedio. Restaura el cálculo correcto.',
         enunciado:'Arrastra el desarrollo correcto para <strong>(5x - 4)²</strong>.',
         opciones:[
           {id:'2a',texto:'25x² + 16',correcta:false,feedback:'<strong>Incorrecto.</strong> Falta el término central negativo.'},
@@ -221,11 +330,27 @@
       {
         id:3, tipo:3, titulo:'El contenedor de doble cara', eyebrow:'Nivel 3 · Diferencia de cuadrados',
         tags:[{label:'Medio',cls:'rtag-gold'},{label:'(a+b)(a-b)',cls:'rtag-purple'},{label:'Conjugados',cls:'rtag-pink'}],
+        imagen: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bloque Suma -->
+          <rect x="20" y="30" width="80" height="25" fill="rgba(245,158,11,0.15)" stroke="var(--gold)" stroke-width="2"/>
+          <line x1="75" y1="30" x2="75" y2="55" stroke="var(--gold)" stroke-width="1.5"/>
+          <text x="47" y="47" font-size="11" fill="var(--text)" font-family="monospace" text-anchor="middle">7x</text>
+          <text x="87" y="47" font-size="11" fill="var(--gold)" font-family="monospace" text-anchor="middle">+ 6</text>
+          
+          <!-- Operador central -->
+          <text x="60" y="68" font-size="14" fill="var(--muted)" font-family="monospace" text-anchor="middle">×</text>
+          
+          <!-- Bloque Resta -->
+          <rect x="20" y="75" width="80" height="25" fill="rgba(245,158,11,0.05)" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3"/>
+          <line x1="75" y1="75" x2="75" y2="100" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="3"/>
+          <text x="47" y="92" font-size="11" fill="var(--text)" font-family="monospace" text-anchor="middle">7x</text>
+          <text x="87" y="92" font-size="11" fill="var(--red)" font-family="monospace" text-anchor="middle">- 6</text>
+        </svg>`,
         narrativa:'La plataforma expandió <strong>(7x + 6)(7x - 6)</strong> y dejó una expresión con términos lineales que debían anularse. Identifica la simplificación válida.',
         enunciado:'Escribe la palabra <strong>correcto</strong> frente a la única simplificación válida.',
         opciones:[
           {id:'3a',texto:'49x² + 36',correcta:false,feedback:'<strong>Incorrecto.</strong> En binomios conjugados el producto final es una resta.'},
-          {id:'3b',texto:'49x² - 36',correcta:true,feedback:'<strong>¡Correcto!</strong> Los términos lineales se cancelan y queda <em>49x² - 36</em>.'},
+          {id:'3b',texto:'49x² - 36',correcta:true,feedback:'<strong>¡Correcto!</strong> Los términos lineales (+42x y -42x) se cancelan y queda <em>49x² - 36</em>.'},
           {id:'3c',texto:'49x² - 84x - 36',correcta:false,feedback:'<strong>Incorrecto.</strong> No deben sobrevivir términos lineales.'},
           {id:'3d',texto:'49x² + 84x - 36',correcta:false,feedback:'<strong>Incorrecto.</strong> Los productos cruzados se anulan.'}
         ]
@@ -233,65 +358,138 @@
       {
         id:4, tipo:2, titulo:'El tanque de agua del colegio', eyebrow:'Nivel 4 · Cubo de binomio',
         tags:[{label:'Medio-alto',cls:'rtag-gold'},{label:'(a+b)³',cls:'rtag-purple'},{label:'Volumen',cls:'rtag-pink'}],
-        narrativa:'La capacidad de un tanque con arista <strong>2x + 3</strong> fue subestimada por el sistema. El cálculo correcto requiere el desarrollo completo del cubo del binomio.',
+        imagen: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(60, 25)">
+            <!-- Cubo en perspectiva isométrica -->
+            <!-- Cara superior -->
+            <path d="M0,0 L-35,17.5 L0,35 L35,17.5 Z" fill="rgba(129,140,248,0.2)" stroke="var(--accent-2)" stroke-width="1.5"/>
+            <!-- Cara izquierda -->
+            <path d="M-35,17.5 L-35,62.5 L0,80 L0,35 Z" fill="rgba(129,140,248,0.1)" stroke="var(--accent-2)" stroke-width="1.5"/>
+            <!-- Cara derecha -->
+            <path d="M0,35 L0,80 L35,62.5 L35,17.5 Z" fill="rgba(129,140,248,0.3)" stroke="var(--accent-2)" stroke-width="1.5"/>
+            
+            <!-- Líneas indicando 2x+3 en las tres dimensiones -->
+            <path d="M-40,15 L-5, -2.5" stroke="var(--muted)" stroke-dasharray="2"/>
+            <text x="-35" y="5" font-size="8" fill="var(--text)" font-family="monospace" text-anchor="middle">2x+3</text>
+            
+            <path d="M40,15 L5, -2.5" stroke="var(--muted)" stroke-dasharray="2"/>
+            <text x="35" y="5" font-size="8" fill="var(--text)" font-family="monospace" text-anchor="middle">2x+3</text>
+            
+            <path d="M45,20 L45, 60" stroke="var(--muted)" stroke-dasharray="2"/>
+            <text x="60" y="42" font-size="8" fill="var(--text)" font-family="monospace" text-anchor="middle">2x+3</text>
+            
+            <text x="0" y="45" font-size="12" font-weight="bold" fill="var(--accent-2)" font-family="monospace" text-anchor="middle">V = ?</text>
+          </g>
+        </svg>`,
+        narrativa:'La capacidad de un tanque con arista <strong>(2x + 3)</strong> fue subestimada por el sistema. El cálculo correcto requiere el desarrollo completo del cubo del binomio.',
         enunciado:'Arrastra la opción correcta para <strong>(2x + 3)³</strong>.',
         opciones:[
           {id:'4a',texto:'8x³ + 27',correcta:false,feedback:'<strong>Incorrecto.</strong> No basta con elevar los extremos.'},
-          {id:'4b',texto:'8x³ + 12x² + 18x + 27',correcta:false,feedback:'<strong>Incorrecto.</strong> Los coeficientes intermedios están mal.'},
+          {id:'4b',texto:'8x³ + 12x² + 18x + 27',correcta:false,feedback:'<strong>Incorrecto.</strong> Los coeficientes intermedios están mal. Recuerda 3(2x)²(3).'},
           {id:'4c',texto:'8x³ + 36x² + 54x + 27',correcta:true,feedback:'<strong>¡Correcto!</strong> Aplicaste la regla 1-3-3-1 correctamente.'},
-          {id:'4d',texto:'6x³ + 36x² + 54x + 27',correcta:false,feedback:'<strong>Incorrecto.</strong> El primer término debe ser 8x³.'}
+          {id:'4d',texto:'6x³ + 36x² + 54x + 27',correcta:false,feedback:'<strong>Incorrecto.</strong> El primer término debe ser 8x³ (2³ = 8).'}
         ]
       },
       {
         id:5, tipo:5, titulo:'El festival de matemáticas', eyebrow:'Nivel 5 · Factorización compuesta',
         tags:[{label:'Alto',cls:'rtag-pink'},{label:'Factor común',cls:'rtag-purple'},{label:'Dif. cuadrados',cls:'rtag-gold'}],
+        imagen: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="20" width="80" height="30" fill="rgba(52,211,153,0.1)" stroke="var(--green)" stroke-width="2" rx="4"/>
+          <text x="60" y="40" font-size="12" fill="var(--text)" font-family="monospace" text-anchor="middle">50x³ - 72x</text>
+          
+          <!-- Llave de extracción -->
+          <path d="M60 50 v15 M40 65 h40" stroke="var(--muted)" stroke-width="1.5" fill="none"/>
+          <path d="M40 65 v10 M80 65 v10" stroke="var(--muted)" stroke-width="1.5" fill="none"/>
+          <path d="M40 75 v15 M80 75 v15" stroke="var(--green)" stroke-dasharray="2" stroke-width="1.5" fill="none"/>
+          
+          <rect x="30" y="90" width="20" height="20" fill="rgba(52,211,153,0.2)" stroke="var(--green)" rx="2"/>
+          <rect x="70" y="90" width="20" height="20" fill="rgba(52,211,153,0.2)" stroke="var(--green)" rx="2"/>
+          <text x="40" y="104" font-size="9" fill="var(--text)" font-family="monospace" text-anchor="middle">2x</text>
+          <text x="80" y="104" font-size="9" fill="var(--text)" font-family="monospace" text-anchor="middle">(?)</text>
+        </svg>`,
         narrativa:'La expresión <strong>50x³ - 72x</strong> fue catalogada como irreducible. Debes factorizarla completamente para reactivar los fondos del festival.',
         enunciado:'Factoriza completamente la expresión. <br><small style="color:#f6c56c;display:block;margin-top:8px">Escribe sin espacios. Formato válido: 2x(5x+6)(5x-6)</small>',
         respuestaExacta:['2x(5x+6)(5x-6)','2x(5x-6)(5x+6)'],
-        opciones:[{id:'5c',texto:'2x(5x+6)(5x-6)',correcta:true,feedback:'<strong>¡Correcto!</strong> Sacaste factor común y luego aplicaste diferencia de cuadrados.'}]
+        opciones:[{id:'5c',texto:'2x(5x+6)(5x-6)',correcta:true,feedback:'<strong>¡Correcto!</strong> Sacaste factor común (2x) y luego aplicaste diferencia de cuadrados en (25x² - 36).'}]
       },
       {
         id:6, tipo:6, titulo:'La fórmula justa del sistema', eyebrow:'Nivel 6 · Misión final · Experto',
         tags:[{label:'Experto',cls:'rtag-pink'},{label:'Misión final',cls:'rtag-gold'},{label:'Código',cls:'rtag-purple'}],
-        narrativa:'El sistema redujo erróneamente la ecuación <strong>[(x + 4)² - 16]</strong> a <em>x</em>. Encuentra la simplificación correcta para obtener el código final.',
+        imagen: `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="100" height="100" fill="rgba(239,68,68,0.05)" stroke="var(--red)" stroke-width="2" stroke-dasharray="4"/>
+          <text x="60" y="25" font-size="10" fill="var(--red)" font-family="monospace" text-anchor="middle">SYSTEM.KERNEL.OVERRIDE</text>
+          
+          <rect x="25" y="40" width="70" height="30" fill="var(--surface)" stroke="var(--muted)" stroke-width="1" rx="4"/>
+          <text x="60" y="59" font-size="12" fill="var(--text)" font-family="monospace" text-anchor="middle">(½x + 4)²</text>
+          
+          <rect x="50" y="80" width="20" height="20" fill="rgba(239,68,68,0.2)" stroke="var(--red)" stroke-width="1.5" rx="4"/>
+          <text x="60" y="94" font-size="10" fill="var(--red)" font-family="monospace" text-anchor="middle">-16</text>
+          
+          <path d="M60 70 v10" stroke="var(--muted)" stroke-width="2" fill="none"/>
+        </svg>`,
+        narrativa:'El sistema redujo erróneamente la ecuación <strong>(½x + 4)² - 16</strong> a <em>¼x²</em>. Encuentra la simplificación correcta para obtener el código final.',
         enunciado:'Desarrolla y simplifica al máximo la expresión para hallar el código de desbloqueo final.',
         opciones:[
-          {id:'6a',texto:'x²',codigo:'ALFA-00',correcta:false,feedback:'<strong>Código denegado.</strong> Falta el término lineal.'},
-          {id:'6b',texto:'x² + 4x + 16',codigo:'DELTA-44',correcta:false,feedback:'<strong>Código denegado.</strong> No cancelaste el 16 exterior.'},
-          {id:'6c',texto:'x² + 8x',codigo:'EAP-2026',correcta:true,feedback:'<strong>¡Código correcto!</strong> El sistema ha sido restaurado con éxito.'},
-          {id:'6d',texto:'x² + 2x',codigo:'SIGMA-88',correcta:false,feedback:'<strong>Código denegado.</strong> El término lineal no es correcto.'}
+          {id:'6a',texto:'¼x²',codigo:'ALFA-00',correcta:false,feedback:'<strong>Código denegado.</strong> Falta el término lineal doble producto: 2(½x)(4).'},
+          {id:'6b',texto:'¼x² + 4x + 16',codigo:'DELTA-44',correcta:false,feedback:'<strong>Código denegado.</strong> Desarrollaste el binomio pero olvidaste restar el 16 exterior.'},
+          {id:'6c',texto:'¼x² + 4x',codigo:'EAP-2026',correcta:true,feedback:'<strong>¡Código correcto!</strong> El sistema ha sido restaurado con éxito.'},
+          {id:'6d',texto:'¼x² + 2x',codigo:'SIGMA-88',correcta:false,feedback:'<strong>Código denegado.</strong> El término lineal es 4x, no 2x.'}
         ]
       }
     ];
 
+    // ─── 2. SISTEMA DE JUEGO BASE ───
     const TOTAL_RETOS = RETOS.length;
     const DURATION_SEC = 45 * 60;
-    const PENALIZACION_SEG = 2 * 60;
     const MAX_INTENTOS = 3;
 
     const $ = (id) => document.getElementById(id);
     const getParam = (key) => new URLSearchParams(window.location.search).get(key);
 
     function loadState(){
-      try { return JSON.parse(sessionStorage.getItem('er-state')) || {startTime:Date.now(),resueltos:[],penalizacion:0,intentosPorReto:{}}; }
-      catch(e){ return {startTime:Date.now(),resueltos:[],penalizacion:0,intentosPorReto:{}}; }
+      let st = null;
+      try {
+        const saved = sessionStorage.getItem('er-state');
+        if(saved) st = JSON.parse(saved);
+      } catch(e) {}
+      
+      if(!st || !st.startTime) {
+        st = { startTime: Date.now(), resueltos: [], penalizacion: 0, totalErrores: 0, intentosPorReto: {} };
+        sessionStorage.setItem('er-state', JSON.stringify(st));
+      }
+      return st;
     }
+
     function saveState(state){ sessionStorage.setItem('er-state', JSON.stringify(state)); }
     function formatTime(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
-    function getTiempoRestante(){ const st=loadState(); const elapsed=Math.floor((Date.now()-st.startTime)/1000); return Math.max(0, DURATION_SEC - elapsed - (st.penalizacion||0)); }
+    function getTiempoRestante(){ 
+      const st = loadState(); 
+      const elapsed = Math.floor((Date.now()-st.startTime)/1000); 
+      return Math.max(0, DURATION_SEC - elapsed - (st.penalizacion||0)); 
+    }
 
     function startClock(){
       const tick = () => {
         const remaining = getTiempoRestante();
         const clock = $('clock');
-        clock.textContent = formatTime(remaining);
-        clock.classList.remove('warning','danger');
-        if(remaining <= 60) clock.classList.add('danger');
-        else if(remaining <= 300) clock.classList.add('warning');
+        if(clock) {
+          clock.textContent = formatTime(remaining);
+          clock.classList.remove('warning','danger');
+          if(remaining <= 60) clock.classList.add('danger');
+          else if(remaining <= 300) clock.classList.add('warning');
+        }
+        
         const st = loadState();
+        if(st.penalizacion > 0 && !$('pen-txt')) {
+            clock.insertAdjacentHTML('afterend', `<span id="pen-txt" style="color:var(--red); font-size:0.75rem; margin-left:8px;">-${formatTime(st.penalizacion)}</span>`);
+        } else if(st.penalizacion > 0) {
+            $('pen-txt').textContent = `-${formatTime(st.penalizacion)}`;
+        }
+
         const pct = Math.round((st.resueltos.length / TOTAL_RETOS) * 100);
-        $('progress-bar').style.width = pct + '%';
-        $('progress-txt').textContent = st.resueltos.length + '/' + TOTAL_RETOS;
+        if($('progress-bar')) $('progress-bar').style.width = pct + '%';
+        if($('progress-txt')) $('progress-txt').textContent = st.resueltos.length + '/' + TOTAL_RETOS;
+        
         if(remaining <= 0) window.location.href = 'cierre.html';
       };
       tick(); setInterval(tick, 1000);
@@ -299,12 +497,12 @@
 
     function construirPista(reto){
       switch(reto.id){
-        case 1: return '<strong>Pista:</strong> En el cuadrado de un binomio siempre aparece el término central <em>2ab</em>.';
-        case 2: return '<strong>Pista:</strong> En <em>(a-b)²</em>, el término central es negativo: <em>-2ab</em>.';
-        case 3: return '<strong>Pista:</strong> En binomios conjugados los términos lineales se eliminan.';
-        case 4: return '<strong>Pista:</strong> Usa el patrón del cubo del binomio: <em>a³ + 3a²b + 3ab² + b³</em>.';
-        case 5: return '<strong>Pista:</strong> Primero saca factor común y luego revisa si queda diferencia de cuadrados.';
-        case 6: return '<strong>Pista:</strong> Desarrolla el cuadrado del binomio y después simplifica con el término exterior.';
+        case 1: return '<strong>Pista:</strong> Observa la imagen. Hay 4 áreas 3x², dos áreas de 3x*5 y una de 5².';
+        case 2: return '<strong>Pista:</strong> En la figura, se recorta 4. En <em>(a-b)²</em>, el término central es negativo: <em>-2ab</em>.';
+        case 3: return '<strong>Pista:</strong> Mira los bloques. El +6 y el -6 al multiplicarse por 7x se anulan entre sí.';
+        case 4: return '<strong>Pista:</strong> Para hallar el volumen V aplica la fórmula <em>a³ + 3a²b + 3ab² + b³</em>.';
+        case 5: return '<strong>Pista:</strong> Como muestra el esquema, primero saca el factor común 2x y luego observa qué queda adentro.';
+        case 6: return '<strong>Pista:</strong> Desarrolla el binomio completo primero, y al final réstale el bloque de -16.';
         default: return '<strong>Pista:</strong> Revisa el patrón algebraico y el signo del término medio.';
       }
     }
@@ -312,17 +510,22 @@
     function registrarIntentoFallido(retoId){
       const st = loadState();
       st.intentosPorReto = st.intentosPorReto || {};
+      st.totalErrores = (st.totalErrores || 0) + 1;
       st.intentosPorReto[retoId] = (st.intentosPorReto[retoId] || 0) + 1;
-      let penalizado = false;
+      
       let intentosActuales = st.intentosPorReto[retoId];
+      let penSeg = 0;
+      
       if(intentosActuales >= MAX_INTENTOS){
-        st.penalizacion = (st.penalizacion || 0) + PENALIZACION_SEG;
+        penSeg = 10 * 60;
         st.intentosPorReto[retoId] = 0;
-        intentosActuales = 0;
-        penalizado = true;
+      } else {
+        penSeg = 5 * 60;
       }
+      
+      st.penalizacion = (st.penalizacion || 0) + penSeg;
       saveState(st);
-      return { penalizado, intentosActuales };
+      return { penSeg, intentosActuales };
     }
 
     function marcarResuelto(retoId){
@@ -354,6 +557,8 @@
       $('reto-enunciado').innerHTML = reto.enunciado;
       $('reto-tags').innerHTML = reto.tags.map(t => `<span class="rtag ${t.cls}">${t.label}</span>`).join('');
       $('hint-box').innerHTML = construirPista(reto);
+      
+      $('reto-imagen-container').innerHTML = reto.imagen;
 
       const opcionesEl = $('reto-opciones');
       const btnValidar = $('btn-validar');
@@ -385,6 +590,7 @@
         });
         dragHTML += `</div>`;
         opcionesEl.innerHTML = dragHTML;
+        
         const zonaDrop = $('zona-drop');
         const bindDrags = () => {
           opcionesEl.querySelectorAll('.drag-item').forEach(item => {
@@ -395,6 +601,7 @@
           });
         };
         bindDrags();
+        
         zonaDrop.addEventListener('dragover', e => e.preventDefault());
         zonaDrop.addEventListener('drop', e => {
           e.preventDefault();
@@ -402,9 +609,11 @@
           const droppedId = e.dataTransfer.getData('text/plain');
           const dragged = opcionesEl.querySelector(`.drag-item[data-id="${droppedId}"]`);
           if(!dragged) return;
+          
           const existente = zonaDrop.querySelector('.drag-item');
           const cont = opcionesEl.querySelector('.drag-items-container');
           if(existente && cont) cont.appendChild(existente);
+          
           zonaDrop.innerHTML = '';
           zonaDrop.appendChild(dragged);
           zonaDrop.dataset.seleccionado = droppedId;
@@ -445,8 +654,6 @@
       }
 
       btnValidar.disabled = true;
-
-      $('btn-mapa').onclick = () => { window.location.href = 'mapa.html'; };
 
       btnValidar.onclick = () => {
         if(yaRespondio) return;
@@ -502,6 +709,7 @@
           yaRespondio = true;
           btnValidar.disabled = true;
           btnSiguiente.classList.add('visible');
+          
           if(reto.id >= TOTAL_RETOS){
             btnSiguiente.textContent = 'VER RESULTADOS';
             btnSiguiente.onclick = () => window.location.href = 'cierre.html';
@@ -511,16 +719,25 @@
           }
         } else {
           const r = registrarIntentoFallido(reto.id);
-          let extra = '<br><br>' + construirPista(reto);
-          if(r.penalizado) extra += '<br><br><strong>Penalización aplicada:</strong> -2:00 minutos por acumular 3 intentos fallidos.';
-          mostrarFeedback(false, feedbackTexto + extra);
+          let penMin = r.penSeg / 60;
+          let aviso = '';
+          
+          if(r.penSeg === 600) {
+              aviso = `<div style="margin-top:10px; color:var(--red); font-weight:bold;">¡ERROR CRÍTICO! 3 intentos fallidos en este reto. Penalización mayor: -10:00 minutos.</div>`;
+          } else {
+              aviso = `<div style="margin-top:10px; color:var(--red); font-weight:bold;">¡ALERTA! Has cometido un error. Penalización: -5:00 minutos.</div>`;
+          }
+          
+          if (MAX_INTENTOS - r.intentosActuales === 1) {
+              aviso += `<div style="margin-top:5px; color:var(--gold); font-size:0.85rem;">Cuidado: Tu próximo fallo restará 10 minutos adicionales. Piensa antes de validar.</div>`;
+          }
+          
+          mostrarFeedback(false, feedbackTexto + aviso);
         }
       };
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const st = loadState();
-      if(!st.startTime) { window.location.href = 'index.html'; return; }
       startClock();
       renderReto();
     });
