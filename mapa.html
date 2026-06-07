@@ -60,30 +60,35 @@
     }
     @keyframes glow-pulse { 0%{opacity:.6} 100%{opacity:1} }
 
-    /* ── Header ────────────────────────────────────────── */
+    /* ── Header Premium ────────────────────────────────────────── */
     header {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0.75rem 1.5rem;
-      background: rgba(10,12,16,0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(10,12,16,0.88); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-    .header-left {
-      display: flex; align-items: center; gap: 0.75rem;
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .logo-link { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    
+    /* Configuración específica para el SVG en el Header */
+    .logo-svg { 
+      width: 40px; 
+      height: 40px; 
+      display: block;
+      filter: drop-shadow(0 0 4px rgba(56,189,248,0.3));
     }
-    .header-logo {
-      font-family: var(--font-mono); font-size: 0.8rem;
-      font-weight: 700; letter-spacing: 0.08em;
-      color: var(--accent);
+    
+    .logo-text {
+      font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #00FFFF, #B026FF);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: flex; align-items: center;
     }
-    .header-sep {
-      width: 1px; height: 20px;
-      background: var(--border);
-    }
-    .header-title {
-      font-size: 0.82rem; color: var(--muted);
-      font-weight: 500;
+    .logo-text span {
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 500;
+      color: #E2E8F0; -webkit-text-fill-color: #E2E8F0;
+      margin: 0 0.35rem; text-transform: lowercase;
     }
 
     /* Reloj y progreso */
@@ -377,7 +382,7 @@
 
     /* ── Responsive ──────────────────────────────────── */
     @media (max-width: 520px) {
-      .header-title { display: none; }
+      .logo-text span { display: none; }
       .nodo-formula { display: none; }
       .nodo-tags    { display: none; }
       .barra-outer  { width: 50px; }
@@ -389,25 +394,44 @@
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-glow" aria-hidden="true"></div>
 
-  <!-- ── HEADER ── -->
+  <!-- ── HEADER PREMIUM ── -->
   <header>
     <div class="header-left">
-      <span class="header-logo">EAP·2026</span>
-      <div class="header-sep" aria-hidden="true"></div>
-      <span class="header-title">Mapa de Misión</span>
+      <a href="index.html" class="logo-link">
+        
+        <!-- ÍCONO SVG CEREBRO-CIRCUITO -->
+        <svg class="logo-svg" viewBox="50 50 200 200" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <circle cx="150" cy="150" r="90" fill="none" stroke="#00FFFF" stroke-width="2" stroke-dasharray="12 6 3 6" opacity="0.4"/>
+            <path d="M 150 80 L 90 105 L 150 130 L 210 105 Z" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M 120 120 V 145 L 150 158 L 180 145 V 120" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round"/>
+            <g stroke="#00FFFF" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 145 135 C 120 130, 100 140, 95 155 C 85 155, 80 170, 90 180 C 80 190, 85 210, 100 215 C 95 225, 110 235, 125 230 C 135 235, 145 225, 145 215 Z"/>
+            </g>
+            <g stroke="#B026FF" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 155 135 V 235"/>
+              <path d="M 155 155 H 170 L 180 145 H 195"/> <circle cx="195" cy="145" r="5" fill="#B026FF"/>
+              <path d="M 155 175 H 165 L 175 185 H 205"/> <circle cx="205" cy="185" r="5" fill="#B026FF"/>
+              <path d="M 155 195 H 175 L 185 205 H 195"/> <circle cx="195" cy="205" r="5" fill="#B026FF"/>
+            </g>
+          </g>
+        </svg>
+
+        <!-- TEXTO DEL LOGO -->
+        <span class="logo-text">Eduquémonos<span>con</span>TIC</span>
+      </a>
     </div>
+
+    <!-- Reloj y Progreso -->
     <div class="header-right">
-      <!-- Reloj -->
       <div class="clock-wrap" aria-label="Tiempo restante">
         <span class="clock-icon" aria-hidden="true">⏱</span>
         <span id="clock" aria-live="polite">45:00</span>
         <span id="penalizacion-txt" class="hidden" aria-live="assertive"></span>
       </div>
-      <!-- Progreso -->
       <div class="progreso-wrap" aria-label="Retos completados">
         <div class="barra-outer">
-          <div id="progress-bar" role="progressbar"
-               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+          <div id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
         </div>
         <span id="progress-txt">0/6</span>
       </div>
@@ -575,93 +599,128 @@
         </a>
       </div>
 
-    </div><!-- /.mapa-path -->
+    </div>
   </main>
 
   <footer>
     Desarrollado por <span>Eduquemos con TIC</span> · Matemáticas 8° · 2026
   </footer>
 
-  <script src="gameEngine.js" defer></script>
-
-  <!-- ── Lógica de desbloqueo garantizada ──
-       Este bloque se ejecuta DESPUÉS de que gameEngine.js llama initMapa().
-       Si gameEngine.js no está disponible, actúa como fallback autónomo.
-  ── -->
   <script>
-    (function garantizarDesbloqueo() {
-      // Espera a que el DOM + gameEngine.js estén listos
-      document.addEventListener('DOMContentLoaded', function() {
-        // Pequeño delay para asegurar que initMapa() de gameEngine.js ya corrió
-        setTimeout(function() {
+    // ── LÓGICA DE JUEGO A PRUEBA DE FALLOS ──
+    const TOTAL_RETOS = 6;
+    const DURATION_SEC = 45 * 60;
 
-          // ── Lee el estado desde sessionStorage (igual que gameEngine.js Parte 2) ──
-          let estado = {};
-          try {
-            const raw = sessionStorage.getItem('er-state');
-            if (raw) estado = JSON.parse(raw);
-          } catch(e) {}
-
-          const resueltos = Array.isArray(estado.resueltos) ? estado.resueltos : [];
-          const TOTAL     = 6;
-          const siguiente = resueltos.length + 1; // id del próximo reto disponible
-
-          for (let id = 1; id <= TOTAL; id++) {
-            const nodo  = document.getElementById('nodo-' + id);
-            if (!nodo) continue;
-
-            // Limpia clases previas
-            nodo.classList.remove('completed', 'active-node', 'locked');
-            const badge = nodo.querySelector('.nodo-status-label');
-
-            if (resueltos.includes(id)) {
-              // ── COMPLETADO ──
-              nodo.classList.add('completed');
-              nodo.href = 'reto.html?id=' + id;
-              nodo.removeAttribute('aria-disabled');
-              if (badge) {
-                badge.className = 'nodo-status-label status-completed';
-                badge.textContent = '✓ Completado';
-              }
-              // Conector previo se pone "done"
-              const lineEl  = document.getElementById('line-' + id);
-              const arrowEl = document.getElementById('arrow-' + id);
-              if (lineEl)  lineEl.classList.add('done');
-              if (arrowEl) arrowEl.classList.add('done');
-
-            } else if (id === siguiente) {
-              // ── DISPONIBLE ──
-              nodo.classList.add('active-node');
-              nodo.href = 'reto.html?id=' + id;
-              nodo.removeAttribute('aria-disabled');
-              nodo.style.cursor = 'pointer';
-              if (badge) {
-                badge.className = 'nodo-status-label status-active';
-                badge.textContent = id === 6 ? '🔓 ¡Misión final!' : '🔓 Disponible';
-              }
-
-            } else {
-              // ── BLOQUEADO ──
-              nodo.classList.add('locked');
-              nodo.href = '#';
-              nodo.setAttribute('aria-disabled', 'true');
-              nodo.style.cursor = 'not-allowed';
-              if (badge) {
-                badge.className = 'nodo-status-label status-locked';
-                badge.textContent = '🔒 Bloqueado';
-              }
-            }
+    function getOrInitState() {
+      let st = { startTime: Date.now(), resueltos: [], penalizacion: 0 };
+      try {
+        const saved = sessionStorage.getItem('er-state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.startTime) {
+            st = parsed; 
           }
+        }
+      } catch(e) {}
+      
+      sessionStorage.setItem('er-state', JSON.stringify(st));
+      return st;
+    }
+    
+    function formatTime(sec){ 
+      const m = Math.floor(sec/60);
+      const s = sec%60; 
+      return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0'); 
+    }
+    
+    function getTiempoRestante(estadoActual){ 
+      const elapsed = Math.floor((Date.now() - estadoActual.startTime) / 1000); 
+      return Math.max(0, DURATION_SEC - elapsed - (estadoActual.penalizacion || 0)); 
+    }
 
-          // Si todos están resueltos → cierre automático
-          if (resueltos.length >= TOTAL) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const st = getOrInitState();
+
+      // ─── 1. RENDERIZAR MAPA (Candados y Conectores) ───
+      const resueltos = Array.isArray(st.resueltos) ? st.resueltos : [];
+      const siguiente = resueltos.length + 1;
+
+      for (let id = 1; id <= TOTAL_RETOS; id++) {
+        const nodo = document.getElementById('nodo-' + id);
+        if (!nodo) continue;
+
+        nodo.classList.remove('completed', 'active-node', 'locked');
+        const badge = nodo.querySelector('.nodo-status-label');
+
+        if (resueltos.includes(id)) {
+          nodo.classList.add('completed');
+          nodo.href = 'reto.html?id=' + id;
+          nodo.removeAttribute('aria-disabled');
+          if (badge) {
+            badge.className = 'nodo-status-label status-completed';
+            badge.textContent = '✓ Completado';
+          }
+          const lineEl = document.getElementById('line-' + id);
+          const arrowEl = document.getElementById('arrow-' + id);
+          if (lineEl) lineEl.classList.add('done');
+          if (arrowEl) arrowEl.classList.add('done');
+          
+        } else if (id === siguiente) {
+          nodo.classList.add('active-node');
+          nodo.href = 'reto.html?id=' + id;
+          nodo.removeAttribute('aria-disabled');
+          if (badge) {
+            badge.className = 'nodo-status-label status-active';
+            badge.textContent = id === TOTAL_RETOS ? '🔓 ¡Misión final!' : '🔓 Disponible';
+          }
+          
+        } else {
+          nodo.classList.add('locked');
+          nodo.href = '#';
+          nodo.setAttribute('aria-disabled', 'true');
+          if (badge) {
+            badge.className = 'nodo-status-label status-locked';
+            badge.textContent = '🔒 Bloqueado';
+          }
+        }
+      }
+
+      // ─── 2. MANEJO DEL RELOJ Y PENALIZACIÓN ───
+      const tick = () => {
+        let currentSt = getOrInitState();
+        const remaining = getTiempoRestante(currentSt);
+        
+        const clock = document.getElementById('clock');
+        const penTxt = document.getElementById('penalizacion-txt');
+        
+        if(clock) {
+            clock.textContent = formatTime(remaining);
+            clock.classList.remove('warning','danger');
+            if(remaining <= 60) clock.classList.add('danger');
+            else if(remaining <= 300) clock.classList.add('warning');
+        }
+
+        if(currentSt.penalizacion > 0 && penTxt) {
+            penTxt.classList.remove('hidden');
+            penTxt.textContent = `-${formatTime(currentSt.penalizacion)}`;
+        }
+
+        const currentResueltos = Array.isArray(currentSt.resueltos) ? currentSt.resueltos : [];
+        const pct = Math.round((currentResueltos.length / TOTAL_RETOS) * 100);
+        
+        const progressBar = document.getElementById('progress-bar');
+        const progressTxt = document.getElementById('progress-txt');
+        if(progressBar) progressBar.style.width = pct + '%';
+        if(progressTxt) progressTxt.textContent = currentResueltos.length + '/' + TOTAL_RETOS;
+
+        if(remaining <= 0 || currentResueltos.length >= TOTAL_RETOS) {
             window.location.href = 'cierre.html';
-          }
-
-        }, 80); // 80ms de margen para que gameEngine.js corra primero
-      });
-    })();
+        }
+      };
+      
+      tick(); 
+      setInterval(tick, 1000);
+    });
   </script>
-
 </body>
 </html>
