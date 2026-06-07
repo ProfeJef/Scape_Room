@@ -34,6 +34,37 @@
       background-size: 60px 60px; pointer-events: none;
     }
 
+    /* ── HEADER PREMIUM ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(10,12,16,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .logo-link { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    
+    /* Configuración específica para el SVG en el Header */
+    .logo-svg { 
+      width: 40px; 
+      height: 40px; 
+      display: block;
+      filter: drop-shadow(0 0 4px rgba(56,189,248,0.3));
+    }
+    
+    .logo-text {
+      font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #00FFFF, #B026FF);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: flex; align-items: center;
+    }
+    .logo-text span {
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 500;
+      color: #E2E8F0; -webkit-text-fill-color: #E2E8F0;
+      margin: 0 0.35rem; text-transform: lowercase;
+    }
+
     main {
       position: relative; z-index: 1; flex: 1;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -41,7 +72,7 @@
     }
 
     .card {
-      width: 100%; max-width: 580px;
+      width: 100%; max-width: 680px; 
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius-lg); overflow: hidden;
       box-shadow: 0 0 50px rgba(0,0,0,0.4);
@@ -51,46 +82,53 @@
 
     /* Variantes de estado */
     .card.success { border-color: rgba(52,211,153,0.3); box-shadow: 0 0 60px rgba(52,211,153,0.1); }
+    .card.warning { border-color: rgba(245,158,11,0.4); box-shadow: 0 0 60px rgba(245,158,11,0.1); }
     .card.timeout { border-color: rgba(239,68,68,0.3); box-shadow: 0 0 60px rgba(239,68,68,0.1); }
 
-    .card-body { padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; }
+    .card-body { padding: 3rem 2.5rem; display: flex; flex-direction: column; align-items: center; }
 
     .icon-wrap {
       width: 80px; height: 80px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 2.5rem; margin-bottom: 1.5rem;
+      font-size: 2.5rem; margin-bottom: 1rem; border: 2px solid;
     }
-    .success .icon-wrap { background: rgba(52,211,153,0.1); border: 2px solid rgba(52,211,153,0.4); color: var(--green); }
-    .timeout .icon-wrap { background: rgba(239,68,68,0.1); border: 2px solid rgba(239,68,68,0.4); color: var(--red); }
+    .success .icon-wrap { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.4); color: var(--green); }
+    .warning .icon-wrap { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.4); color: var(--gold); }
+    .timeout .icon-wrap { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); color: var(--red); }
 
     .eyebrow {
       font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--muted); margin-bottom: 0.5rem;
     }
     .success .eyebrow { color: var(--green); }
+    .warning .eyebrow { color: var(--gold); }
     .timeout .eyebrow { color: var(--red); }
 
     .titulo {
       font-family: var(--font-mono); font-size: clamp(1.8rem, 4vw, 2.5rem); line-height: 1.1;
-      margin-bottom: 1rem; font-weight: 900;
+      margin-bottom: 1rem; font-weight: 900; color: #fff;
     }
-    .success .titulo { color: #fff; text-shadow: 0 0 20px rgba(52,211,153,0.4); }
-    .timeout .titulo { color: #fff; text-shadow: 0 0 20px rgba(239,68,68,0.4); }
+    .success .titulo { text-shadow: 0 0 20px rgba(52,211,153,0.4); }
+    .warning .titulo { text-shadow: 0 0 20px rgba(245,158,11,0.4); }
+    .timeout .titulo { text-shadow: 0 0 20px rgba(239,68,68,0.4); }
 
-    .mensaje { font-size: 1rem; line-height: 1.6; color: #94a3b8; margin-bottom: 2rem; max-width: 480px; }
+    .mensaje { font-size: 0.95rem; line-height: 1.6; color: #94a3b8; margin-bottom: 2rem; max-width: 540px; }
     .mensaje strong { color: #fff; }
 
-    /* Stats */
-    .stats-container {
-      display: flex; gap: 1rem; width: 100%; justify-content: center; margin-bottom: 2.5rem;
+    /* Stats Globales (Grilla de 4) */
+    .stats-global {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; justify-content: center; margin-bottom: 2.5rem;
     }
     .stat-box {
       background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1rem 1.5rem; flex: 1; max-width: 200px;
+      border-radius: var(--radius); padding: 1.2rem;
     }
     .stat-val { font-family: var(--font-mono); font-size: 1.8rem; font-weight: 700; color: var(--accent); margin-bottom: 0.2rem; }
     .success .stat-box .stat-val { color: var(--green); }
-    .stat-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .warning .stat-box .stat-val { color: var(--gold); }
+    .stat-lbl { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .error-val { color: var(--red) !important; }
 
     /* Botón */
     .btn {
@@ -102,6 +140,10 @@
     .success .btn {
       background: linear-gradient(135deg, var(--green) 0%, #10b981 100%); color: #000;
       box-shadow: 0 0 30px rgba(52,211,153,0.3);
+    }
+    .warning .btn {
+      background: linear-gradient(135deg, var(--gold) 0%, #d97706 100%); color: #000;
+      box-shadow: 0 0 30px rgba(245,158,11,0.3);
     }
     .timeout .btn {
       background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%); color: #000;
@@ -119,14 +161,43 @@
 
     @media (max-width: 520px) {
       .card-body { padding: 2rem 1.25rem; }
-      .stats-container { flex-direction: column; }
-      .stat-box { max-width: 100%; }
+      .stats-global { grid-template-columns: 1fr; }
+      header{padding:.75rem .8rem} .logo-text span { display: none; }
     }
   </style>
 </head>
 <body>
 
   <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ── HEADER PREMIUM ── -->
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="logo-link">
+        
+        <!-- ÍCONO SVG CEREBRO-CIRCUITO -->
+        <svg class="logo-svg" viewBox="50 50 200 200" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <circle cx="150" cy="150" r="90" fill="none" stroke="#00FFFF" stroke-width="2" stroke-dasharray="12 6 3 6" opacity="0.4"/>
+            <path d="M 150 80 L 90 105 L 150 130 L 210 105 Z" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M 120 120 V 145 L 150 158 L 180 145 V 120" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round"/>
+            <g stroke="#00FFFF" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 145 135 C 120 130, 100 140, 95 155 C 85 155, 80 170, 90 180 C 80 190, 85 210, 100 215 C 95 225, 110 235, 125 230 C 135 235, 145 225, 145 215 Z"/>
+            </g>
+            <g stroke="#B026FF" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 155 135 V 235"/>
+              <path d="M 155 155 H 170 L 180 145 H 195"/> <circle cx="195" cy="145" r="5" fill="#B026FF"/>
+              <path d="M 155 175 H 165 L 175 185 H 205"/> <circle cx="205" cy="185" r="5" fill="#B026FF"/>
+              <path d="M 155 195 H 175 L 185 205 H 195"/> <circle cx="195" cy="205" r="5" fill="#B026FF"/>
+            </g>
+          </g>
+        </svg>
+
+        <!-- TEXTO DEL LOGO -->
+        <span class="logo-text">Eduquémonos<span>con</span>TIC</span>
+      </a>
+    </div>
+  </header>
 
   <main>
     <div id="resultado-card" class="card" role="main">
@@ -135,25 +206,32 @@
         <div class="icon-wrap" id="icon-resultado">🏆</div>
 
         <p class="eyebrow" id="text-eyebrow">Evaluación del Sistema</p>
-        <h1 class="titulo" id="text-titulo">MISIÓN CUMPLIDA</h1>
+        <h1 class="titulo" id="text-titulo">Calculando...</h1>
 
-        <p class="mensaje" id="text-mensaje">
-          Has restaurado con éxito el algoritmo central. Las decisiones matemáticas han vuelto a ser exactas.
-        </p>
+        <p class="mensaje" id="text-mensaje">Analizando el registro de eventos...</p>
 
-        <div class="stats-container">
+        <!-- Stats -->
+        <div class="stats-global">
           <div class="stat-box">
             <div class="stat-val" id="stat-retos">0/6</div>
-            <div class="stat-lbl">Retos Superados</div>
+            <div class="stat-lbl">Retos Restaurados</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val error-val" id="stat-errores">0</div>
+            <div class="stat-lbl">Errores Cometidos</div>
           </div>
           <div class="stat-box">
             <div class="stat-val" id="stat-tiempo">00:00</div>
-            <div class="stat-lbl">Tiempo Empleado</div>
+            <div class="stat-lbl">Tiempo Invertido</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-puntaje">0</div>
+            <div class="stat-lbl">Puntaje Global</div>
           </div>
         </div>
 
         <button id="btn-reiniciar" class="btn">
-          <span>REINICIAR MISIÓN</span>
+          <span>NUEVA SIMULACIÓN</span>
         </button>
 
       </div>
@@ -166,24 +244,34 @@
     document.addEventListener('DOMContentLoaded', () => {
       const TOTAL_RETOS = 6;
       const DURATION_SEC = 45 * 60;
-
-      let estado = { startTime: Date.now(), resueltos: [], penalizacion: 0 };
+      
+      let estado = { startTime: Date.now(), resueltos: [], penalizacion: 0, totalErrores: 0 };
       try {
         const saved = sessionStorage.getItem('er-state');
         if(saved) estado = JSON.parse(saved);
       } catch(e){}
 
       const resueltosCount = Array.isArray(estado.resueltos) ? estado.resueltos.length : 0;
+      const totalErrores = estado.totalErrores || 0;
       const exito = resueltosCount >= TOTAL_RETOS;
 
       // Cálculo de tiempo
-      const elapsedRaw = Math.floor((Date.now() - estado.startTime) / 1000);
+      const elapsedRaw = estado.startTime ? Math.floor((Date.now() - estado.startTime) / 1000) : 0;
       const penalizacion = estado.penalizacion || 0;
-      const totalTimeUsed = Math.min(elapsedRaw + penalizacion, DURATION_SEC); // no superar los 45 min
+      const totalTimeUsed = Math.min(elapsedRaw + penalizacion, DURATION_SEC); 
 
       const m = Math.floor(totalTimeUsed / 60);
       const s = totalTimeUsed % 60;
       const timeStr = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+
+      // Cálculo de Puntaje
+      let score = resueltosCount * 1000; 
+      if (exito) {
+        let timeRemaining = Math.max(0, DURATION_SEC - totalTimeUsed);
+        score += Math.floor(timeRemaining * 1.5); 
+      }
+      let penalizacionDeduccion = totalErrores * 300; 
+      score = Math.max(0, score - penalizacionDeduccion); 
 
       // Elementos del DOM
       const card = document.getElementById('resultado-card');
@@ -193,20 +281,33 @@
       const mensaje = document.getElementById('text-mensaje');
 
       document.getElementById('stat-retos').textContent = resueltosCount + '/' + TOTAL_RETOS;
+      document.getElementById('stat-errores').textContent = totalErrores;
       document.getElementById('stat-tiempo').textContent = timeStr;
+      document.getElementById('stat-puntaje').textContent = score;
 
-      if(exito){
-        card.classList.add('success');
-        icon.textContent = '🏆';
-        eyebrow.textContent = 'SISTEMA RESTAURADO';
-        titulo.textContent = 'MISIÓN CUMPLIDA';
-        mensaje.innerHTML = 'Has restaurado con éxito el algoritmo central utilizando tu <strong>pensamiento algebraico</strong>. Las decisiones matemáticas han vuelto a ser exactas.';
+      if (exito) {
+        if (totalErrores === 0) {
+            // VICTORIA PERFECTA
+            card.classList.add('success');
+            icon.textContent = '⚡';
+            eyebrow.textContent = 'EJECUCIÓN PERFECTA';
+            titulo.textContent = 'SISTEMA 100% RESTAURADO';
+            mensaje.innerHTML = '¡Impecable! Has recuperado el control total del algoritmo sin cometer errores. Tienes una comprensión sólida de los patrones algebraicos. Eres una leyenda del álgebra escolar.';
+        } else {
+            // VICTORIA CON ERRORES - ENFOQUE PEDAGÓGICO
+            card.classList.add('warning');
+            icon.textContent = '🛠️';
+            eyebrow.textContent = 'MISIÓN COMPLETADA CON OBSERVACIONES';
+            titulo.textContent = 'SISTEMA RESTAURADO';
+            mensaje.innerHTML = `Llegar al final demuestra gran perseverancia, ¡buen trabajo! El algoritmo registró <strong>${totalErrores} errores</strong>, los cuales son excelentes oportunidades de aprendizaje. Muchos de estos fallos ocurren al olvidar el doble producto en un binomio al cuadrado (el famoso <em>2ab</em>) o al confundir la ley de los signos. Tómate un momento para reflexionar sobre los pasos donde dudaste. ¡La precisión algebraica se construye analizando nuestros propios intentos!`;
+        }
       } else {
+        // DERROTA / TIEMPO AGOTADO - ENFOQUE PEDAGÓGICO
         card.classList.add('timeout');
-        icon.textContent = '⏳';
+        icon.textContent = '⏱️';
         eyebrow.textContent = 'SISTEMA BLOQUEADO';
         titulo.textContent = 'TIEMPO AGOTADO';
-        mensaje.innerHTML = 'No alcanzó el tiempo para restaurar todas las decisiones del sistema. Pero cada reto resuelto fue un paso importante. <strong>Usa lo aprendido y vuelve a intentarlo.</strong>';
+        mensaje.innerHTML = `Has realizado un gran esfuerzo, pero los <strong>${totalErrores} errores</strong> acumulados consumieron el tiempo disponible. ¡No te desanimes! En matemáticas, la agilidad mental llega únicamente después de dominar la precisión. Identifica en qué misiones tuviste mayores dificultades (¿factorización? ¿binomios?) y repasa las reglas estructurales. La persistencia es la verdadera clave del éxito algebraico. ¡Vuelve a intentarlo!`;
       }
 
       // Lógica de reiniciar
