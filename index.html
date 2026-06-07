@@ -40,7 +40,35 @@
       display: flex; flex-direction: column;
       overflow-x: hidden;
     }
+    
+    /* HEADER PREMIUM */
+    header {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(10,12,16,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .logo-link { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    .logo-svg { width: 32px; height: 32px; display: block; }
+    .logo-text {
+      font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em;
+      background: linear-gradient(90deg, #00FFFF, #B026FF);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: flex; align-items: center;
+    }
+    .logo-text span {
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 500;
+      color: #E2E8F0; -webkit-text-fill-color: #E2E8F0;
+      margin: 0 0.35rem; text-transform: lowercase;
+    }
+    .header-title {
+      font-size: 0.85rem; color: var(--muted);
+      border-left: 1px solid var(--border); padding-left: 1rem;
+    }
 
+    /* FONDOS ANIMADOS */
     .bg-grid {
       position: fixed; inset: 0; z-index: 0;
       background-image:
@@ -58,6 +86,7 @@
     }
     @keyframes glow-pulse { 0%{opacity:.6} 100%{opacity:1} }
 
+    /* CONTENIDO PRINCIPAL */
     main {
       position: relative; z-index: 1; flex: 1;
       display: flex; flex-direction: column;
@@ -202,7 +231,7 @@
       display:flex; align-items:center; gap:.6rem;
       margin-top:1rem; padding:.6rem 1rem;
       background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.2);
-      border-radius:8px; font-size:.78rem; color:#fbbf24;
+      border-radius:8px; font-size:.78rem; color:#fbbf24; line-height: 1.4;
     }
 
     footer {
@@ -214,12 +243,56 @@
     footer span { color:var(--accent); }
 
     @media (max-width:520px) {
+      .header-title { display: none; }
       .dos-cols { grid-template-columns:1fr; }
       .card-body { padding:1.25rem 1rem; }
     }
   </style>
 </head>
 <body>
+
+  <!-- BARRA DE NAVEGACIÓN SUPERIOR CON LOGO CORREGIDO -->
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="logo-link">
+        
+        <!-- ÍCONO SVG -->
+        <svg class="logo-svg" viewBox="20 20 260 260" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="neonGradHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00FFFF" />
+              <stop offset="100%" stop-color="#B026FF" />
+            </linearGradient>
+            <filter id="neonGlowHeader" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+          <g>
+            <circle cx="150" cy="150" r="90" fill="none" stroke="url(#neonGradHeader)" stroke-width="2.5" stroke-dasharray="12 6 3 6" opacity="0.5"/>
+            <!-- Birrete -->
+            <path d="M 150 70 L 80 95 L 150 120 L 220 95 Z" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round" filter="url(#neonGlowHeader)"/>
+            <path d="M 110 110 V 135 L 150 148 L 190 135 V 110" fill="none" stroke="#00FFFF" stroke-width="5" stroke-linejoin="round" filter="url(#neonGlowHeader)"/>
+            <!-- Cerebro -->
+            <g stroke="#00FFFF" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neonGlowHeader)">
+              <path d="M 145 125 C 120 120, 100 130, 95 145 C 85 145, 80 160, 90 170 C 80 180, 85 200, 100 205 C 95 215, 110 225, 125 220 C 135 225, 145 215, 145 205 Z"/>
+            </g>
+            <!-- Circuito -->
+            <g stroke="#B026FF" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neonGlowHeader)">
+              <path d="M 155 125 V 225"/>
+              <path d="M 155 145 H 170 L 180 135 H 195"/> <circle cx="195" cy="135" r="5" fill="#B026FF"/>
+              <path d="M 155 165 H 165 L 175 175 H 205"/> <circle cx="205" cy="175" r="5" fill="#B026FF"/>
+              <path d="M 155 185 H 175 L 185 195 H 195"/> <circle cx="195" cy="195" r="5" fill="#B026FF"/>
+            </g>
+          </g>
+        </svg>
+
+        <!-- TEXTO DEL LOGO -->
+        <span class="logo-text">Eduquémonos<span>con</span>TIC</span>
+      </a>
+      <span class="header-title"></span>
+    </div>
+  </header>
 
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-glow" aria-hidden="true"></div>
@@ -287,7 +360,7 @@
               Reglas
             </div>
             <ol class="reglas-list">
-              <li><span class="regla-num">1</span>Cada error descuenta 2 min.</li>
+              <li><span class="regla-num">1</span>Errores restan 5 min y 10 min.</li>
               <li><span class="regla-num">2</span>Primer error → pista automática.</li>
               <li><span class="regla-num">3</span>Segundo error → explicación.</li>
               <li><span class="regla-num">4</span>Retos en orden estricto.</li>
@@ -310,8 +383,8 @@
           </div>
           <div class="stat-chip">
             <span class="stat-icon" aria-hidden="true">⚡</span>
-            <span class="stat-val">−2 min</span>
-            <span class="stat-lbl">Por error ×3</span>
+            <span class="stat-val">−5 min</span>
+            <span class="stat-lbl">Por error</span>
           </div>
         </div>
 
@@ -325,7 +398,7 @@
         <!-- Warning -->
         <div class="warning-strip" role="note">
           <span aria-hidden="true">⚠</span>
-          <span>Cada 3 errores consecutivos en un reto descuentan <strong>2 minutos</strong> del tiempo disponible.</span>
+          <span>Cada error descuenta <strong>5 minutos</strong>. El tercer fallo consecutivo en un mismo reto resta <strong>10 minutos</strong> del tiempo disponible.</span>
         </div>
 
       </div>
@@ -339,11 +412,12 @@
   <!-- ── Lógica del botón embebida (no depende de gameEngine.js) ── -->
   <script>
     document.getElementById('btn-iniciar-mision').addEventListener('click', function() {
-      // Reinicia el estado en sessionStorage
+      // Reinicia el estado en sessionStorage con el contador global de errores en 0
       var estado = {
         startTime:       Date.now(),
         resueltos:       [],
         penalizacion:    0,
+        totalErrores:    0,
         intentosPorReto: {}
       };
       try {
