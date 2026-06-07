@@ -1,9 +1,3 @@
-// ============================================================
-//  gameEngine.js  —  PARTE 1 / 6
-//  Base de datos de RETOS completa
-//  Escape Room Educativo · Matemáticas 8° · Binomios
-// ============================================================
-
 const RETOS = [
 
   // ─── RETO 1 · Tipo 1 (Selección múltiple) ────────────────
@@ -182,13 +176,13 @@ const RETOS = [
     respuestaExacta: "2x(5x+6)(5x-6)",
     respuestasAceptadas: ["2x(5x+6)(5x-6)", "2x(5x-6)(5x+6)"],
     opciones: [
-      { id: "5a", texto: "x(50x² − 72)",      correcta: false,
+      { id: "5a", texto: "x(50x² − 72)",       correcta: false,
         feedback: `<strong>Incorrecto.</strong> El MCD numérico de 50 y 72 es 2, no 1.` },
-      { id: "5b", texto: "2x(25x² − 36)",     correcta: false,
+      { id: "5b", texto: "2x(25x² − 36)",      correcta: false,
         feedback: `<strong>Incompleto.</strong> <em>25x² − 36</em> aún es factorizable.` },
       { id: "5c", texto: "2x(5x + 6)(5x − 6)", correcta: true,
         feedback: `<strong>¡Correcto!</strong> Factor común <em>2x</em> + diferencia de cuadrados.` },
-      { id: "5d", texto: "2(25x³ − 36x)",     correcta: false,
+      { id: "5d", texto: "2(25x³ − 36x)",      correcta: false,
         feedback: `<strong>Incorrecto.</strong> <em>x</em> también es factor común.` }
     ]
   },
@@ -208,50 +202,48 @@ const RETOS = [
       de acceso que restaurará los derechos de la comunidad estudiantil.`,
     enunciado: "Desarrolla y simplifica al máximo: (½x + 4)² − 16",
     opciones: [
-      { id: "6a", texto: "¼x²",          codigo: "ALFA-00",   correcta: false,
+      { id: "6a", texto: "¼x²",           codigo: "ALFA-00",  correcta: false,
         feedback: `<strong>Código Denegado.</strong> Omitiste el doble producto: <em>2·(½x)·4 = 4x</em>.` },
       { id: "6b", texto: "¼x² + 4x + 16", codigo: "DELTA-44", correcta: false,
         feedback: `<strong>Código Denegado.</strong> Olvidaste restar el <em>−16</em> exterior.` },
-      { id: "6c", texto: "¼x² + 4x",     codigo: "EAP-2026",  correcta: true,
+      { id: "6c", texto: "¼x² + 4x",      codigo: "EAP-2026", correcta: true,
         feedback: `<strong>¡CÓDIGO CORRECTO! SISTEMA RESTAURADO.</strong><br>
           <em>¼x² + 4x + 16 − 16 = ¼x² + 4x</em>.` },
-      { id: "6d", texto: "¼x² + 2x",     codigo: "SIGMA-88",  correcta: false,
+      { id: "6d", texto: "¼x² + 2x",      codigo: "SIGMA-88", correcta: false,
         feedback: `<strong>Código Denegado.</strong> El doble producto es 4x, no 2x.` }
     ]
   }
 
-]; // 
+];
 // ============================================================
-//  gameEngine.js  —  PARTE 2 / 6  (con penalizaciones)
-//  Estado · sessionStorage · Utilidades · Temporizador 45 min
-//  Sistema de penalización por intentos fallidos
+//  gameEngine.js  —  PARTE 2 / 5
+//  Estado · sessionStorage · Utilidades · Temporizador
+//  Penalizaciones + historial real de errores por reto
 // ============================================================
 
-// ──────────────────────────────────────────────────────────
-//  CONSTANTES
-// ──────────────────────────────────────────────────────────
-const TOTAL_RETOS      = RETOS.length;   // 6
-const DURATION_SEC     = 45 * 60;        // 2 700 s = 45 min
-const PENALIZACION_SEG = 2 * 60;         // −2 min por penalización
-const MAX_INTENTOS     = 3;              // intentos antes de penalizar
+const TOTAL_RETOS      = RETOS.length;
+const DURATION_SEC     = 45 * 60;
+const PENALIZACION_SEG = 2 * 60;
+const MAX_INTENTOS     = 3;
 
-// ──────────────────────────────────────────────────────────
-//  ESTADO EN MEMORIA
-// ──────────────────────────────────────────────────────────
 const Estado = {
-  startTime:       0,
-  penalizacion:    0,
-  resueltos:       [],
-  intentosPorReto: {}
+  startTime:        0,
+  penalizacion:     0,
+  resueltos:        [],
+  intentosPorReto:  {},
+  historialPorReto: {},
+  respuestasLog:    {}
 };
 
 function saveEstado() {
   try {
     sessionStorage.setItem("er-state", JSON.stringify({
-      startTime:       Estado.startTime,
-      penalizacion:    Estado.penalizacion,
-      resueltos:       Estado.resueltos,
-      intentosPorReto: Estado.intentosPorReto
+      startTime:        Estado.startTime,
+      penalizacion:     Estado.penalizacion,
+      resueltos:        Estado.resueltos,
+      intentosPorReto:  Estado.intentosPorReto,
+      historialPorReto: Estado.historialPorReto,
+      respuestasLog:    Estado.respuestasLog
     }));
   } catch (_) {}
 }
@@ -261,17 +253,18 @@ function loadEstado() {
     const raw = sessionStorage.getItem("er-state");
     if (!raw) return false;
     const data = JSON.parse(raw);
-    Estado.startTime       = data.startTime       || 0;
-    Estado.penalizacion    = data.penalizacion     || 0;
-    Estado.resueltos       = Array.isArray(data.resueltos) ? data.resueltos : [];
-    Estado.intentosPorReto = data.intentosPorReto  || {};
+    Estado.startTime        = data.startTime || 0;
+    Estado.penalizacion     = data.penalizacion || 0;
+    Estado.resueltos        = Array.isArray(data.resueltos) ? data.resueltos : [];
+    Estado.intentosPorReto  = data.intentosPorReto || {};
+    Estado.historialPorReto = data.historialPorReto || {};
+    Estado.respuestasLog    = data.respuestasLog || {};
     return Estado.startTime > 0;
-  } catch (_) { return false; }
+  } catch (_) {
+    return false;
+  }
 }
 
-// ──────────────────────────────────────────────────────────
-//  UTILIDADES
-// ──────────────────────────────────────────────────────────
 const $id = id => document.getElementById(id);
 const $qs = (sel, ctx = document) => ctx.querySelector(sel);
 const getParam = key => new URLSearchParams(window.location.search).get(key);
@@ -283,20 +276,27 @@ const formatTime = sec => {
 };
 
 const normalizeRespuesta = str =>
-  str.trim()
-     .replace(/\s+/g, "")
-     .toLowerCase()
-     .replace(/\u2212/g, "-")
-     .replace(/\u00d7/g, "*");
+  (str || "")
+    .trim()
+    .replace(/\s+/g, "")
+    .toLowerCase()
+    .replace(/\u2212/g, "-")
+    .replace(/\u00d7/g, "*");
 
-// ──────────────────────────────────────────────────────────
-//  SISTEMA DE PENALIZACIONES
-// ──────────────────────────────────────────────────────────
-function registrarIntentoFallido(retoId) {
-  if (!Estado.intentosPorReto[retoId]) {
-    Estado.intentosPorReto[retoId] = 0;
-  }
+function registrarIntentoFallido(retoId, respuestaUsuario = null) {
+  if (!Estado.intentosPorReto[retoId])  Estado.intentosPorReto[retoId]  = 0;
+  if (!Estado.historialPorReto[retoId]) Estado.historialPorReto[retoId] = 0;
+  if (!Estado.respuestasLog[retoId])    Estado.respuestasLog[retoId]    = [];
+
   Estado.intentosPorReto[retoId]++;
+  Estado.historialPorReto[retoId]++;
+
+  Estado.respuestasLog[retoId].push({
+    tipo: "incorrecta",
+    respuesta: respuestaUsuario,
+    ts: Date.now()
+  });
+
   const intentos = Estado.intentosPorReto[retoId];
   let penalizado = false;
 
@@ -306,12 +306,33 @@ function registrarIntentoFallido(retoId) {
     penalizado = true;
     _flashPenalizacion();
   }
+
   saveEstado();
   return { penalizado, intentosActuales: penalizado ? 0 : intentos };
 }
 
+function registrarRespuestaCorrecta(retoId, respuestaUsuario = null) {
+  if (!Estado.respuestasLog[retoId]) Estado.respuestasLog[retoId] = [];
+
+  Estado.respuestasLog[retoId].push({
+    tipo: "correcta",
+    respuesta: respuestaUsuario,
+    ts: Date.now()
+  });
+
+  if (!Estado.resueltos.includes(retoId)) {
+    Estado.resueltos.push(retoId);
+    Estado.resueltos.sort((a, b) => a - b);
+  }
+  saveEstado();
+}
+
 function getIntentosReto(retoId) {
   return Estado.intentosPorReto[retoId] || 0;
+}
+
+function getHistorialReto(retoId) {
+  return Estado.historialPorReto[retoId] || 0;
 }
 
 function getTiempoRestante() {
@@ -350,31 +371,28 @@ function _mostrarAlertaIntentos(retoId, intentosActuales, penalizado) {
   let alertEl = $id("intentos-alerta");
   if (!alertEl) {
     alertEl = document.createElement("p");
-    alertEl.id        = "intentos-alerta";
+    alertEl.id = "intentos-alerta";
     alertEl.className = "intentos-alerta";
-    const btnValidar  = $id("btn-validar");
+    const btnValidar = $id("btn-validar");
     if (btnValidar) btnValidar.insertAdjacentElement("afterend", alertEl);
   }
 
   const restantes = MAX_INTENTOS - intentosActuales;
 
   if (penalizado) {
-    alertEl.className   = "intentos-alerta critico";
+    alertEl.className = "intentos-alerta critico";
     alertEl.textContent = `⚠ Se aplicó −${formatTime(PENALIZACION_SEG)}. Tienes ${MAX_INTENTOS} intentos nuevos.`;
   } else if (intentosActuales === 0) {
     alertEl.classList.add("hidden");
   } else if (restantes === 1) {
-    alertEl.className   = "intentos-alerta critico";
+    alertEl.className = "intentos-alerta critico";
     alertEl.textContent = `⚠ Último intento. El siguiente error descuenta −${formatTime(PENALIZACION_SEG)}.`;
   } else {
-    alertEl.className   = "intentos-alerta";
+    alertEl.className = "intentos-alerta";
     alertEl.textContent = `Llevas ${intentosActuales} intento${intentosActuales > 1 ? "s" : ""} fallido${intentosActuales > 1 ? "s" : ""}. Penalización al ${MAX_INTENTOS}.º`;
   }
 }
 
-// ──────────────────────────────────────────────────────────
-//  TEMPORIZADOR GLOBAL
-// ──────────────────────────────────────────────────────────
 let _clockInterval = null;
 
 function startClock() {
@@ -391,7 +409,7 @@ function startClock() {
 
     clockEl.textContent = formatTime(remaining);
     clockEl.classList.remove("warning", "danger");
-    if (remaining <= 60)       clockEl.classList.add("danger");
+    if (remaining <= 60) clockEl.classList.add("danger");
     else if (remaining <= 300) clockEl.classList.add("warning");
 
     if (penalizEl) {
@@ -422,40 +440,30 @@ function startClock() {
   _clockInterval = setInterval(tick, 1000);
 }
 // ============================================================
-//  gameEngine.js  —  PARTE 3 / 6
-//  initVestibulo · initMapa
+//  gameEngine.js  —  PARTE 3 / 5
+//  initVestibulo · initMapa · initReto · Renderizadores
 // ============================================================
 
-// ──────────────────────────────────────────────────────────
-//  VESTÍBULO  (index.html)
-//  Resetea el estado y arranca la misión al pulsar el botón.
-// ──────────────────────────────────────────────────────────
 function initVestibulo() {
   const btn = $id("btn-iniciar-mision");
   if (!btn) return;
 
   btn.addEventListener("click", () => {
-    Estado.startTime = Date.now();
-    Estado.resueltos = [];
-    Estado.penalizacion = 0;
-    Estado.intentosPorReto = {};
+    Estado.startTime        = Date.now();
+    Estado.resueltos        = [];
+    Estado.penalizacion     = 0;
+    Estado.intentosPorReto  = {};
+    Estado.historialPorReto = {};
+    Estado.respuestasLog    = {};
     saveEstado();
     window.location.href = "mapa.html";
   });
 }
 
-// ──────────────────────────────────────────────────────────
-//  MAPA  (mapa.html)
-//  Pinta cada nodo según su estado:
-//    - completed   → reto ya resuelto, enlace activo
-//    - active-node → siguiente reto disponible
-//    - locked      → bloqueado, sin enlace
-//  Si todos los retos están resueltos, redirige a cierre.
-// ──────────────────────────────────────────────────────────
 function initMapa() {
   if (!window.location.pathname.includes("mapa.html")) return;
 
-  const desbloqueado = Estado.resueltos.length + 1; // id del siguiente reto
+  const desbloqueado = Estado.resueltos.length + 1;
 
   RETOS.forEach(reto => {
     const nodo = $id(`nodo-${reto.id}`);
@@ -464,29 +472,24 @@ function initMapa() {
     nodo.classList.remove("completed", "active-node", "locked");
 
     if (Estado.resueltos.includes(reto.id)) {
-      // ── Completado ──
       nodo.classList.add("completed");
       nodo.href = `reto.html?id=${reto.id}`;
 
       const lbl = $qs(".nodo-status-label", nodo);
       if (lbl) {
-        lbl.className   = "nodo-status-label status-completed";
+        lbl.className = "nodo-status-label status-completed";
         lbl.textContent = "✓ Completado";
       }
-
     } else if (reto.id === desbloqueado) {
-      // ── Disponible ──
       nodo.classList.add("active-node");
       nodo.href = `reto.html?id=${reto.id}`;
 
       const lbl = $qs(".nodo-status-label", nodo);
       if (lbl) {
-        lbl.className   = "nodo-status-label status-active";
+        lbl.className = "nodo-status-label status-active";
         lbl.textContent = "🔓 Disponible";
       }
-
     } else {
-      // ── Bloqueado ──
       nodo.classList.add("locked");
       nodo.removeAttribute("href");
       nodo.setAttribute("aria-disabled", "true");
@@ -494,27 +497,23 @@ function initMapa() {
     }
   });
 
-  // Si completó todo → redirige directo al cierre
   if (Estado.resueltos.length >= TOTAL_RETOS) {
     window.location.href = "cierre.html";
   }
 }
-// ============================================================
-//  gameEngine.js  —  PARTE 4 / 6
-//  initReto + renderizadores por tipo (Tipo 1, 2, 3)
-// ============================================================
 
-// ──────────────────────────────────────────────────────────
-//  DESPACHO DE RETO  (reto.html)
-// ──────────────────────────────────────────────────────────
 function initReto() {
   if (!window.location.pathname.includes("reto.html")) return;
 
   const idParam = parseInt(getParam("id"), 10);
-  const reto    = RETOS.find(r => r.id === idParam);
-  if (!reto) { window.location.href = "mapa.html"; return; }
+  const reto = RETOS.find(r => r.id === idParam);
+  if (!reto) {
+    window.location.href = "mapa.html";
+    return;
+  }
 
   _pintarEstructura(reto);
+  _renderIntentosPrevios(reto.id);
 
   switch (reto.tipo) {
     case 1: _renderTipo1(reto); break;
@@ -526,10 +525,6 @@ function initReto() {
   }
 }
 
-// ──────────────────────────────────────────────────────────
-//  Cabecero compartido: eyebrow, título, tags, narrativa,
-//  enunciado
-// ──────────────────────────────────────────────────────────
 function _pintarEstructura(reto) {
   const eyebrow   = $id("reto-eyebrow");
   const titulo    = $id("reto-titulo");
@@ -537,8 +532,8 @@ function _pintarEstructura(reto) {
   const narrativa = $id("reto-narrativa");
   const enunciado = $id("reto-enunciado");
 
-  if (eyebrow)   eyebrow.textContent = reto.eyebrow  || "";
-  if (titulo)    titulo.textContent  = reto.titulo    || "";
+  if (eyebrow)   eyebrow.textContent = reto.eyebrow || "";
+  if (titulo)    titulo.textContent  = reto.titulo || "";
   if (narrativa) narrativa.innerHTML = reto.narrativa || "";
   if (enunciado) enunciado.innerHTML = reto.enunciado || "";
 
@@ -549,9 +544,22 @@ function _pintarEstructura(reto) {
   }
 }
 
-// ──────────────────────────────────────────────────────────
-//  TIPO 1 · Selección múltiple (radio-button estilizado)
-// ──────────────────────────────────────────────────────────
+function _renderIntentosPrevios(retoId) {
+  const totalFallos = getHistorialReto(retoId);
+  if (!totalFallos) return;
+
+  let info = $id("historial-reto");
+  if (!info) {
+    info = document.createElement("p");
+    info.id = "historial-reto";
+    info.className = "historial-reto";
+    const enunciado = $id("reto-enunciado");
+    if (enunciado) enunciado.insertAdjacentElement("afterend", info);
+  }
+
+  info.textContent = `Historial del reto: ${totalFallos} intento${totalFallos > 1 ? "s" : ""} fallido${totalFallos > 1 ? "s" : ""} acumulado${totalFallos > 1 ? "s" : ""}.`;
+}
+
 function _renderTipo1(reto) {
   const cont = $id("opciones-container");
   if (!cont) return;
@@ -571,21 +579,20 @@ function _renderTipo1(reto) {
 
   cont.querySelectorAll("input[type=radio]").forEach(inp => {
     inp.addEventListener("change", () => {
-      cont.querySelectorAll(".opcion-pro-inner")
-          .forEach(el => el.classList.remove("selected"));
-      inp.closest(".opcion-pro-inner").classList.add("selected");
+      cont.querySelectorAll(".opcion-pro-inner").forEach(el => el.classList.remove("selected"));
+      const box = inp.closest(".opcion-pro")?.querySelector(".opcion-pro-inner");
+      if (box) box.classList.add("selected");
     });
   });
 
   _attachValidar(reto, () => {
     const sel = cont.querySelector("input[type=radio]:checked");
-    return sel ? sel.value : null;
+    if (!sel) return null;
+    const op = reto.opciones.find(o => o.id === sel.value);
+    return { id: sel.value, valor: op ? op.texto : sel.value };
   });
 }
 
-// ──────────────────────────────────────────────────────────
-//  TIPO 2 · Drag & Drop con soporte de teclado
-// ──────────────────────────────────────────────────────────
 function _renderTipo2(reto) {
   const cont = $id("opciones-container");
   if (!cont) return;
@@ -593,8 +600,7 @@ function _renderTipo2(reto) {
   const opcMezcladas = [...reto.opciones].sort(() => Math.random() - 0.5);
 
   cont.innerHTML = `
-    <div class="drag-pool" id="drag-pool"
-         aria-label="Fichas disponibles" role="list">
+    <div class="drag-pool" id="drag-pool" aria-label="Fichas disponibles" role="list">
       ${opcMezcladas.map(op => `
         <div class="drag-chip"
              id="chip-${op.id}"
@@ -611,9 +617,7 @@ function _renderTipo2(reto) {
          role="button" tabindex="0"
          aria-label="Zona de respuesta: arrastra aquí tu selección"
          aria-live="polite">
-      <span class="drop-placeholder" id="drop-placeholder">
-        ← Arrastra aquí tu respuesta
-      </span>
+      <span class="drop-placeholder" id="drop-placeholder">← Arrastra aquí tu respuesta</span>
     </div>
   `;
 
@@ -621,20 +625,16 @@ function _renderTipo2(reto) {
   const zone = $id("drop-zone");
   let chipEnZona = null;
 
-  // ── Drag events ──
   pool.querySelectorAll(".drag-chip").forEach(chip => {
     chip.addEventListener("dragstart", e => {
       e.dataTransfer.setData("text/plain", chip.dataset.id);
       chip.classList.add("dragging");
     });
-    chip.addEventListener("dragend", () =>
-      chip.classList.remove("dragging"));
-
-    // Soporte teclado: Enter / Espacio
+    chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
     chip.addEventListener("keydown", e => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        _moverChipAZona(chip);
+        moverChipAZona(chip);
       }
     });
   });
@@ -643,17 +643,16 @@ function _renderTipo2(reto) {
     e.preventDefault();
     zone.classList.add("drag-over");
   });
-  zone.addEventListener("dragleave", () =>
-    zone.classList.remove("drag-over"));
+  zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
   zone.addEventListener("drop", e => {
     e.preventDefault();
     zone.classList.remove("drag-over");
     const chipId = e.dataTransfer.getData("text/plain");
-    const chip   = document.getElementById(`chip-${chipId}`);
-    if (chip) _moverChipAZona(chip);
+    const chip = document.getElementById(`chip-${chipId}`);
+    if (chip) moverChipAZona(chip);
   });
 
-  function _moverChipAZona(chip) {
+  function moverChipAZona(chip) {
     if (chipEnZona) {
       chipEnZona.classList.remove("chip-en-zona");
       pool.appendChild(chipEnZona);
@@ -665,21 +664,18 @@ function _renderTipo2(reto) {
     chipEnZona = chip;
   }
 
-  _attachValidar(reto, () =>
-    chipEnZona ? chipEnZona.dataset.id : null
-  );
+  _attachValidar(reto, () => {
+    if (!chipEnZona) return null;
+    return { id: chipEnZona.dataset.id, valor: chipEnZona.textContent.trim() };
+  });
 }
 
-// ──────────────────────────────────────────────────────────
-//  TIPO 3 · Escribir "correcto" frente a la opción válida
-// ──────────────────────────────────────────────────────────
 function _renderTipo3(reto) {
   const cont = $id("opciones-container");
   if (!cont) return;
 
   cont.innerHTML = reto.opciones.map((op, i) => `
-    <div class="tipo3-row" id="row-${op.id}"
-         role="group" aria-label="Opción ${i + 1}">
+    <div class="tipo3-row" id="row-${op.id}" role="group" aria-label="Opción ${i + 1}">
       <div class="tipo3-expresion">${op.texto}</div>
       <div class="tipo3-input-wrap">
         <label for="input-${op.id}" class="sr-only">
@@ -700,21 +696,15 @@ function _renderTipo3(reto) {
   _attachValidar(reto, () => {
     const inputs = cont.querySelectorAll(".tipo3-input");
     for (const inp of inputs) {
-      if (inp.value.trim().toLowerCase() === "correcto")
-        return inp.dataset.id;
+      if (inp.value.trim().toLowerCase() === "correcto") {
+        const op = reto.opciones.find(o => o.id === inp.dataset.id);
+        return { id: inp.dataset.id, valor: op ? op.texto : inp.dataset.id };
+      }
     }
     return null;
   });
 }
-// ============================================================
-//  gameEngine.js  —  PARTE 5 / 6
-//  Tipo 5 (respuesta abierta) · Tipo 6 (código + confetti)
-//  _attachValidar (validación central con penalizaciones)
-// ============================================================
 
-// ──────────────────────────────────────────────────────────
-//  TIPO 5 · Respuesta abierta con input de texto
-// ──────────────────────────────────────────────────────────
 function _renderTipo5(reto) {
   const cont = $id("opciones-container");
   if (!cont) return;
@@ -740,8 +730,6 @@ function _renderTipo5(reto) {
   `;
 
   const input = $id("respuesta-libre");
-
-  // Enter también valida
   input.addEventListener("keydown", e => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -750,19 +738,20 @@ function _renderTipo5(reto) {
   });
 
   _attachValidar(reto, () => {
-    const val = normalizeRespuesta(input.value);
+    const raw = input.value;
+    const val = normalizeRespuesta(raw);
     if (!val) return null;
 
     const aceptadas = (reto.respuestasAceptadas || [reto.respuestaExacta])
       .map(r => normalizeRespuesta(r));
 
-    return aceptadas.includes(val) ? "5c" : "wrong-open";
+    if (aceptadas.includes(val)) {
+      return { id: "5c", valor: raw.trim() };
+    }
+    return { id: "wrong-open", valor: raw.trim() };
   });
 }
 
-// ──────────────────────────────────────────────────────────
-//  TIPO 6 · Selección múltiple → muestra código → confetti
-// ──────────────────────────────────────────────────────────
 function _renderTipo6(reto) {
   const cont = $id("opciones-container");
   if (!cont) return;
@@ -785,21 +774,24 @@ function _renderTipo6(reto) {
 
   cont.querySelectorAll("input[type=radio]").forEach(inp => {
     inp.addEventListener("change", () => {
-      cont.querySelectorAll(".opcion-pro-inner")
-          .forEach(el => el.classList.remove("selected"));
-      inp.closest(".opcion-pro-inner").classList.add("selected");
+      cont.querySelectorAll(".opcion-pro-inner").forEach(el => el.classList.remove("selected"));
+      const box = inp.closest(".opcion-pro")?.querySelector(".opcion-pro-inner");
+      if (box) box.classList.add("selected");
     });
   });
 
   _attachValidar(reto, () => {
     const sel = cont.querySelector("input[type=radio]:checked");
-    return sel ? sel.value : null;
+    if (!sel) return null;
+    const op = reto.opciones.find(o => o.id === sel.value);
+    return { id: sel.value, valor: op ? `${op.texto} | ${op.codigo}` : sel.value };
   });
 }
+// ============================================================
+//  gameEngine.js  —  PARTE 4 / 5
+//  Validación central · Victoria · Cierre con escala valorativa
+// ============================================================
 
-// ──────────────────────────────────────────────────────────
-//  Animación de victoria (solo Tipo 6)
-// ──────────────────────────────────────────────────────────
 function _dispararVictoria() {
   const overlay = document.createElement("div");
   overlay.className = "victory-overlay";
@@ -810,15 +802,11 @@ function _dispararVictoria() {
       <div class="victory-icon" aria-hidden="true">⚡</div>
       <h2 class="victory-title">SISTEMA RESTAURADO</h2>
       <p class="victory-sub">Código <strong>EAP-2026</strong> validado con éxito</p>
-      <p class="victory-msg">Has liberado el algoritmo. La comunidad escolar
-        puede acceder a sus derechos nuevamente.</p>
-      <button class="btn btn-primary btn-lg" id="btn-al-cierre">
-        Ver resultados finales →
-      </button>
+      <p class="victory-msg">Has liberado el algoritmo. La comunidad escolar puede acceder a sus derechos nuevamente.</p>
+      <button class="btn btn-primary btn-lg" id="btn-al-cierre">Ver resultados finales →</button>
     </div>
   `;
 
-  // Confetti CSS puro (sin dependencias)
   const colores = ["#38BDF8", "#F59E0B", "#34D399", "#F472B6", "#A78BFA"];
   for (let i = 0; i < 60; i++) {
     const p = document.createElement("div");
@@ -826,10 +814,10 @@ function _dispararVictoria() {
     p.style.cssText = `
       left: ${Math.random() * 100}%;
       background: ${colores[i % colores.length]};
-      width:  ${6 + Math.random() * 8}px;
+      width: ${6 + Math.random() * 8}px;
       height: ${6 + Math.random() * 8}px;
-      animation-duration:   ${0.8 + Math.random() * 1.4}s;
-      animation-delay:      ${Math.random() * 0.6}s;
+      animation-duration: ${0.8 + Math.random() * 1.4}s;
+      animation-delay: ${Math.random() * 0.6}s;
       animation-timing-function: ease-in;
     `;
     overlay.appendChild(p);
@@ -838,21 +826,11 @@ function _dispararVictoria() {
   document.body.appendChild(overlay);
   setTimeout(() => overlay.querySelector(".victory-content")?.focus(), 100);
 
-  overlay.querySelector("#btn-al-cierre")
-    .addEventListener("click", () => {
-      window.location.href = "cierre.html";
-    });
+  overlay.querySelector("#btn-al-cierre").addEventListener("click", () => {
+    window.location.href = "cierre.html";
+  });
 }
 
-// ──────────────────────────────────────────────────────────
-//  _attachValidar
-//  Conecta #btn-validar con la lógica de evaluación.
-//  Integra el sistema de penalizaciones de la Parte 2.
-//
-//  @param {object}   reto        — objeto del reto activo
-//  @param {Function} getSelected — devuelve el id de la opción
-//                                  seleccionada (o null)
-// ──────────────────────────────────────────────────────────
 function _attachValidar(reto, getSelected) {
   const btnValidar    = $id("btn-validar");
   const feedbackCont  = $id("feedback-container");
@@ -864,66 +842,64 @@ function _attachValidar(reto, getSelected) {
   if (!btnValidar) return;
 
   btnValidar.addEventListener("click", () => {
-    const selId = getSelected();
+    const selected = getSelected();
 
-    // ── Sin selección ──
-    if (!selId) {
+    if (!selected) {
       if (feedbackCont) {
         feedbackCont.className = "feedback-container visible warning";
         if (feedbackTitle) feedbackTitle.textContent = "Selecciona una opción";
-        if (feedbackBody)  feedbackBody.innerHTML =
-          "Elige o escribe una respuesta antes de validar.";
+        if (feedbackBody)  feedbackBody.innerHTML = "Elige o escribe una respuesta antes de validar.";
       }
       return;
     }
 
-    const opcion     = reto.opciones.find(o => o.id === selId);
+    const selId = selected.id;
+    const respuestaUsuario = selected.valor;
+    const opcion = reto.opciones.find(o => o.id === selId);
     const esCorrecta = opcion ? opcion.correcta : false;
 
-    // ── Mostrar feedback ──
     if (feedbackCont) {
-      feedbackCont.className =
-        `feedback-container visible ${esCorrecta ? "correct" : "incorrect"}`;
-      if (feedbackIcon)  feedbackIcon.textContent =
-        esCorrecta ? "✅" : "❌";
-      if (feedbackTitle) feedbackTitle.textContent =
-        esCorrecta ? "¡Correcto! Misión cumplida" : "Intento fallido";
-      if (feedbackBody && opcion)
-        feedbackBody.innerHTML = opcion.feedback;
+      feedbackCont.className = `feedback-container visible ${esCorrecta ? "correct" : "incorrect"}`;
+      if (feedbackIcon)  feedbackIcon.textContent = esCorrecta ? "✅" : "❌";
+      if (feedbackTitle) feedbackTitle.textContent = esCorrecta ? "¡Correcto! Misión cumplida" : "Intento fallido";
+      if (feedbackBody)  feedbackBody.innerHTML = opcion
+        ? opcion.feedback
+        : "La respuesta no coincide con el desarrollo correcto.";
     }
 
-    // ── INCORRECTO → registrar penalización ──
     if (!esCorrecta) {
-      const { penalizado, intentosActuales } =
-        registrarIntentoFallido(reto.id);
+      const { penalizado, intentosActuales } = registrarIntentoFallido(reto.id, respuestaUsuario);
       _mostrarAlertaIntentos(reto.id, intentosActuales, penalizado);
+      _renderIntentosPrevios(reto.id);
       return;
     }
 
-    // ── CORRECTO ──
-    btnValidar.disabled    = true;
+    btnValidar.disabled = true;
     btnValidar.textContent = "Validado ✓";
 
-    // Registra el reto como resuelto (sin duplicados)
-    if (!Estado.resueltos.includes(reto.id)) {
-      Estado.resueltos.push(reto.id);
-      saveEstado();
+    registrarRespuestaCorrecta(reto.id, respuestaUsuario);
+
+    const alerta = $id("intentos-alerta");
+    if (alerta) {
+      alerta.className = "intentos-alerta exito";
+      const fallos = getHistorialReto(reto.id);
+      alerta.textContent = fallos === 0
+        ? "✅ Resuelto al primer intento."
+        : `✅ Resuelto tras ${fallos} intento${fallos > 1 ? "s" : ""} fallido${fallos > 1 ? "s" : ""}.`;
     }
 
-    // Animación especial para Tipo 6 (misión final)
     if (reto.tipo === 6) {
       setTimeout(_dispararVictoria, 700);
       return;
     }
 
-    // Muestra botón siguiente
     if (btnNext) {
       const siguienteId = reto.id + 1;
       if (siguienteId <= TOTAL_RETOS) {
-        btnNext.href        = `reto.html?id=${siguienteId}`;
+        btnNext.href = `reto.html?id=${siguienteId}`;
         btnNext.textContent = "Siguiente reto →";
       } else {
-        btnNext.href        = "cierre.html";
+        btnNext.href = "cierre.html";
         btnNext.textContent = "Ver resultados →";
       }
       btnNext.classList.remove("hidden");
@@ -931,156 +907,201 @@ function _attachValidar(reto, getSelected) {
     }
   });
 }
-// ============================================================
-//  gameEngine.js  —  PARTE 6 / 6
-//  initCierre · Bootstrap (DOMContentLoaded)
-// ============================================================
 
-// ──────────────────────────────────────────────────────────
-//  CIERRE  (cierre.html)
-//  Muestra el resumen de la misión: tiempo, retos resueltos,
-//  nivel de logro, lista de retos y botón de reinicio.
-// ──────────────────────────────────────────────────────────
 function initCierre() {
   if (!window.location.pathname.includes("cierre.html")) return;
 
-  const resueltosN = Estado.resueltos.length;
-  const total      = TOTAL_RETOS;
-
-  // ── Tiempo total empleado ──
-  const elapsedSec = Estado.startTime
-    ? Math.min(
-        Math.floor((Date.now() - Estado.startTime) / 1000),
-        DURATION_SEC
-      )
+  const resueltosN    = Estado.resueltos.length;
+  const elapsedSec    = Estado.startTime
+    ? Math.min(Math.floor((Date.now() - Estado.startTime) / 1000), DURATION_SEC)
     : 0;
-  const tiempoUsado = formatTime(elapsedSec);
-  const remaining   = Math.max(0, DURATION_SEC - elapsedSec);
-  const tiempoSobra = formatTime(remaining);
+  const tiempoUsado   = formatTime(elapsedSec);
+  const tiempoSobra   = formatTime(Math.max(0, DURATION_SEC - elapsedSec));
+  const penalizTotal  = formatTime(Estado.penalizacion || 0);
+  const historial     = Estado.historialPorReto || {};
+  const fallosTotales = Object.values(historial).reduce((a, b) => a + b, 0);
+  const promedioFallos = resueltosN > 0 ? (fallosTotales / resueltosN) : fallosTotales;
 
-  // ── Penalización total aplicada ──
-  const penalizTotal = formatTime(Estado.penalizacion || 0);
+  let escalaKey = "bajo";
+  if (resueltosN === TOTAL_RETOS && fallosTotales === 0) escalaKey = "superior";
+  else if (resueltosN >= 4) escalaKey = "alto";
+  else if (resueltosN >= 2) escalaKey = "basico";
 
-  // ── Nivel según desempeño ──
-  let nivel, mensaje, iconoNivel;
-  if (resueltosN === total) {
-    nivel      = "LEYENDA DEL SISTEMA";
-    iconoNivel = "🏆";
-    mensaje    = "¡Completaste todos los retos! El sistema educativo fue restaurado totalmente. Eres un agente de élite.";
-  } else if (resueltosN >= 4) {
-    nivel      = "EXPERTO DIGITAL";
-    iconoNivel = "⭐";
-    mensaje    = `Lograste ${resueltosN} de ${total} retos. ¡Gran desempeño! Solo faltaron ${total - resueltosN} para la misión completa.`;
-  } else if (resueltosN >= 2) {
-    nivel      = "AGENTE EN FORMACIÓN";
-    iconoNivel = "🔷";
-    mensaje    = `Completaste ${resueltosN} de ${total} retos. Sigue entrenando tus habilidades algebraicas para la próxima misión.`;
-  } else {
-    nivel      = "RECIÉN INICIADO";
-    iconoNivel = "🔰";
-    mensaje    = `Completaste ${resueltosN} de ${total} retos. Revisa los productos notables y vuelve a intentarlo.`;
-  }
-
-  // ── Inyecta valores en el DOM ──
-  const tiles = {
-    "cierre-resueltos":  `${resueltosN} / ${total}`,
-    "cierre-tiempo":     tiempoUsado,
-    "cierre-sobrante":   tiempoSobra,
-    "cierre-penalizacion": penalizTotal,
-    "cierre-nivel":      `${iconoNivel} ${nivel}`,
-    "cierre-mensaje":    mensaje,
-    "cierre-icon-nivel": iconoNivel
+  const escalas = {
+    bajo: {
+      icono: "🔰",
+      nombre: "BAJO",
+      mensaje: "Necesitas reforzar los productos notables básicos. Te conviene repasar el cuadrado de binomio, la diferencia de cuadrados y la identificación correcta del término central.",
+      felicitacion: "Cada intento cuenta. Sigue practicando: estás construyendo la base para resolver con más seguridad."
+    },
+    basico: {
+      icono: "🔷",
+      nombre: "BÁSICO",
+      mensaje: "Comprendes parte de los procedimientos, pero aún cometes errores de signo, coeficientes o factorización completa. Vas por buen camino.",
+      felicitacion: "Buen avance. Ya reconoces varias estructuras algebraicas; ahora toca ganar precisión."
+    },
+    alto: {
+      icono: "⭐",
+      nombre: "ALTO",
+      mensaje: "Tu desempeño fue sólido. Resolviste la mayoría de retos y mostraste dominio de varios productos notables. Aún puedes mejorar la precisión en respuestas complejas.",
+      felicitacion: "Muy buen trabajo. Tu razonamiento algebraico es consistente y demuestra comprensión real."
+    },
+    superior: {
+      icono: "🏆",
+      nombre: "SUPERIOR",
+      mensaje: "Dominio sobresaliente. Resolviste todos los retos sin errores acumulados, aplicando correctamente productos notables, factorización y simplificación algebraica.",
+      felicitacion: "¡Excelente! Tu desempeño fue preciso, consistente y de nivel superior."
+    }
   };
 
-  Object.entries(tiles).forEach(([id, val]) => {
+  const nivel = escalas[escalaKey];
+
+  const bind = {
+    "cierre-resueltos": `${resueltosN} / ${TOTAL_RETOS}`,
+    "cierre-tiempo": tiempoUsado,
+    "cierre-sobrante": tiempoSobra,
+    "cierre-penalizacion": penalizTotal,
+    "cierre-fallos": String(fallosTotales),
+    "cierre-promedio-fallos": resueltosN > 0 ? promedioFallos.toFixed(2) : "0.00",
+    "cierre-nivel": `${nivel.icono} ${nivel.nombre}`,
+    "cierre-mensaje": nivel.mensaje,
+    "cierre-felicitacion": nivel.felicitacion,
+    "cierre-icon-nivel": nivel.icono
+  };
+
+  Object.entries(bind).forEach(([id, val]) => {
     const el = $id(id);
     if (el) el.innerHTML = val;
   });
 
-  // ── Barra visual de progreso ──
   const barraEl = $id("cierre-barra");
   const porcEl  = $id("cierre-porcentaje");
-  const pct     = Math.round((resueltosN / total) * 100);
-
+  const pct = Math.round((resueltosN / TOTAL_RETOS) * 100);
   if (barraEl) {
     barraEl.style.width = pct + "%";
     barraEl.setAttribute("aria-valuenow", pct);
   }
   if (porcEl) porcEl.textContent = `${pct}%`;
 
-  // ── Lista detallada de retos ──
-  const listaEl = $id("cierre-lista-retos");
+  ["seg-bajo", "seg-basico", "seg-alto", "seg-superior"].forEach(id => {
+    const el = $id(id);
+    if (el) el.classList.remove("activo");
+  });
+  const segActivo = $id(`seg-${escalaKey}`);
+  if (segActivo) segActivo.classList.add("activo");
+
+  const listaEl = $id("cierre-lista-retos") || $id("retro-lista");
   if (listaEl) {
-    listaEl.innerHTML = RETOS.map(r => {
+    listaEl.innerHTML = RETOS.map((r, i) => {
       const done = Estado.resueltos.includes(r.id);
+      const intentosFall = historial[r.id] || 0;
+
+      let claseDot = "dot-fail";
+      let claseEstado = "em-fail";
+      let estadoTxt = "✗ No resuelto";
+      let retro = "Revisa de nuevo este contenido: necesitas reforzar el procedimiento y la lectura cuidadosa del patrón algebraico.";
+
+      if (done && intentosFall === 0) {
+        claseDot = "dot-ok";
+        claseEstado = "em-ok";
+        estadoTxt = "✓ Al primer intento";
+        retro = "Excelente precisión. Identificaste correctamente la estructura algebraica desde el primer intento.";
+      } else if (done && intentosFall <= 2) {
+        claseDot = "dot-warn";
+        claseEstado = "em-warn";
+        estadoTxt = `✓ Resuelto (${intentosFall} fallo${intentosFall > 1 ? "s" : ""} previo${intentosFall > 1 ? "s" : ""})`;
+        retro = "Lo resolviste correctamente después de algunos intentos. Conviene reforzar seguridad en signos y coeficientes.";
+      } else if (done) {
+        claseDot = "dot-effort";
+        claseEstado = "em-effort";
+        estadoTxt = `✓ Resuelto (${intentosFall} fallos previos)`;
+        retro = "Lograste resolverlo con perseverancia. Sería útil repasar este tipo de producto notable para ganar rapidez y exactitud.";
+      }
+
       return `
-        <li class="cierre-reto-item ${done ? "done" : "pending"}">
-          <span class="cierre-reto-icon" aria-hidden="true">
-            ${done ? "✅" : "🔒"}
-          </span>
-          <span class="cierre-reto-titulo">
-            Reto ${r.id}: ${r.titulo}
+        <li class="retro-item ${done ? "done" : "pending"}">
+          <span class="retro-dot ${claseDot}" aria-hidden="true"></span>
+          <span class="retro-reto-titulo">
+            <strong>Reto ${r.id}: ${r.titulo}</strong><br>
+            <span>${r.eyebrow || ""}</span><br>
+            <em class="${claseEstado}">${estadoTxt}</em><br>
+            <span>${retro}</span>
           </span>
         </li>
       `;
     }).join("");
   }
 
-  // ── Botón reiniciar misión ──
-  const btnReinicio = $id("btn-reiniciar");
-  if (btnReinicio) {
-    btnReinicio.addEventListener("click", () => {
-      try { sessionStorage.removeItem("er-state"); } catch (_) {}
-      Estado.startTime       = 0;
-      Estado.resueltos       = [];
-      Estado.penalizacion    = 0;
-      Estado.intentosPorReto = {};
-      window.location.href   = "index.html";
+  const modal = $id("felicita-overlay");
+  const modalTitulo = $id("felicita-titulo");
+  const modalTexto = $id("felicita-texto");
+  const modalEmoji = $id("felicita-emoji");
+
+  if (modalTitulo) modalTitulo.textContent = `Nivel alcanzado: ${nivel.nombre}`;
+  if (modalTexto)  modalTexto.textContent = nivel.felicitacion;
+  if (modalEmoji)  modalEmoji.textContent = nivel.icono;
+
+  if (modal) {
+    setTimeout(() => {
+      modal.classList.add("visible");
+      $id("felicita-box")?.focus();
+    }, 500);
+  }
+
+  const btnOcultarModal = $id("btn-felicita-ok");
+  if (btnOcultarModal && modal) {
+    btnOcultarModal.addEventListener("click", () => {
+      modal.classList.remove("visible");
+      setTimeout(() => { modal.style.display = "none"; }, 350);
     });
   }
+
+  const btnReinicio = $id("btn-reiniciar");
+  const btnReinicio2 = $id("btn-reiniciar-2"); // soporte para el segundo botón
+  
+  const resetFunc = () => {
+    try { sessionStorage.removeItem("er-state"); } catch (_) {}
+    Estado.startTime        = 0;
+    Estado.resueltos        = [];
+    Estado.penalizacion     = 0;
+    Estado.intentosPorReto  = {};
+    Estado.historialPorReto = {};
+    Estado.respuestasLog    = {};
+    window.location.href = "index.html";
+  };
+  
+  if (btnReinicio) btnReinicio.addEventListener("click", resetFunc);
+  if (btnReinicio2) btnReinicio2.addEventListener("click", resetFunc);
 }
+// ============================================================
+//  gameEngine.js  —  PARTE 5 / 5
+//  Bootstrap (Punto de entrada)
+// ============================================================
 
-// ──────────────────────────────────────────────────────────
-//  BOOTSTRAP
-//  Punto de entrada único. Detecta la página actual y llama
-//  a la función de inicialización correspondiente.
-// ──────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-
   // 1. Carga el estado guardado entre páginas
   loadEstado();
 
-  const path = window.location.pathname;
+  // 2. Lee la URL completa en lugar de solo el pathname
+  const urlActual = window.location.href.toLowerCase();
+  
+  // 3. Determina si estamos en el index
+  // Si la URL no tiene "mapa", "reto" ni "cierre", asumimos que es el index
+  const esIndex = !urlActual.includes("mapa.html") && !urlActual.includes("reto.html") && !urlActual.includes("cierre.html");
 
-  // 2. Arranca el reloj en todas las páginas excepto index
-  const esIndex = path.includes("index.html")
-                  || path === "/"
-                  || path === "";
-  if (!esIndex) startClock();
+  // 4. Arranca el reloj en todas las páginas excepto en el inicio
+  if (!esIndex) {
+    startClock();
+  }
 
-  // 3. Inicializa la lógica específica de la página
+  // 5. Inicializa la lógica específica de la página actual
   if (esIndex) {
     initVestibulo();
-  } else if (path.includes("mapa.html")) {
+  } else if (urlActual.includes("mapa.html")) {
     initMapa();
-  } else if (path.includes("reto.html")) {
+  } else if (urlActual.includes("reto.html")) {
     initReto();
-  } else if (path.includes("cierre.html")) {
+  } else if (urlActual.includes("cierre.html")) {
     initCierre();
   }
 });
-
-// ============================================================
-//  FIN DE gameEngine.js
-//
-//  Orden de concatenación del archivo final:
-//    1. gameEngine-p1.js  →  RETOS[]
-//    2. gameEngine-p2.js  →  Estado, penalizaciones, reloj
-//    3. gameEngine-p3.js  →  initVestibulo, initMapa
-//    4. gameEngine-p4.js  →  initReto, Tipo 1, 2, 3
-//    5. gameEngine-p5.js  →  Tipo 5, 6, _attachValidar
-//    6. gameEngine-p6.js  →  initCierre, Bootstrap
-//
-//  Una sola etiqueta en cada HTML:
-//  <script src="gameEngine.js" defer></script>
-// ============================================================
